@@ -52,10 +52,6 @@
                                 <br/>
                                 @endforeach
 
-
-
-
-
                            </div>
                           </div>
                         </div>
@@ -100,9 +96,6 @@ $('.select2bs4').select2({
 <script type="text/javascript">
 
  var APP_URL = {!! json_encode(url('/')) !!}
-
-
-
 
 </script>
 <style>

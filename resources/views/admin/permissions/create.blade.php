@@ -102,12 +102,7 @@ $('.select2bs4').select2({
 </script>
 
 <script type="text/javascript">
-
  var APP_URL = {!! json_encode(url('/')) !!}
-
-
-
-
 </script>
 <style>
   .form-check-input{
