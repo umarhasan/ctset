@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('main_category_id')->constrained();
-            $table->foreignId('video_category_id')->constrained();
+            $table->foreignId('main_category_id')->constrained('video_main_categories')->onDelete('cascade');
+            $table->foreignId('video_category_id')->constrained('video_categories')->onDelete('cascade');
             $table->string('title');
             $table->string('video_link');
             $table->date('date');

@@ -29,6 +29,7 @@ public function store(LoginRequest $request)
     $request->session()->regenerate();
 
     $user = $request->user();
+    
     // Redirect based on role
     if ($user->hasRole('Admin')) {
         return redirect()->route('admin.dashboard');

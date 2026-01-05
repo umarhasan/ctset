@@ -1,6 +1,5 @@
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
 
-    {{-- Brand --}}
     <div class="sidebar-brand">
         <a href="
             @role('Admin') {{ route('admin.dashboard') }}
@@ -30,13 +29,142 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                
+                <li class="nav-item {{ request()->routeIs('exams.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('exams.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-journal-text"></i>
+                        <p>
+                            Exam
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
 
-                 {{-- User Management --}}
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('exams.index') }}"
+                            class="nav-link {{ request()->routeIs('exams.index') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Exam view</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                @role('Admin')
+                <li class="nav-item {{ request()->routeIs(
+                        'test-types.*',
+                        'marketing-types.*',
+                        'question-types.*',
+                        'time-table-categories.*',
+                        'assignment-from-types.*',
+                        'video-main-categories.*',
+                        'video-categories.*',
+                        'exam-duration-types.*',
+                        'yes-no-options.*'
+                    ) ? 'menu-open' : '' }}">
+
+                    <a href="#" class="nav-link {{ request()->routeIs(
+                            'test-types.*',
+                            'marketing-types.*',
+                            'question-types.*',
+                            'time-table-categories.*',
+                            'assignment-from-types.*',
+                            'video-main-categories.*',
+                            'video-categories.*',
+                            'exam-duration-types.*',
+                            'yes-no-options.*'
+                        ) ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-gear-fill"></i>
+                        <p>
+                            Master
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="{{ route('test-types.index') }}"
+                               class="nav-link {{ request()->routeIs('test-types.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Test Types</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('marketing-types.index') }}"
+                               class="nav-link {{ request()->routeIs('marketing-types.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Marketing Types</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('question-types.index') }}"
+                               class="nav-link {{ request()->routeIs('question-types.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Question Types</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('time-table-categories.index') }}"
+                            class="nav-link {{ request()->routeIs('time-table-categories.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Time Table Categories</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('assignment-from-types.index') }}"
+                            class="nav-link {{ request()->routeIs('assignment-from-types.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Assignment From Types</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('video-main-categories.index') }}"
+                            class="nav-link {{ request()->routeIs('video-main-categories.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Video Main Categories</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('video-categories.index') }}"
+                            class="nav-link {{ request()->routeIs('video-categories.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Video Categories</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('exam-duration-types.index') }}"
+                            class="nav-link {{ request()->routeIs('exam-duration-types.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Exam Duration Types</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('yes-no-options.index') }}"
+                            class="nav-link {{ request()->routeIs('yes-no-options.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Yes / No Options</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endrole
+
                 @php
-                    $hasUserManagement = auth()->user()->can('users.index') 
-                                        || auth()->user()->can('roles.index') 
-                                        || auth()->user()->can('permissions.index');
+                    $hasUserManagement =
+                        auth()->user()->can('users.index') ||
+                        auth()->user()->can('roles.index') ||
+                        auth()->user()->can('permissions.index');
                 @endphp
+
                 @if($hasUserManagement)
                 <li class="nav-item {{ request()->routeIs('users.*','roles.*','permissions.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->routeIs('users.*','roles.*','permissions.*') ? 'active' : '' }}">
@@ -48,6 +176,7 @@
                     </a>
 
                     <ul class="nav nav-treeview">
+
                         @can('users.index')
                         <li class="nav-item">
                             <a href="{{ route('users.index') }}"
@@ -77,11 +206,11 @@
                             </a>
                         </li>
                         @endcan
+
                     </ul>
                 </li>
                 @endif
 
-                {{-- Profile --}}
                 @can('profile.view')
                 <li class="nav-item">
                     <a href="{{ route('profile.edit') }}"
@@ -92,21 +221,22 @@
                 </li>
                 @endcan
 
-                {{-- Example: Additional dynamic menu from permissions --}}
-                @php
-                    $allPermissions = auth()->user()->getAllPermissions()->pluck('name');
-                @endphp
+                <li class="nav-item mt-3">
+                    <a href="#"
+                       class="nav-link text-danger"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="nav-icon bi bi-box-arrow-right"></i>
+                        <p>Logout</p>
+                    </a>
 
-                @foreach($allPermissions as $perm)
-                    @if(str_contains($perm, 'custommenu.')) {{-- e.g. custommenu.reports --}}
-                        <li class="nav-item">
-                            <a href="{{ route($perm) }}" class="nav-link">
-                                <i class="nav-icon bi bi-file-text"></i>
-                                <p>{{ ucfirst(str_replace('custommenu.', '', $perm)) }}</p>
-                            </a>
-                        </li>
-                    @endif
-                @endforeach
+                    <form id="logout-form"
+                          action="{{ route('logout') }}"
+                          method="POST"
+                          class="d-none">
+                        @csrf
+                    </form>
+                </li>
+
             </ul>
         </nav>
     </div>

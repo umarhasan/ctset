@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('test_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('title');
             $table->boolean('status')->default(1);
             $table->timestamps();
         });

@@ -28,7 +28,8 @@ use App\Http\Controllers\Admin\EvaluationPointController;
 use App\Http\Controllers\Admin\LongitudinalRequirementController;
 use App\Http\Controllers\Admin\DopController;
 use App\Http\Controllers\Admin\DopStepController;
-
+// Exam
+use App\Http\Controllers\Admin\ExamController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -37,7 +38,7 @@ Route::get('/', function () {
         Route::resource('roles', RoleController::class);
         Route::resource('permissions', PermissionController::class);
         Route::resource('users', UserController::class);
-        
+        Route::resource('exams', ExamController::class);
         // Master
         Route::resource('test-types', TestTypeController::class);
         Route::resource('marketing-types', MarketingTypeController::class);

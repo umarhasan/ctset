@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Dop extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 }

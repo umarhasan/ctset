@@ -13,20 +13,21 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-            $table->string('test_type');
+            $table->bigInteger('exam_id')->unique();
             $table->string('exam_name');
+            $table->foreignId('test_type')->constrained('test_types')->cascadeOnDelete();
+            $table->foreignId('question_type')->constrained('question_types')->cascadeOnDelete();
+            $table->foreignId('marketing')->nullable()->constrained('marketing_types')->nullOnDelete();
+            $table->foreignId('exam_duration_type')->constrained('exam_duration_types')->cascadeOnDelete();
             $table->date('exam_date');
-            $table->enum('exam_duration_type', ['one_day', 'multiple_day']);
             $table->time('exam_time')->nullable();
             $table->integer('hours')->nullable();
             $table->integer('minutes')->nullable();
-            $table->string('long_before')->nullable();
-            $table->string('question_type');
             $table->text('exam_requirement')->nullable();
             $table->text('exam_equipment')->nullable();
-            $table->string('marketing')->nullable();
-            $table->boolean('question_shuffling')->default(false);
-            $table->boolean('previous_button')->default(false);
+            $table->text('long_before')->nullable();
+            $table->tinyInteger('question_shuffling')->default(0);
+            $table->tinyInteger('previous_button')->default(0);
             $table->timestamps();
         });
 
