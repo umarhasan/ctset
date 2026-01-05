@@ -37,9 +37,9 @@
                 <a class="btn btn-success" href="{{ route('permissions.create') }}"> Create New Permission</a>
                 <!-- <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a> -->
                 </div>
-              <div class="card-body">
-                <table id="example" class="table table-bordered table-striped">
-                  <thead>
+              <div class="card-body table-responsive">
+                <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center align-middle w-100">
+                    <thead class="table-light text-nowrap">
                   <tr>
                     <th>S.No</th>
                     <th>permission</th>

@@ -1,47 +1,83 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('auth_layouts.app')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('title', 'Login')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@section('content')
+   <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="login-container">
+                    <!-- University Header -->
+                    <!-- Login Card -->
+                    <div class="login-card">
+                        <div class="text-center mb-4">
+                            <img src="{{ asset('adminlte/assets/img/logo.png') }}" alt="LMS Logo" height="80">
+                        </div>
+                        @if (session('status'))
+                            <div class="alert alert-success">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('login') }}">
+                            @csrf
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text input-group-text-custom">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <input type="email"
+                                           name="email"
+                                           value="{{ old('email') }}"
+                                           class="form-control form-control-custom @error('email') is-invalid @enderror"
+                                           placeholder="admin@gmail.com"
+                                           required autofocus>
+                                </div>
+                                @error('email')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Password -->
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text input-group-text-custom">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="password"
+                                           name="password"
+                                           class="form-control form-control-custom @error('password') is-invalid @enderror"
+                                           placeholder="••••••••"
+                                           required>
+                                </div>
+                                <div class="password-note">Your strong password</div>
+                                @error('password')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Remember Me -->
+                            <div class="remember-me">
+                                <input type="checkbox" id="remember" name="remember">
+                                <label for="remember">Remember me</label>
+                                <span class="remember-note">(if this is a private computer)</span>
+                            </div>
+
+                            <!-- Login Button -->
+                            <button type="submit" class="btn login-btn">
+                                Login
+                            </button>
+                        </form>
+
+                        <!-- Copyright -->
+                        <div class="copyright">
+                            Copyright © 2019-2020. All rights reserved
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+@endsection

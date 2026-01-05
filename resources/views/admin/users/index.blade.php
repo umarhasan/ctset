@@ -35,9 +35,10 @@
               <a class="btn btn-success" href="{{ route('users.create') }}"> New User </a>
             </div>
             <!-- /.card-header -->
-            <div class="card-body">
-              <table id="example" class="table table-bordered table-striped">
-                <thead>
+            <div class="card-body table-responsive">
+            <table id="examTable"
+                   class="table table-bordered table-hover table-striped mb-0 text-center align-middle w-100">
+                <thead class="table-light text-nowrap">
                 <tr>
                 <th>No</th>
                 <th>Name</th>
@@ -57,7 +58,7 @@
                     <td>
                         @if(!empty($user))
                             <?php $roles = $user->getRoleNames(); ?>
-                            <label class="badge bg-label-primary me-1">{{ $roles[0] }}</label>
+                            <label class="badge bg-info me-1">{{ $roles[0] }}</label>
                         @endif
                     </td>
                     <td>
@@ -83,7 +84,7 @@
                   @endif
                 </tbody>
               </table>
-            
+
             </div>
             <!-- /.card-body -->
           </div>

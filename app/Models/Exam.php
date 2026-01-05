@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Exam extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
@@ -20,7 +22,7 @@ class Exam extends Model
             }
         });
     }
-    
+
     public function testType()
     {
         return $this->belongsTo(TestType::class, 'test_type', 'id');
@@ -41,5 +43,43 @@ class Exam extends Model
         return $this->belongsTo(ExamDurationType::class, 'exam_duration_type', 'id');
     }
 
-    // Optional: Yes/No options for shuffling or previous button could be handled as boolean, no relation needed
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    // Get invited trainees for this exam
+    public function invitedTrainees()
+    {
+        return $this->belongsToMany(User::class, 'invitations', 'exam_id', 'user_id')
+                    ->withPivot('status', 'sent_at', 'completed_at')
+                    ->withTimestamps()
+                    ->whereHas('roles', function($q) {
+                        $q->where('name', 'trainee');
+                    });
+    }
+
+
+
+    public function getCreatedAtFormattedAttribute()
+    {
+        return $this->created_at->format('d-m-Y h:i:s a');
+    }
+
+    // Get status counts for this exam
+    public function getStatusCountsAttribute()
+    {
+        return [
+            'Unregistered' => $this->invitations()->where('status', 'Unregistered')->count(),
+            'Incompleted' => $this->invitations()->where('status', 'Incompleted')->count(),
+            'Completed' => $this->invitations()->where('status', 'Completed')->count(),
+            'Absent' => $this->invitations()->where('status', 'Absent')->count(),
+            'All' => $this->invitations()->count()
+        ];
+    }
 }

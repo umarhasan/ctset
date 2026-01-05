@@ -28,17 +28,28 @@ use App\Http\Controllers\Admin\EvaluationPointController;
 use App\Http\Controllers\Admin\LongitudinalRequirementController;
 use App\Http\Controllers\Admin\DopController;
 use App\Http\Controllers\Admin\DopStepController;
+use App\Http\Controllers\Admin\ExamInvitationController;
 // Exam
 use App\Http\Controllers\Admin\ExamController;
-Route::get('/', function () {
-    return view('welcome');
-});
+    Route::get('/', function () {
+        return auth()->check()
+            ? redirect()->route('dashboard')
+            : redirect()->route('login');
+    });
 
     Route::middleware(['auth'])->group(function () {
         Route::resource('roles', RoleController::class);
         Route::resource('permissions', PermissionController::class);
         Route::resource('users', UserController::class);
         Route::resource('exams', ExamController::class);
+
+        Route::get('/pending', [ExamInvitationController::class, 'pendingExams'])->name('exams.pending');
+        Route::get('/{examId}/send-invite', [ExamInvitationController::class, 'sendInvite'])->name('exams.send-invite');
+        Route::post('/{examId}/send-invite', [ExamInvitationController::class, 'sendInviteAction'])->name('exams.send-invite.action');
+        Route::get('/sent-invites', [ExamInvitationController::class, 'sentInvites'])->name('exams.sent-invites');
+        Route::get('/{examId}/invited-students', [ExamInvitationController::class, 'viewInvitedStudents'])->name('exams.view-invited-students');
+        Route::post('/invitations/{invitation}/update-status', [ExamInvitationController::class, 'updateStatus'])->name('exams.update-status');
+
         // Master
         Route::resource('test-types', TestTypeController::class);
         Route::resource('marketing-types', MarketingTypeController::class);
@@ -58,7 +69,7 @@ Route::get('/', function () {
         Route::resource('evaluation-points', EvaluationPointController::class);
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
         Route::resource('dops', DopController::class);
-        Route::resource('dop-steps', DopStepController::class); 
+        Route::resource('dop-steps', DopStepController::class);
 
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -66,7 +77,7 @@ Route::get('/', function () {
             Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
         });
 
-    
+
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         });
@@ -77,6 +88,8 @@ Route::get('/', function () {
 
         Route::prefix('trainee')->name('trainee.')->group(function () {
             Route::get('/dashboard', [TraineeDashboardController::class, 'index'])->name('dashboard');
+            Route::get('/invitations', [ExamInvitationController::class, 'myInvitations'])->name('invitations');
+
         });
     });
 

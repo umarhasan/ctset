@@ -26,8 +26,6 @@ class RolePermissionSeeder extends Seeder
          | PERMISSIONS
          -------------------------------------------------*/
         $permissions = [
-            // Common
-            'dashboard.view',
             'profile.view',
             'profile.update',
             'profile.delete',
@@ -53,6 +51,20 @@ class RolePermissionSeeder extends Seeder
             'permissions.update',
             'permissions.delete',
             'permissions.assign',
+
+            // Exam permissions
+            'exams.index',
+            'exams.create',
+            'exams.edit',
+            'exams.delete',
+            'exams.view',
+
+            // Exam Invite permissions
+            'view-pending-exams',
+            'send-invites',
+            'view-sent-invites',
+            'view-invited-students',
+            'update-invitation-status',
         ];
 
         foreach ($permissions as $permission) {
@@ -77,7 +89,7 @@ class RolePermissionSeeder extends Seeder
 
         // Assessor → limited permissions
         $assessorRole->syncPermissions([
-            'dashboard.view',
+
             'profile.view',
             'profile.update',
             'users.index',
@@ -86,8 +98,8 @@ class RolePermissionSeeder extends Seeder
 
         // Trainee → basic permissions
         $traineeRole->syncPermissions([
-            'dashboard.view',
             'profile.view',
+            'trainee.invitations',
         ]);
 
         /* -------------------------------------------------

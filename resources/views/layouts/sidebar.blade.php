@@ -7,9 +7,9 @@
             @else {{ route('trainee.dashboard') }}
             @endrole
         " class="brand-link">
-            <img src="{{ asset('adminlte/assets/img/AdminLTELogo.png') }}"
+            <img src="{{ asset('adminlte/assets/img/logo.png') }}"
                  class="brand-image opacity-75 shadow">
-            <span class="brand-text fw-light">{{ config('app.name') }}</span>
+
         </a>
     </div>
 
@@ -29,7 +29,9 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-                
+
+                {{-- Exam Menu - Permission based --}}
+                @can('exams.index')
                 <li class="nav-item {{ request()->routeIs('exams.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->routeIs('exams.*') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-journal-text"></i>
@@ -49,7 +51,76 @@
                         </li>
                     </ul>
                 </li>
+                @endcan
+                {{-- My Trainee --}}
+                {{-- Exam Menu - Permission based --}}
+                @can('trainee.invitations')
+                <li class="nav-item {{ request()->routeIs('trainee.invitations.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('trainee.invitations.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-journal-text"></i>
+                        <p>
+                            My invitations
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
 
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('trainee.invitations') }}"
+                            class="nav-link {{ request()->routeIs('exams.index') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Trainee Invitations</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endcan
+                {{-- Exam Invite Dropdown - Permission based --}}
+                @php
+                    // Check if user has any exam invite permission
+                    $hasExamInvitePermission =
+                        auth()->user()->can('view-pending-exams') ||
+                        auth()->user()->can('send-invites') ||
+                        auth()->user()->can('view-sent-invites');
+                @endphp
+
+                @if($hasExamInvitePermission)
+                <li class="nav-item {{ request()->routeIs('exams.pending', 'exams.send-invite', 'exams.sent-invites', 'exams.view-invited-students') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('exams.pending', 'exams.send-invite', 'exams.sent-invites', 'exams.view-invited-students') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-envelope"></i>
+                        <p>
+                            Exam Invite
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        {{-- Invite Trainee - Specific permission required --}}
+                        @can('view-pending-exams')
+                        <li class="nav-item">
+                            <a href="{{ route('exams.pending') }}"
+                            class="nav-link {{ request()->routeIs('exams.pending') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Invite Trainee</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        {{-- View Invite - Specific permission required --}}
+                        @can('view-sent-invites')
+                        <li class="nav-item">
+                            <a href="{{ route('exams.sent-invites') }}"
+                            class="nav-link {{ request()->routeIs('exams.sent-invites') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>View Invite</p>
+                            </a>
+                        </li>
+                        @endcan
+                    </ul>
+                </li>
+                @endif
+
+                {{-- Master Menu - Only for Admin Role --}}
                 @role('Admin')
                 <li class="nav-item {{ request()->routeIs(
                         'test-types.*',
@@ -158,6 +229,7 @@
                 </li>
                 @endrole
 
+                {{-- User Management - Permission based --}}
                 @php
                     $hasUserManagement =
                         auth()->user()->can('users.index') ||
@@ -211,6 +283,7 @@
                 </li>
                 @endif
 
+                {{-- Profile - Permission based --}}
                 @can('profile.view')
                 <li class="nav-item">
                     <a href="{{ route('profile.edit') }}"
@@ -221,6 +294,7 @@
                 </li>
                 @endcan
 
+                {{-- Logout - Always visible for logged in users --}}
                 <li class="nav-item mt-3">
                     <a href="#"
                        class="nav-link text-danger"

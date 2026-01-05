@@ -51,5 +51,34 @@
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
 @stack('scripts')
+<script>
+    $(function () {
+        $('#examTable').DataTable({
+            scrollX: true,
+            autoWidth: true,
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            lengthChange: true,
+
+            dom:
+                "<'row mb-2'<'col-md-6'l><'col-md-6 text-end'f>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row mt-2'<'col-md-5'i><'col-md-7 text-end'p>>",
+
+            columnDefs: [
+                { targets: -1, orderable: false }
+            ],
+
+            language: {
+                search: "",
+                searchPlaceholder: "Search exams..."
+            }
+        });
+
+            $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+</script>
 </body>
 </html>

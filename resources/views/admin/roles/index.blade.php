@@ -35,58 +35,58 @@
               </div>
               <!-- /.card-header -->
               <div class="card-header">
-              @can('role-create')
+              @can('roles.create')
                 <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a>
                 @endcan
                 <!-- <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a> -->
                 </div>
-              <div class="card-body">
-                <table id="example" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>S.No</th>
-                    <th>Roles</th>
-                    <th>Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  @if($roles)
-                  @php
-                  $id =1;
-                  @endphp
-                  @foreach($roles as $key =>  $role)
-                  <tr>
-                    <td>{{ $key+1 }}</td>
-                    <td>{{ $role->name }}</td>
-                    <td>
-                        <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu">
+               <div class="card-body table-responsive">
+                <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center align-middle w-100">
+                    <thead class="table-light text-nowrap">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Roles</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if($roles)
+                    @php
+                    $id =1;
+                    @endphp
+                    @foreach($roles as $key =>  $role)
+                        <tr>
+                            <td>{{ $key+1 }}</td>
+                            <td>{{ $role->name }}</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
 
-                                <a class="dropdown-item" href="{{ route('roles.edit',$role->id) }}"
-                                ><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                                <form action="{{ route('roles.destroy', $role->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="dropdown-item"><i class="bx bx-trash-alt me-1"></i> Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                    </td>
+                                        <a class="dropdown-item" href="{{ route('roles.edit',$role->id) }}"
+                                        ><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                        <form action="{{ route('roles.destroy', $role->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item"><i class="bx bx-trash-alt me-1"></i> Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
 
-			      </tr>
-                  @endforeach
-                  @endif
-                  </tbody>
-                  <tfoot>
-                  <tr>
-                    <th>S.No</th>
-                    <th>Roles</th>
-                    <th>Action</th>
-                  </tr>
-                  </tfoot>
+                        </tr>
+                    @endforeach
+                    @endif
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Roles</th>
+                            <th>Action</th>
+                        </tr>
+                    </tfoot>
                 </table>
               </div>
               <!-- /.card-body -->

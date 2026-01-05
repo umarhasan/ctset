@@ -36,24 +36,24 @@
               <div class="card">
                   <div class="card-header">
                   <form action="{{ route('users.store') }}" method="POST">
-@csrf
+                        @csrf
 
-<input class="form-control mb-2" name="name" placeholder="Name" required>
+                        <input class="form-control mb-2" name="name" placeholder="Name" required>
 
-<input class="form-control mb-2" type="email" name="email" placeholder="Email" required>
+                        <input class="form-control mb-2" type="email" name="email" placeholder="Email" required>
 
-<input class="form-control mb-2" type="password" name="password" placeholder="Password" required>
+                        <input class="form-control mb-2" type="password" name="password" placeholder="Password" required>
 
-<input class="form-control mb-2" type="password" name="password_confirmation" placeholder="Confirm Password" required>
+                        <input class="form-control mb-2" type="password" name="password_confirmation" placeholder="Confirm Password" required>
 
-<select name="roles[]" class="form-control mb-3" required>
-@foreach($roles as $role)
-<option value="{{ $role }}">{{ $role }}</option>
-@endforeach
-</select>
+                        <select name="roles[]" class="form-control mb-3" required>
+                        @foreach($roles as $role)
+                        <option value="{{ $role }}">{{ $role }}</option>
+                        @endforeach
+                        </select>
 
-<button class="btn btn-primary">Create User</button>
-</form>
+                        <button class="btn btn-primary">Create User</button>
+                    </form>
                   </div>
               </div>
           </div>

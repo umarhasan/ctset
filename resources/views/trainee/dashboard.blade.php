@@ -13,7 +13,7 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6">
-                <h3 class="mb-0">Dashboard</h3>
+                <h3 class="mb-0">Trainee Dashboard</h3>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
@@ -160,7 +160,7 @@
             </div>
             <!--end::Row-->
             <!--begin::Row-->
-            <div class="row">
+            {{-- <div class="row">
               <!-- Start col -->
               <div class="col-lg-7 connectedSortable">
                 <div class="card mb-4">
@@ -464,7 +464,7 @@
                 </div>
               </div>
               <!-- /.Start col -->
-            </div>
+            </div> --}}
             <!-- /.row (main row) -->
           </div>
           <!--end::Container-->
