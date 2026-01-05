@@ -29,6 +29,12 @@ use App\Http\Controllers\Admin\LongitudinalRequirementController;
 use App\Http\Controllers\Admin\DopController;
 use App\Http\Controllers\Admin\DopStepController;
 use App\Http\Controllers\Admin\ExamInvitationController;
+use App\Http\Controllers\Admin\ExamMatrixController;
+use App\Http\Controllers\Admin\WorkCloudController;
+use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\TopicController;
+use App\Http\Controllers\Admin\SemesterController;
+use App\Http\Controllers\Admin\HospitalController;
 // Exam
 use App\Http\Controllers\Admin\ExamController;
     Route::get('/', function () {
@@ -42,6 +48,12 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('permissions', PermissionController::class);
         Route::resource('users', UserController::class);
         Route::resource('exams', ExamController::class);
+        Route::resource('exam_matrices', ExamMatrixController::class);
+        Route::resource('work_clouds', WorkCloudController::class);
+        Route::resource('subjects', SubjectController::class);
+        Route::resource('topics', TopicController::class);
+        Route::resource('semesters', SemesterController::class);
+        Route::resource('hospitals', HospitalController::class);
 
         Route::get('/pending', [ExamInvitationController::class, 'pendingExams'])->name('exams.pending');
         Route::get('/{examId}/send-invite', [ExamInvitationController::class, 'sendInvite'])->name('exams.send-invite');

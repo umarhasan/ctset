@@ -65,6 +65,45 @@ class RolePermissionSeeder extends Seeder
             'view-sent-invites',
             'view-invited-students',
             'update-invitation-status',
+            'trainee.invitations',
+
+            'exam_matrices.index',
+            'exam_matrices.create',
+            'exam_matrices.edit',
+            'exam_matrices.delete',
+            'exam_matrices.view',
+
+            'work_clouds.index',
+            'work_clouds.create',
+            'work_clouds.edit',
+            'work_clouds.delete',
+            'work_clouds.view',
+
+            'hospitals.index',
+            'hospitals.create',
+            'hospitals.edit',
+            'hospitals.delete',
+            'hospitals.view',
+
+            'semesters.index',
+            'semesters.create',
+            'semesters.edit',
+            'semesters.delete',
+            'semesters.view',
+
+            'subjects.index',
+            'subjects.create',
+            'subjects.edit',
+            'subjects.delete',
+            'subjects.view',
+
+            'topics.index',
+            'topics.create',
+            'topics.edit',
+            'topics.delete',
+            'topics.view',
+
+
         ];
 
         foreach ($permissions as $permission) {
