@@ -44,7 +44,7 @@
                             <a href="{{ route('exams.index') }}"
                             class="nav-link {{ request()->routeIs('exams.index') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Exam view</p>
+                                <p>View Exam</p>
                             </a>
                         </li>
                     </ul>
