@@ -14,20 +14,29 @@ class ExamController extends Controller
 {
     public function index()
     {
-        $records = Exam::with(['testType', 'questionType', 'marketingType', 'examDuration'])
-                        ->latest()->get();
+        $records = Exam::with([
+            'testType',
+            'questionTypes',
+            'marketingType',
+            'examDuration'
+        ])->latest()->get();
 
         $testTypes = TestType::all();
         $questionTypes = QuestionType::all();
         $marketingTypes = MarketingType::all();
         $examDurations = ExamDurationType::all();
 
-        return view('admin.exams.index', compact('records', 'testTypes', 'questionTypes', 'marketingTypes', 'examDurations'));
+        return view(
+            'admin.exams.index',
+            compact('records', 'testTypes', 'questionTypes', 'marketingTypes', 'examDurations')
+        );
     }
 
     public function edit(Exam $exam)
     {
-        return response()->json($exam);
+        return response()->json(
+            $exam->load('questionTypes')
+        );
     }
 
     public function store(Request $request)
@@ -35,7 +44,11 @@ class ExamController extends Controller
         $data = $request->validate([
             'exam_name' => 'required|string|max:255',
             'test_type' => 'required|exists:test_types,id',
-            'question_type' => 'required|exists:question_types,id',
+
+            // ✅ MIX TYPE SUPPORT
+            'question_types' => 'required|array|min:1',
+            'question_types.*' => 'exists:question_types,id',
+
             'marketing' => 'nullable|exists:marketing_types,id',
             'exam_duration_type' => 'required|exists:exam_duration_types,id',
             'exam_date' => 'required|date',
@@ -49,7 +62,12 @@ class ExamController extends Controller
             'previous_button' => 'nullable|in:0,1',
         ]);
 
-        Exam::create($data);
+        $exam = Exam::create(
+            collect($data)->except('question_types')->toArray()
+        );
+
+        // ✅ SAVE MULTIPLE QUESTION TYPES
+        $exam->questionTypes()->sync($data['question_types']);
 
         return response()->json(['message' => 'Exam created successfully']);
     }
@@ -59,7 +77,11 @@ class ExamController extends Controller
         $data = $request->validate([
             'exam_name' => 'required|string|max:255',
             'test_type' => 'required|exists:test_types,id',
-            'question_type' => 'required|exists:question_types,id',
+
+            // ✅ MIX TYPE SUPPORT
+            'question_types' => 'required|array|min:1',
+            'question_types.*' => 'exists:question_types,id',
+
             'marketing' => 'nullable|exists:marketing_types,id',
             'exam_duration_type' => 'required|exists:exam_duration_types,id',
             'exam_date' => 'required|date',
@@ -73,7 +95,11 @@ class ExamController extends Controller
             'previous_button' => 'nullable|in:0,1',
         ]);
 
-        $exam->update($data);
+        $exam->update(
+            collect($data)->except('question_types')->toArray()
+        );
+
+        $exam->questionTypes()->sync($data['question_types']);
 
         return response()->json(['message' => 'Exam updated successfully']);
     }

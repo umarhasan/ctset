@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>AdminLTE v4</title>
+    <title>Faculty of Medicine</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- AdminLTE CSS -->

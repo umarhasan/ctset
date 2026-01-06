@@ -5,6 +5,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Assessor\AssessorDashboardController;
 use App\Http\Controllers\Trainee\TraineeDashboardController;
+use App\Http\Controllers\Trainee\TraineeExamController;
+use App\Http\Controllers\Trainee\TraineeResultController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -35,6 +37,8 @@ use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\HospitalController;
+use App\Http\Controllers\Admin\ResultController;
+
 // Exam
 use App\Http\Controllers\Admin\ExamController;
     Route::get('/', function () {
@@ -56,12 +60,16 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('hospitals', HospitalController::class);
 
         Route::get('/pending', [ExamInvitationController::class, 'pendingExams'])->name('exams.pending');
-        Route::get('/{examId}/send-invite', [ExamInvitationController::class, 'sendInvite'])->name('exams.send-invite');
-        Route::post('/{examId}/send-invite', [ExamInvitationController::class, 'sendInviteAction'])->name('exams.send-invite.action');
-        Route::get('/sent-invites', [ExamInvitationController::class, 'sentInvites'])->name('exams.sent-invites');
+        Route::get('/{exam}/send-invite', [ExamInvitationController::class, 'sendInvite'])->name('exams.send-invite');
+        Route::post('/{exam}/send-invite', [ExamInvitationController::class, 'sendInviteAction'])->name('exams.send-invite.action');
+        Route::get('/sent-invites', [ExamInvitationController::class, 'sentInvites']) ->name('exams.sent-invites');
         Route::get('/{examId}/invited-students', [ExamInvitationController::class, 'viewInvitedStudents'])->name('exams.view-invited-students');
         Route::post('/invitations/{invitation}/update-status', [ExamInvitationController::class, 'updateStatus'])->name('exams.update-status');
 
+        Route::get('results/pending',[ResultController::class,'pending'])->name('results.pending');
+        Route::post('results/calculate/{exam}',[ResultController::class,'calculate'])->name('results.calculate');
+        Route::get('results/view/{exam}',[ResultController::class,'view'])->name('results.view');
+        Route::post('results/announce/{exam}',[ResultController::class,'announce'])->name('results.announce');
         // Master
         Route::resource('test-types', TestTypeController::class);
         Route::resource('marketing-types', MarketingTypeController::class);
@@ -102,6 +110,11 @@ use App\Http\Controllers\Admin\ExamController;
             Route::get('/dashboard', [TraineeDashboardController::class, 'index'])->name('dashboard');
             Route::get('/invitations', [ExamInvitationController::class, 'myInvitations'])->name('invitations');
 
+            Route::get('exams',[TraineeExamController::class,'index'])->name('exams');
+            Route::post('exam/start/{exam}',[TraineeExamController::class,'start'])->name('exam.start');
+            Route::post('exam/submit/{exam}',[TraineeExamController::class,'submit'])->name('exam.submit');
+            Route::get('results',[TraineeResultController::class,'index'])->name('results.index');
+            Route::get('results/{exam}',[TraineeResultController::class,'view'])->name('results.view');
         });
     });
 

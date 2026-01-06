@@ -16,7 +16,6 @@ return new class extends Migration
             $table->bigInteger('exam_id')->unique();
             $table->string('exam_name');
             $table->foreignId('test_type')->constrained('test_types')->cascadeOnDelete();
-            $table->foreignId('question_type')->constrained('question_types')->cascadeOnDelete();
             $table->foreignId('marketing')->nullable()->constrained('marketing_types')->nullOnDelete();
             $table->foreignId('exam_duration_type')->constrained('exam_duration_types')->cascadeOnDelete();
             $table->date('exam_date');

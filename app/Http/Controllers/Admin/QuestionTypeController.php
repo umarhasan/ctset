@@ -16,9 +16,9 @@ class QuestionTypeController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['title'=>'required']);
+        $request->validate(['title' => 'required']);
         QuestionType::create($request->only('title'));
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     public function edit($id)
@@ -28,14 +28,14 @@ class QuestionTypeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate(['title'=>'required']);
+        $request->validate(['title' => 'required']);
         QuestionType::findOrFail($id)->update($request->only('title'));
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     public function destroy($id)
     {
         QuestionType::findOrFail($id)->delete();
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 }

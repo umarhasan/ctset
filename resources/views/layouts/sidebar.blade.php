@@ -156,7 +156,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('test-types.index') }}"
-                               class="nav-link {{ request()->routeIs('test-types.*') ? 'active' : '' }}">
+                            class="nav-link {{ request()->routeIs('test-types.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Test Types</p>
                             </a>
@@ -164,7 +164,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('marketing-types.index') }}"
-                               class="nav-link {{ request()->routeIs('marketing-types.*') ? 'active' : '' }}">
+                            class="nav-link {{ request()->routeIs('marketing-types.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Marketing Types</p>
                             </a>
@@ -172,7 +172,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('question-types.index') }}"
-                               class="nav-link {{ request()->routeIs('question-types.*') ? 'active' : '' }}">
+                            class="nav-link {{ request()->routeIs('question-types.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Question Types</p>
                             </a>
@@ -227,143 +227,168 @@
                         </li>
                     </ul>
                 </li>
+
+                {{-- Results Menu --}}
+                @php
+                    $hasResultPermission =
+                        auth()->user()->can('results.pending') ||
+                        auth()->user()->can('results.view');
+                @endphp
+
+                @if($hasResultPermission)
+                <li class="nav-item {{ request()->routeIs('results.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('results.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-bar-chart-fill"></i>
+                        <p>
+                            Results
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        {{-- Pending Results --}}
+                        @can('results.pending')
+                        <li class="nav-item">
+                            <a href="{{ route('results.pending') }}"
+                            class="nav-link {{ request()->routeIs('results.pending') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Pending Results</p>
+                            </a>
+                        </li>
+                        @endcan
+
+
+                    </ul>
+                </li>
+                @endif
                 @endrole
-                    @can('exam_matrices.index')
-                        <li class="nav-item {{ request()->routeIs('exam_matrices.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ request()->routeIs('exam_matrices.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-grid-fill"></i>
-                                <p>
-                                     Matrix
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('exam_matrices.index') }}" class="nav-link {{ request()->routeIs('exam_matrices.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>All Matrix</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    @endcan
+                @can('exam_matrices.index')
+                    <li class="nav-item {{ request()->routeIs('exam_matrices.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('exam_matrices.*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-grid-fill"></i>
+                            <p>
+                                    Matrix
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('exam_matrices.index') }}" class="nav-link {{ request()->routeIs('exam_matrices.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>All Matrix</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
 
-                    {{-- Work Cloud --}}
-                    @can('work_clouds.index')
-                        <li class="nav-item {{ request()->routeIs('work_clouds.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ request()->routeIs('work_clouds.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-cloud-fill"></i>
-                                <p>
-                                    Work Cloud
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('work_clouds.index') }}" class="nav-link {{ request()->routeIs('work_clouds.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Manage Work Cloud</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    @endcan
+                {{-- Work Cloud --}}
+                @can('work_clouds.index')
+                    <li class="nav-item {{ request()->routeIs('work_clouds.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('work_clouds.*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-cloud-fill"></i>
+                            <p>
+                                Work Cloud
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('work_clouds.index') }}" class="nav-link {{ request()->routeIs('work_clouds.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Work Cloud</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
 
-                    {{-- Hospital --}}
-                    @can('hospitals.index')
-                        <li class="nav-item {{ request()->routeIs('hospitals.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ request()->routeIs('hospitals.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-hospital-fill"></i>
-                                <p>
-                                    Hospital
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('hospitals.index') }}" class="nav-link {{ request()->routeIs('hospitals.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Manage Hospitals</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    @endcan
+                {{-- Hospital --}}
+                @can('hospitals.index')
+                    <li class="nav-item {{ request()->routeIs('hospitals.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('hospitals.*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-hospital-fill"></i>
+                            <p>
+                                Hospital
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('hospitals.index') }}" class="nav-link {{ request()->routeIs('hospitals.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Manage Hospitals</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
 
-                    {{-- Semester --}}
-                    @can('semesters.index')
-                        <li class="nav-item {{ request()->routeIs('semesters.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ request()->routeIs('semesters.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-calendar-event-fill"></i>
-                                <p>
-                                    Semester
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('semesters.index') }}" class="nav-link {{ request()->routeIs('semesters.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Manage Semesters</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    @endcan
+                @role('Trainee')
+                <li class="nav-item">
+                    <a href="{{ route('trainee.exams') }}"
+                    class="nav-link {{ request()->routeIs('trainee.results.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-clipboard-check"></i>
+                        <p>Exams</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('trainee.results.index') }}"
+                    class="nav-link {{ request()->routeIs('trainee.results.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-clipboard-check"></i>
+                        <p>My Results</p>
+                    </a>
+                </li>
+                @endrole
 
-                    {{-- Subject --}}
-                    @can('subjects.index')
-                        <li class="nav-item {{ request()->routeIs('subjects.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ request()->routeIs('subjects.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-book-fill"></i>
-                                <p>
-                                    Subject
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
+                {{-- Book And Assignments --}}
+                @canany(['subjects.index', 'topics.index']) {{-- Check if user has at least one permission --}}
+                    <li class="nav-item {{ request()->routeIs('subjects.*', 'topics.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('subjects.*', 'topics.*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-book-fill"></i>
+                            <p>
+                                Book & Assignments
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            @can('subjects.index') {{-- Permission for Subjects --}}
                                 <li class="nav-item">
                                     <a href="{{ route('subjects.index') }}" class="nav-link {{ request()->routeIs('subjects.*') ? 'active' : '' }}">
                                         <i class="nav-icon bi bi-circle"></i>
-                                        <p>Manage Subjects</p>
+                                        <p>View Subjects</p>
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
-                    @endcan
+                            @endcan
 
-                    {{-- Topic --}}
-                    @can('topics.index')
-                        <li class="nav-item {{ request()->routeIs('topics.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ request()->routeIs('topics.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-journal-text"></i>
-                                <p>
-                                    Topic
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
+                            @can('topics.index') {{-- Permission for Topics --}}
                                 <li class="nav-item">
                                     <a href="{{ route('topics.index') }}" class="nav-link {{ request()->routeIs('topics.*') ? 'active' : '' }}">
                                         <i class="nav-icon bi bi-circle"></i>
-                                        <p>Manage Topics</p>
+                                        <p>View Topics</p>
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
-                    @endcan
+                            @endcan
+                        </ul>
+                    </li>
+                @endcanany
+
+
 
                 {{-- User Management - Permission based --}}
                 @php
                     $hasUserManagement =
                         auth()->user()->can('users.index') ||
                         auth()->user()->can('roles.index') ||
-                        auth()->user()->can('permissions.index');
+                        auth()->user()->can('permissions.index')||
+                        auth()->user()->can('semesters.index');
                 @endphp
 
                 @if($hasUserManagement)
-                    <li class="nav-item {{ request()->routeIs('users.*','roles.*','permissions.*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs('users.*','roles.*','permissions.*') ? 'active' : '' }}">
+                    <li class="nav-item {{ request()->routeIs('users.*','roles.*','permissions.*','semesters.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('users.*','roles.*','permissions.*','semesters.*') ? 'active' : '' }}">
                             <i class="nav-icon bi bi-people-fill"></i>
                             <p>
                                 User Management
@@ -403,6 +428,14 @@
                             </li>
                             @endcan
 
+                            @can('semesters.index')
+                            <li class="nav-item">
+                                    <a href="{{ route('semesters.index') }}" class="nav-link {{ request()->routeIs('semesters.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Semesters Setup</p>
+                                    </a>
+                            </li>
+                            @endcan
                         </ul>
                     </li>
                 @endif

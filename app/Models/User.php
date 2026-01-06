@@ -47,4 +47,8 @@ class User extends Authenticatable
             $q->where('name', 'admin');
         });
     }
+
+    public function examAttempts(){
+        return $this->hasMany(ExamAttempt::class);
+    }
 }

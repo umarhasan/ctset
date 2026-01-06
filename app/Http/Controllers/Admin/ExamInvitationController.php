@@ -8,88 +8,75 @@ use App\Models\User;
 use App\Models\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class ExamInvitationController extends Controller
 {
-    // Pending Exams for Invitation (exams without any invites or with only unregistered invites)
     public function pendingExams()
     {
-        // Get exams that have no invitations or only unregistered invitations
-        $exams = Exam::whereDoesntHave('invitations')
-                     ->orWhereHas('invitations', function($query) {
-                         $query->where('status', 'Unregistered');
-                     })
-                     ->withCount(['invitations as unregistered_count' => function($query) {
-                         $query->where('status', 'Unregistered');
-                     }])
-                     ->orderBy('created_at', 'desc')
-                     ->paginate(10);
+        $exams = Exam::with([
+                'testType','questionTypes','examDuration'
+            ])
+            ->withCount([
+                'invitations as unregistered_count' => fn ($q) =>
+                    $q->where('status', 'Unregistered')
+            ])
+            ->whereDoesntHave('invitations')
+            ->orWhereHas('invitations', fn ($q) =>
+                $q->where('status', 'Unregistered')
+            )
+            ->paginate(10);
 
         return view('admin.exams.pending', compact('exams'));
     }
 
-    // Send Invite Page - Show trainees not yet invited for this exam
-    public function sendInvite($examId)
+    public function sendInvite(Exam $exam)
     {
+        $invitedIds = $exam->invitations()->pluck('user_id');
 
-        $exam = Exam::where('exam_id', $examId)->firstOrFail();
-
-        // Get trainee users not yet invited for this exam
-        $invitedUserIds = $exam->invitations->pluck('user_id')->toArray();
         $trainees = User::role('Trainee')
-                       ->whereNotIn('id', $invitedUserIds)
-                       ->orderBy('name')
-                       ->paginate(10);
+            ->whereNotIn('id', $invitedIds)
+            ->paginate(10);
 
-        return view('admin.exams.sent-invites', compact('exam', 'trainees'));
+        return view('admin.exams.send-invite', compact('exam', 'trainees'));
     }
 
-    // Send Invite Action
-    public function sendInviteAction(Request $request, $examId)
+    public function sendInviteAction(Request $request, Exam $exam)
     {
-
         $request->validate([
-            'user_ids' => 'required|array',
-            'user_ids.*' => 'exists:users,id'
+            'user_ids' => 'required|array'
         ]);
 
-        $exam = Exam::where('exam_id', $examId)->firstOrFail();
-
-        DB::transaction(function () use ($exam, $request) {
-            foreach ($request->user_ids as $userId) {
-                Invitation::create([
+        foreach ($request->user_ids as $userId) {
+            Invitation::firstOrCreate(
+                [
                     'exam_id' => $exam->id,
                     'user_id' => $userId,
+                ],
+                [
                     'status' => 'Unregistered',
-                    'sent_at' => now()
-                ]);
-            }
-        });
+                    'sent_at' => now(),
+                ]
+            );
+        }
 
-        return redirect()->route('exams.sent-invites')
-                         ->with('success', 'Invites sent successfully!');
+        return back()->with('success', 'Invitations sent successfully');
     }
 
-    // Exams with Sent Invites
     public function sentInvites()
     {
-        $exams = Exam::has('invitations')
-             ->withCount(['invitations as total_invites'])
-             ->with(['invitations' => function($query) {
-                 $query->select('exam_id', DB::raw('count(*) as status_count'), 'status')
-                       ->groupBy('exam_id', 'status');
-             }])
-             ->orderBy('created_at', 'desc')
-             ->paginate(10);
+        $exams = Exam::with('testType')
+            ->has('invitations')
+            ->withCount('invitations')
+            ->paginate(10);
 
         return view('admin.exams.sent-invites', compact('exams'));
     }
 
-    // View Invited Students for Specific Exam
-    public function viewInvitedStudents($examId)
+    public function viewInvitedStudents($examId,)
     {
-        $exam = Exam::where('exam_id', $examId)->firstOrFail();
+
+        $exam = Exam::findOrFail($examId);
 
         $status = request('status', 'All');
 
@@ -101,26 +88,28 @@ class ExamInvitationController extends Controller
 
         $invitations = $query->paginate(10);
 
-        // Get status counts
-        $statusCounts = $exam->status_counts;
+        $statusCounts = [
+            'All' => $exam->invitations()->count(),
+            'Unregistered' => $exam->invitations()->where('status','Unregistered')->count(),
+            'Incompleted' => $exam->invitations()->where('status','Incompleted')->count(),
+            'Completed' => $exam->invitations()->where('status','Completed')->count(),
+            'Absent' => $exam->invitations()->where('status','Absent')->count(),
+        ];
 
-        return view('admin.exams.view-invited-students', compact('exam', 'invitations', 'statusCounts', 'status'));
+        return view(
+            'admin.exams.view-invited-students',
+            compact('exam','invitations','status','statusCounts')
+        );
     }
 
-    // Update Invitation Status (if needed for admin to manually update)
-    public function updateStatus(Request $request, $invitationId)
+    public function updateStatus(Request $request, Invitation $invitation)
     {
-        $request->validate([
-            'status' => 'required|in:Unregistered,Incompleted,Completed,Absent'
-        ]);
-
-        $invitation = Invitation::findOrFail($invitationId);
         $invitation->update([
             'status' => $request->status,
             'completed_at' => $request->status === 'Completed' ? now() : null
         ]);
 
-        return back()->with('success', 'Status updated successfully!');
+        return back()->with('success','Status updated');
     }
 
      public function myInvitations()

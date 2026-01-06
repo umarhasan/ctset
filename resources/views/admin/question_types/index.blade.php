@@ -2,25 +2,23 @@
 
 @section('content')
 <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Question Types</h3>
-        <div class="ms-auto">
-            <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
-                <i class="fa fa-plus"></i> Add Question Type
-            </button>
-        </div>    
+        <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
+            <i class="fa fa-plus"></i> Add
+        </button>
     </div>
 
     <div class="card-body">
-        <table class="table table-bordered table-hover" id="masterTable">
+        <table class="table table-bordered" id="masterTable">
             <thead>
-                <tr>
-                    <th>Title</th>
-                    <th width="120">Action</th>
-                </tr>
+            <tr>
+                <th>Title</th>
+                <th width="120">Action</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach($records as $row)
+            @foreach($records as $row)
                 <tr>
                     <td>{{ $row->title }}</td>
                     <td>
@@ -32,13 +30,12 @@
                         </button>
                     </td>
                 </tr>
-                @endforeach
+            @endforeach
             </tbody>
         </table>
     </div>
 </div>
 
-<!-- Modal -->
 <div class="modal fade" id="masterModal">
     <div class="modal-dialog">
         <form id="masterForm">
@@ -46,22 +43,14 @@
             <input type="hidden" id="record_id">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalTitle"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 id="modalTitle"></h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
                 <div class="modal-body">
-                    <label>Title</label>
                     <input type="text" name="title" id="title" class="form-control" required>
                 </div>
-
                 <div class="modal-footer">
-                    <button class="btn btn-success">
-                        <i class="fa fa-save"></i> Save
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
+                    <button class="btn btn-success">Save</button>
                 </div>
             </div>
         </form>
@@ -97,33 +86,16 @@ $(function () {
         let url = id ? `{{ route('question-types.index') }}/${id}` : `{{ route('question-types.store') }}`;
         let method = id ? 'PUT' : 'POST';
 
-        $.ajax({
-            url: url,
-            method: method,
-            data: $(this).serialize(),
-            success: function () {
-                $('#masterModal').modal('hide');
-                location.reload();
-            },
-            error: function(xhr){
-                alert(xhr.responseJSON.message || 'Something went wrong!');
-            }
-        });
+        $.ajax({url, method, data: $(this).serialize(), success: () => location.reload()});
     });
 
     window.deleteRecord = function (id) {
         if (!confirm('Delete record?')) return;
-
         $.ajax({
             url: `{{ route('question-types.index') }}/${id}`,
             method: 'DELETE',
-            data: {_token: '{{ csrf_token() }}'},
-            success: function () {
-                location.reload();
-            },
-            error: function(xhr){
-                alert(xhr.responseJSON.message || 'Could not delete!');
-            }
+            data: {_token:'{{ csrf_token() }}'},
+            success: () => location.reload()
         });
     }
 });

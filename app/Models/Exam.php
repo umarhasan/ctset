@@ -28,9 +28,14 @@ class Exam extends Model
         return $this->belongsTo(TestType::class, 'test_type', 'id');
     }
 
-    public function questionType()
+    public function questionTypes()
     {
-        return $this->belongsTo(QuestionType::class, 'question_type', 'id');
+        return $this->belongsToMany(
+            QuestionType::class,
+            'exam_question_type',
+            'exam_id',
+            'question_type_id'
+        );
     }
 
     public function marketingType()
@@ -38,12 +43,13 @@ class Exam extends Model
         return $this->belongsTo(MarketingType::class, 'marketing', 'id');
     }
 
+
     public function examDuration()
     {
         return $this->belongsTo(ExamDurationType::class, 'exam_duration_type', 'id');
     }
 
-    public function invitations(): HasMany
+    public function invitations()
     {
         return $this->hasMany(Invitation::class);
     }
@@ -81,5 +87,13 @@ class Exam extends Model
             'Absent' => $this->invitations()->where('status', 'Absent')->count(),
             'All' => $this->invitations()->count()
         ];
+    }
+
+   public function attempts(){
+        return $this->hasMany(ExamAttempt::class);
+    }
+
+    public function result(){
+        return $this->hasOne(ExamResult::class);
     }
 }

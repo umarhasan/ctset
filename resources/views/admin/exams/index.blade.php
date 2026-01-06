@@ -1,34 +1,22 @@
 @extends('layouts.app')
-<style>
-/* No jumping */
-table.dataTable {
-    table-layout: fixed;
-}
 
-/* Equal height */
+<style>
+table.dataTable { table-layout: fixed; }
 .table th, .table td {
     vertical-align: middle !important;
     white-space: nowrap;
 }
-
-/* Header strong */
 .table thead th {
     font-weight: 600;
     text-transform: capitalize;
 }
-
-/* Search input */
 .dataTables_filter input {
     border-radius: 20px;
     padding: 4px 12px;
 }
-
-/* Length dropdown */
 .dataTables_length select {
     border-radius: 20px;
 }
-
-/* Small buttons */
 .btn-xs {
     padding: 3px 6px;
     font-size: 12px;
@@ -47,59 +35,59 @@ table.dataTable {
     </div>
 
     <div class="card-body table-responsive">
-            <table id="examTable"
-                   class="table table-bordered table-hover table-striped mb-0 text-center align-middle w-100">
-                <thead class="table-light text-nowrap">
+        <table id="examTable1" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
+            <thead class="table-light">
+            <tr>
+                <th>Exam ID</th>
+                <th>Test Type</th>
+                <th>Exam Name</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>Day Type</th>
+                <th>Start / Days</th>
+                <th>Login / End</th>
+                <th>Created</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach($records as $row)
                 <tr>
-                    <th width="80">ID</th>
-                    <th width="120">Test Type</th>
-                    <th width="180">Exam Name</th>
-                    <th width="120">Category</th>
-                    <th width="110">Date</th>
-                    <th width="130">Duration</th>
-                    <th width="160">Day Type</th>
-                    <th width="180">Start / Days</th>
-                    <th width="200">Login / End</th>
-                    <th width="130">Created</th>
-                    <th width="90">Action</th>
+                    <td>{{ $row->exam_id }}</td>
+                    <td>{{ $row->testType->title ?? '-' }}</td>
+                    <td class="text-start">{{ $row->exam_name }}</td>
+                    <td class="text-center">
+                        @foreach($row->questionTypes as $qt)
+                            <div>{{ $qt->title }}</div>
+
+                            @if(!$loop->last && $row->questionTypes->count() > 1)
+                                <hr class="my-1 mx-auto" style="width:60%">
+                            @endif
+                        @endforeach
+                    </td>
+
+                    <td>{{ \Carbon\Carbon::parse($row->exam_date)->format('d-m-Y') }}</td>
+                    <td>{{ ($row->hours ?? 0).'H '.($row->minutes ?? 0).'M' }}</td>
+                    <td>{{ $row->examDuration->title ?? '-' }}</td>
+                    <td>{{ $row->exam_time ?? '-' }}</td>
+                    <td>{{ $row->long_before ?? '-' }}</td>
+                    <td>{{ $row->created_at->format('d-m-Y') }}</td>
+                    <td>
+                        <button class="btn btn-warning btn-xs"
+                                onclick="openEditModal({{ $row->id }})">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                    </td>
                 </tr>
-                </thead>
-
-                <tbody>
-                @foreach($records as $row)
-                    <tr>
-                        <td>{{ $row->exam_id ?? '-' }}</td>
-                        <td>{{ $row->testType->title ?? '-' }}</td>
-                        <td class="text-start">{{ $row->exam_name }}</td>
-                        <td>{{ $row->questionType->title ?? '-' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($row->exam_date)->format('d-m-Y') }}</td>
-                        <td>{{ ($row->hours ?? 0).'h '.($row->minutes ?? 0).'m' }}</td>
-                        <td>{{ $row->examDuration->title ?? '-' }}</td>
-                        <td>{{ $row->exam_time ?? '-' }}</td>
-                        <td>{{ $row->long_before ?? '-' }}</td>
-                        <td>{{ $row->created_at->format('d-m-Y') }}</td>
-                        <td class="text-nowrap">
-                            <button class="btn btn-warning btn-xs me-1"
-                                    data-bs-toggle="tooltip" title="Edit"
-                                    onclick="openEditModal({{ $row->id }})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-
-                            <!-- <button class="btn btn-danger btn-xs"
-                                    data-bs-toggle="tooltip" title="Delete"
-                                    onclick="deleteRecord({{ $row->id }})">
-                                <i class="fas fa-trash"></i>
-                            </button> -->
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
+            @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
 
-<!-- Modal -->
+<!-- MODAL -->
 <div class="modal fade" id="examModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <form id="examForm">
@@ -118,9 +106,9 @@ table.dataTable {
                         <div class="col-md-6">
                             <label>Test Type</label>
                             <select name="test_type" id="test_type" class="form-control" required>
-                                <option value="">Select Test Type</option>
+                                <option value="">Select</option>
                                 @foreach($testTypes as $type)
-                                <option value="{{ $type->id }}">{{ $type->title }}</option>
+                                    <option value="{{ $type->id }}">{{ $type->title }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -134,52 +122,56 @@ table.dataTable {
                             <label>Exam Date</label>
                             <input type="date" name="exam_date" id="exam_date" class="form-control" required>
                         </div>
-                        <div class="col-md-6">
-                            <label>Long Before</label>
-                            <textarea name="long_before" id="long_before" class="form-control"></textarea>
-                        </div>
+
                         <div class="col-md-6">
                             <label>Exam Time</label>
                             <input type="time" name="exam_time" id="exam_time" class="form-control">
                         </div>
+
                         <div class="col-md-3">
                             <label>Hours</label>
-                            <input type="number" name="hours" id="hours" class="form-control" min="0">
+                            <input type="number" name="hours" id="hours" class="form-control">
                         </div>
 
                         <div class="col-md-3">
                             <label>Minutes</label>
-                            <input type="number" name="minutes" id="minutes" class="form-control" min="0">
+                            <input type="number" name="minutes" id="minutes" class="form-control">
                         </div>
+
                         <div class="col-md-6">
-                            <label>Exam Duration Type</label>
-                            <select name="exam_duration_type" id="exam_duration_type" class="form-control" required>
-                                <option value="">Select Duration Type</option>
-                                @foreach($examDurations as $duration)
-                                <option value="{{ $duration->id }}">{{ $duration->title }}</option>
+                            <label>Exam Duration</label>
+                            <select name="exam_duration_type" id="exam_duration_type" class="form-control">
+                                @foreach($examDurations as $d)
+                                    <option value="{{ $d->id }}">{{ $d->title }}</option>
                                 @endforeach
                             </select>
                         </div>
 
-
-                        <div class="col-md-3">
-                            <label>Question Type</label>
-                            <select name="question_type" id="question_type" class="form-control" required>
-                                <option value="">Select Question Type</option>
-                                @foreach($questionTypes as $qtype)
-                                <option value="{{ $qtype->id }}">{{ $qtype->title }}</option>
-                                @endforeach
-                            </select>
+                        <div class="col-md-6">
+                            <label>Question Types</label><br>
+                            @foreach($questionTypes as $q)
+                                <label class="me-3">
+                                    <input type="checkbox"
+                                           class="question-type-checkbox"
+                                           name="question_types[]"
+                                           value="{{ $q->id }}">
+                                    {{ $q->title }}
+                                </label>
+                            @endforeach
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label>Marketing</label>
                             <select name="marketing" id="marketing" class="form-control">
-                                <option value="">Select Marketing</option>
                                 @foreach($marketingTypes as $m)
-                                <option value="{{ $m->id }}">{{ $m->title }}</option>
+                                    <option value="{{ $m->id }}">{{ $m->title }}</option>
                                 @endforeach
                             </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label>Long Before</label>
+                            <textarea name="long_before" id="long_before" class="form-control"></textarea>
                         </div>
 
                         <div class="col-md-12">
@@ -192,34 +184,28 @@ table.dataTable {
                             <textarea name="exam_equipment" id="exam_equipment" class="form-control"></textarea>
                         </div>
 
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label>Question Shuffling</label>
-                                <select name="question_shuffling" id="question_shuffling" class="form-control">
-                                    <option value="1">Shuffle Questions</option>
-                                    <option value="0">Don't Shuffle Questions</option>
-                                </select>
-                            </div>
+                        <div class="col-md-6">
+                            <label>Question Shuffling</label>
+                            <select name="question_shuffling" id="question_shuffling" class="form-control">
+                                <option value="1">Enable</option>
+                                <option value="0">Disable</option>
+                            </select>
+                        </div>
 
-                            <div class="col-md-6">
-                                <label>Previous Button</label>
-                                <select name="previous_button" id="previous_button" class="form-control">
-                                    <option value="1">Enable Previous Button</option>
-                                    <option value="0">Disable Previous Button</option>
-                                </select>
-                            </div>
+                        <div class="col-md-6">
+                            <label>Previous Button</label>
+                            <select name="previous_button" id="previous_button" class="form-control">
+                                <option value="1">Enable</option>
+                                <option value="0">Disable</option>
+                            </select>
                         </div>
 
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fa fa-save"></i> Save
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
+                    <button class="btn btn-success">Save</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </form>
@@ -229,90 +215,58 @@ table.dataTable {
 
 @push('scripts')
 <script>
-    $(function () {
-        $('#examTable').DataTable({
-            scrollX: true,
-            autoWidth: true,
-            paging: true,
-            searching: true,
-            ordering: true,
-            info: true,
-            lengthChange: true,
+$(function () {
 
-            dom:
-                "<'row mb-2'<'col-md-6'l><'col-md-6 text-end'f>>" +
-                "<'row'<'col-md-12'tr>>" +
-                "<'row mt-2'<'col-md-5'i><'col-md-7 text-end'p>>",
+    $('#examTable1').DataTable({scrollX:true});
 
-            columnDefs: [
-                { targets: -1, orderable: false }
-            ],
+    let modal = new bootstrap.Modal(document.getElementById('examModal'));
 
-            language: {
-                search: "",
-                searchPlaceholder: "Search exams..."
-            }
-        });
+    window.openCreateModal = function () {
+        $('#examForm')[0].reset();
+        $('#record_id').val('');
+        $('.question-type-checkbox').prop('checked', false);
+        $('#modalTitle').text('Add Exam');
+        modal.show();
+    }
 
-        $('[data-bs-toggle="tooltip"]').tooltip();
+    window.openEditModal = function (id) {
+        $.get(`{{ url('exams') }}/${id}/edit`, function (res) {
 
-        let modalEl = document.getElementById('examModal');
-        let modal = new bootstrap.Modal(modalEl);
+            $('#record_id').val(res.id);
+            $('#test_type').val(res.test_type);
+            $('#exam_name').val(res.exam_name);
+            $('#exam_date').val(res.exam_date);
+            $('#exam_time').val(res.exam_time);
+            $('#hours').val(res.hours);
+            $('#minutes').val(res.minutes);
+            $('#exam_duration_type').val(res.exam_duration_type);
+            $('#marketing').val(res.marketing);
+            $('#long_before').val(res.long_before);
+            $('#exam_requirement').val(res.exam_requirement);
+            $('#exam_equipment').val(res.exam_equipment);
+            $('#question_shuffling').val(res.question_shuffling ? 1 : 0);
+            $('#previous_button').val(res.previous_button ? 1 : 0);
 
-        window.openCreateModal = function () {
-            $('#record_id').val('');
-            $('#examForm')[0].reset();
-            $('#modalTitle').text('Add Exam');
+            $('.question-type-checkbox').prop('checked', false);
+            res.question_types.forEach(q =>
+                $('.question-type-checkbox[value="'+q.id+'"]').prop('checked', true)
+            );
+
+            $('#modalTitle').text('Edit Exam');
             modal.show();
-        }
-
-        window.openEditModal = function (id) {
-            $.get(`{{ url('exams') }}/${id}/edit`, function (res) {
-                $('#record_id').val(res.id);
-                $('#test_type').val(res.test_type);
-                $('#exam_name').val(res.exam_name);
-                $('#exam_date').val(res.exam_date);
-                $('#exam_time').val(res.exam_time);
-                $('#exam_duration_type').val(res.exam_duration_type);
-                $('#hours').val(res.hours);
-                $('#minutes').val(res.minutes);
-                $('#question_type').val(res.question_type);
-                $('#marketing').val(res.marketing);
-                $('#exam_requirement').val(res.exam_requirement);
-                $('#exam_equipment').val(res.exam_equipment);
-                $('#long_before').val(res.long_before);
-                $('#question_shuffling').val(res.question_shuffling ? '1' : '0');
-                $('#previous_button').val(res.previous_button ? '1' : '0');
-                $('#modalTitle').text('Edit Exam');
-                modal.show();
-            });
-        }
-
-        $('#examForm').submit(function (e) {
-            e.preventDefault();
-            let id = $('#record_id').val();
-            let url = id ? `{{ url('exams') }}/${id}` : `{{ route('exams.store') }}`;
-            let formData = $(this).serialize();
-            if (id) formData += '&_method=PUT';
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                success: function () { location.reload(); },
-                error: function (xhr) { alert(xhr.responseJSON?.message ?? 'Something went wrong'); }
-            });
         });
+    }
 
-        window.deleteRecord = function (id) {
-            if (!confirm('Delete record?')) return;
-            $.ajax({
-                url: `{{ url('exams') }}/${id}`,
-                type: 'POST',
-                data: {_token:'{{ csrf_token() }}', _method:'DELETE'},
-                success: function () { location.reload(); }
-            });
-        }
+    $('#examForm').submit(function (e) {
+        e.preventDefault();
+
+        let id = $('#record_id').val();
+        let url = id ? `{{ url('exams') }}/${id}` : `{{ route('exams.store') }}`;
+        let data = $(this).serialize();
+        if (id) data += '&_method=PUT';
+
+        $.post(url, data, () => location.reload());
     });
+});
 </script>
 @endpush

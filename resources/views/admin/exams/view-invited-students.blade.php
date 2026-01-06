@@ -68,37 +68,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($invitations as $invitation)
+                    <h4>Invited Students of {{ $exam->exam_name }}</h4>
+
+                    @foreach($invitations as $invitation)
                     <tr>
-                        <td>{{ $invitation->user->id }}</td>
+                         <td>{{ $invitation->user->id }}</td>
                         <td>{{ $invitation->user->name }}</td>
-                        {{-- <td>
-                            <span class="badge bg-info">{{ $invitation->user->rotation ?? 'N/A' }}</span>
-                        </td> --}}
                         <td>{{ $invitation->user->email }}</td>
                         <td>
                             <span class="badge bg-{{ $invitation->status_class }}">
-                                {{ $invitation->status_text }}
+                                {{ $invitation->status }}
                             </span>
                         </td>
-                        <td>{{ $invitation->sent_at ? $invitation->sent_at->format('d-m-Y h:i A') : 'Not sent' }}</td>
+                        <td>{{ optional($invitation->sent_at)->format('d-m-Y h:i A') }}</td>
                         <td>
-                            <form action="{{ route('exams.update-status', $invitation->id) }}" method="POST" class="d-inline">
+                            <form method="POST"
+                                action="{{ route('exams.update-status',$invitation->id) }}">
                                 @csrf
-                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                    <option value="Unregistered" {{ $invitation->status == 'Unregistered' ? 'selected' : '' }}>Unregistered</option>
-                                    <option value="Incompleted" {{ $invitation->status == 'Incompleted' ? 'selected' : '' }}>Incomplete</option>
-                                    <option value="Completed" {{ $invitation->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                                    <option value="Absent" {{ $invitation->status == 'Absent' ? 'selected' : '' }}>Absent</option>
+                                <select name="status" onchange="this.form.submit()">
+                                    <option {{ $invitation->status=='Unregistered'?'selected':'' }}>Unregistered</option>
+                                    <option {{ $invitation->status=='Incompleted'?'selected':'' }}>Incompleted</option>
+                                    <option {{ $invitation->status=='Completed'?'selected':'' }}>Completed</option>
+                                    <option {{ $invitation->status=='Absent'?'selected':'' }}>Absent</option>
                                 </select>
                             </form>
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="7" class="text-center">No invited students found for this status.</td>
-                    </tr>
-                    @endforelse
+                    @endforeach
+
                 </tbody>
             </table>
         </div>
