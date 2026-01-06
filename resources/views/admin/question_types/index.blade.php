@@ -4,9 +4,11 @@
 <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Question Types</h3>
+        <div class="ms-auto">
         <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
-            <i class="fa fa-plus"></i> Add
+            <i class="fa fa-plus"></i> Add Question Types
         </button>
+        </div>
     </div>
 
     <div class="card-body">

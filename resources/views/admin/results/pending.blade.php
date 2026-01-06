@@ -59,7 +59,7 @@
                                   class="d-inline">
                                 @csrf
                                 <button class="btn btn-primary btn-sm">
-                                    <i class="fas fa-calculator"></i> Calculate
+                                    <i class="fas fa-calculator"></i> Recalculate Results
                                 </button>
                             </form>
 
@@ -67,7 +67,7 @@
                         @else
                             <a href="{{ route('results.view',$exam->id) }}"
                                class="btn btn-success btn-sm">
-                                <i class="fas fa-eye"></i> View Result
+                                <i class="fas fa-eye"></i> View All Result
                             </a>
 
                             @if($exam->result->is_announced)

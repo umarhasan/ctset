@@ -29,21 +29,18 @@ class RolePermissionSeeder extends Seeder
             'profile.view',
             'profile.update',
             'profile.delete',
-
             // Users
             'users.index',
             'users.view',
             'users.create',
             'users.update',
             'users.delete',
-
             // Roles
             'roles.index',
             'roles.view',
             'roles.create',
             'roles.update',
             'roles.delete',
-
             // Permissions
             'permissions.index',
             'permissions.view',
@@ -51,14 +48,12 @@ class RolePermissionSeeder extends Seeder
             'permissions.update',
             'permissions.delete',
             'permissions.assign',
-
             // Exam permissions
             'exams.index',
             'exams.create',
             'exams.edit',
             'exams.delete',
             'exams.view',
-
             // Exam Invite permissions
             'view-pending-exams',
             'send-invites',
@@ -103,6 +98,8 @@ class RolePermissionSeeder extends Seeder
             'topics.delete',
             'topics.view',
 
+            'results.pending',
+            'results.view',
 
         ];
 
