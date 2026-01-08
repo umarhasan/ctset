@@ -61,43 +61,62 @@ class RolePermissionSeeder extends Seeder
             'view-invited-students',
             'update-invitation-status',
             'trainee.invitations',
-
+            // Exam Matrix permissions
             'exam_matrices.index',
             'exam_matrices.create',
             'exam_matrices.edit',
             'exam_matrices.delete',
             'exam_matrices.view',
-
+            // Work Cloud permissions
             'work_clouds.index',
             'work_clouds.create',
             'work_clouds.edit',
             'work_clouds.delete',
             'work_clouds.view',
-
+            // Master Data permissions
             'hospitals.index',
             'hospitals.create',
             'hospitals.edit',
             'hospitals.delete',
             'hospitals.view',
-
+            // Semesters
             'semesters.index',
             'semesters.create',
             'semesters.edit',
             'semesters.delete',
             'semesters.view',
-
+            // Subjects
             'subjects.index',
             'subjects.create',
             'subjects.edit',
             'subjects.delete',
             'subjects.view',
-
+            // Topics
             'topics.index',
             'topics.create',
             'topics.edit',
             'topics.delete',
             'topics.view',
-
+            // Timetable Events
+            'timetable-events.index',
+            'timetable-events.create',
+            'timetable-events.edit',
+            'timetable-events.delete',
+            'timetable-events.view',
+            // Ads permissions
+            'ads.index',
+            'ads.create',
+            'ads.edit',
+            'ads.delete',
+            'ads.view',
+            // Assignments permissions
+            'assignments.index',
+            'assignments.create',
+            'assignments.edit',
+            'assignments.delete',
+            'assignments.view',
+            // Results permissions
+            'results.index',
             'results.pending',
             'results.view',
 

@@ -131,7 +131,9 @@
                         'video-main-categories.*',
                         'video-categories.*',
                         'exam-duration-types.*',
-                        'yes-no-options.*'
+                        'yes-no-options.*',
+                        'form-types.*',
+                        'rotations.*'
                     ) ? 'menu-open' : '' }}">
 
                     <a href="#" class="nav-link {{ request()->routeIs(
@@ -143,7 +145,9 @@
                             'video-main-categories.*',
                             'video-categories.*',
                             'exam-duration-types.*',
-                            'yes-no-options.*'
+                            'yes-no-options.*',
+                            'form-types.*',
+                            'rotations.*'
                         ) ? 'active' : '' }}">
                         <i class="nav-icon bi bi-gear-fill"></i>
                         <p>
@@ -223,6 +227,21 @@
                             class="nav-link {{ request()->routeIs('yes-no-options.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Yes / No Options</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('form-types.index') }}"
+                            class="nav-link {{ request()->routeIs('form-types.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Form Types</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('rotations.index') }}"
+                            class="nav-link {{ request()->routeIs('rotations.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Rotations</p>
                             </a>
                         </li>
                     </ul>
@@ -324,7 +343,74 @@
                         </ul>
                     </li>
                 @endcan
+                {{-- Assignments Dropdown --}}
+                @can('assignments.index')
+                <li class="nav-item {{ request()->routeIs('assignments.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('assignments.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-journal-bookmark-fill"></i>
+                        <p>
+                            Forms
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
 
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('assignments.index') }}"
+                            class="nav-link {{ request()->routeIs('assignments.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Assignments</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endcan
+
+                {{-- Timetable Events Dropdown --}}
+                @can('timetable-events.index')
+                <li class="nav-item {{ request()->routeIs('timetable-events.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('timetable-events.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-calendar-event-fill"></i>
+                        <p>
+                            Time Table
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('timetable-events.index') }}"
+                            class="nav-link {{ request()->routeIs('timetable-events.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>List TimeTable</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endcan
+
+                {{-- Ads Dropdown --}}
+                @can('ads.index')
+                <li class="nav-item {{ request()->routeIs('ads.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('ads.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-megaphone-fill"></i>
+                        <p>
+                            Ads
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('ads.index') }}"
+                            class="nav-link {{ request()->routeIs('ads.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Manage Ads</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endcan
                 @role('Trainee')
                 <li class="nav-item">
                     <a href="{{ route('trainee.exams') }}"

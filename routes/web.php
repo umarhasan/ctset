@@ -38,6 +38,10 @@ use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\HospitalController;
 use App\Http\Controllers\Admin\ResultController;
+use App\Http\Controllers\Admin\TimetableEventController;
+use App\Http\Controllers\Admin\FormTypeController;
+use App\Http\Controllers\Admin\RotationController;
+use App\Http\Controllers\Admin\AssignmentController;
 
 // Exam
 use App\Http\Controllers\Admin\ExamController;
@@ -58,6 +62,11 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('topics', TopicController::class);
         Route::resource('semesters', SemesterController::class);
         Route::resource('hospitals', HospitalController::class);
+        Route::resource('timetable-events', TimetableEventController::class);
+        Route::resource('ads', AdController::class);
+        Route::resource('form-types', FormTypeController::class);
+        Route::resource('rotations', RotationController::class);
+        Route::resource('assignments', AssignmentController::class);
 
         Route::get('/pending', [ExamInvitationController::class, 'pendingExams'])->name('exams.pending');
         Route::get('/{exam}/send-invite', [ExamInvitationController::class, 'sendInvite'])->name('exams.send-invite');

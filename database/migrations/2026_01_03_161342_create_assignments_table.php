@@ -6,24 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->string('from_type');
+            $table->unsignedBigInteger('from_type_id');
             $table->string('from');
             $table->string('to');
             $table->json('users');
+            $table->unsignedBigInteger('rotation_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('from_type_id')->references('id')->on('from_types')->onDelete('cascade');
+            $table->foreign('rotation_id')->references('id')->on('rotations')->onDelete('set null');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('assignments');

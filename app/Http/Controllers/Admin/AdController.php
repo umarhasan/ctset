@@ -10,32 +10,52 @@ class AdController extends Controller
 {
     public function index()
     {
-        $records = Ad::latest()->get();
-        return view('admin.ads.index', compact('records'));
+        $ads = Ad::latest()->get();
+        return view('admin.ads.index', compact('ads'));
     }
 
     public function store(Request $request)
     {
-        $request->validate(['title'=>'required']);
-        Ad::create($request->only('title'));
-        return response()->json(['success'=>true]);
+        $data = $request->validate([
+            'title' => 'required|string',
+            'image' => 'nullable|image',
+            'description' => 'nullable|string',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('ads', 'public');
+        }
+
+        Ad::create($data);
+
+        return response()->json(['success' => true]);
     }
 
-    public function edit($id)
+    public function edit(Ad $ad)
     {
-        return response()->json(Ad::findOrFail($id));
+        return response()->json($ad);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Ad $ad)
     {
-        $request->validate(['title'=>'required']);
-        Ad::findOrFail($id)->update($request->only('title'));
-        return response()->json(['success'=>true]);
+        $data = $request->validate([
+            'title' => 'required|string',
+            'image' => 'nullable|image',
+            'description' => 'nullable|string',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('ads', 'public');
+        }
+
+        $ad->update($data);
+
+        return response()->json(['success' => true]);
     }
 
-    public function destroy($id)
+    public function destroy(Ad $ad)
     {
-        Ad::findOrFail($id)->delete();
-        return response()->json(['success'=>true]);
+        $ad->delete();
+        return response()->json(['success' => true]);
     }
 }

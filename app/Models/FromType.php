@@ -5,13 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TimeTableCategory extends Model
+class FromType extends Model
 {
     use HasFactory;
     protected $guarded = [];
-
-    public function events()
-    {
-        return $this->hasMany(TimetableEvent::class, 'category_id');
-    }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('timetable_events', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('category');
+            $table->foreignId('category_id')->constrained('time_table_categories')->onDelete('cascade');
             $table->boolean('is_superviser')->default(false);
             $table->boolean('is_trainee')->default(false);
             $table->date('date');
