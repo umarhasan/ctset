@@ -15,30 +15,52 @@
         <table class="table table-bordered" id="eventTable">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Title</th>
-                    <th>Category</th>
+                    <th>Image</th>
                     <th>Date</th>
                     <th>Time</th>
-                    <th width="120">Action</th>
+                    <th>Category</th>
+                    <th>Reminder Days</th>
+            <th width="120">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($events as $event)
-                <tr>
-                    <td>{{ $event->title }}</td>
-                    <td>{{ $event->category->title ?? '-' }}</td>
-                    <td>{{ $event->date }}</td>
-                    <td>{{ $event->from_time }} - {{ $event->to_time }}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $event->id }})">
-                            <i class="fa fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $event->id }})">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
+                 @foreach($events as $event)
+            <tr>
+                <td class="text-center">{{ $event->id }}</td>
+                <td class="text-center">{{ $event->title }}</td>
+                <td class="text-center">
+                    @if($event->image)
+                        <img src="{{ asset('storage/'.$event->image) }}"
+                            width="50" height="50"
+                            class="rounded"
+                            alt="event image">
+                    @else
+                        <span class="text-muted">No Image</span>
+                    @endif
+                </td>
+                <td class="text-center">{{ $event->date }}</td>
+                <td>
+                    {{ $event->from_time }} - {{ $event->to_time }}
+                </td class="text-center">
+                <td class="text-center">{{ $event->category->title ?? '-' }}</td>
+                <td class="text-center">
+                    {{ $event->reminder_days ?? 'N/A' }}
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-warning btn-sm"
+                        onclick="openEditModal({{ $event->id }})">
+                        <i class="fa fa-edit"></i>
+                    </button>
+
+                    <button class="btn btn-danger btn-sm"
+                        onclick="deleteRecord({{ $event->id }})">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        @endforeach
             </tbody>
         </table>
     </div>

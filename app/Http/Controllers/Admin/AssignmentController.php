@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
-use App\Models\FromType;
+use App\Models\AssignmentFromType;
 use App\Models\Rotation;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ class AssignmentController extends Controller
     public function index()
     {
         $assignments = Assignment::with(['fromType','rotation'])->latest()->get();
-        $fromTypes   = FromType::all();
+        $fromTypes   = AssignmentFromType::all();
         $rotations   = Rotation::all();
 
         // ✅ ONLY TRAINEE USERS (Spatie)

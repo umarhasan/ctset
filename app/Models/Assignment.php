@@ -14,7 +14,7 @@ class Assignment extends Model
     ];
     public function fromType()
     {
-        return $this->belongsTo(FromType::class,'from_type_id');
+        return $this->belongsTo(AssignmentFromType::class,'from_type_id');
     }
 
     public function rotation()
