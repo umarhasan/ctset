@@ -45,6 +45,9 @@ use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\SelfEvaluationController;
 use App\Http\Controllers\Admin\Evaluation360Controller;
 use App\Http\Controllers\Admin\RotationEvaluationController;
+use App\Http\Controllers\Admin\CompetencyController;
+use App\Http\Controllers\Admin\RatingController;
+use App\Http\Controllers\Admin\LevelController;
 
 
 // Exam
@@ -76,6 +79,12 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('evaluation-360', Evaluation360Controller::class);
         Route::resource('rotation-evaluations', RotationEvaluationController::class);
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
+
+        Route::resource('competencies', CompetencyController::class);
+        Route::resource('ratings', RatingController::class);
+        Route::resource('levels', LevelController::class);
+
+
 
         Route::get('/pending', [ExamInvitationController::class, 'pendingExams'])->name('exams.pending');
         Route::get('/{exam}/send-invite', [ExamInvitationController::class, 'sendInvite'])->name('exams.send-invite');
