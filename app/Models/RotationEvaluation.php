@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LongitudinalRequirement extends Model
+class RotationEvaluation extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+
+    protected $fillable = ['title', 'course_title', 'status'];
 
     public function sections()
     {
-        return $this->hasMany(LongitudinalSection::class)->orderBy('order');
+        return $this->hasMany(RotationEvaluationSection::class)->orderBy('order');
     }
 }

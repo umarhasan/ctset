@@ -6,12 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('longitudinal_requirements', function (Blueprint $table) {
+        Schema::create('rotation_evaluations', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('course_title');
@@ -20,11 +17,8 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('longitudinal_requirements');
+        Schema::dropIfExists('rotation_evaluations');
     }
 };

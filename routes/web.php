@@ -43,12 +43,15 @@ use App\Http\Controllers\Admin\FormTypeController;
 use App\Http\Controllers\Admin\RotationController;
 use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\SelfEvaluationController;
+use App\Http\Controllers\Admin\Evaluation360Controller;
+use App\Http\Controllers\Admin\RotationEvaluationController;
+
 
 // Exam
 use App\Http\Controllers\Admin\ExamController;
     Route::get('/', function () {
         return auth()->check()
-            ? redirect()->route('dashboard')
+            ? redirect()->route(route: 'admin.dashboard')
             : redirect()->route('login');
     });
 
@@ -68,7 +71,11 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('form-types', FormTypeController::class);
         Route::resource('rotations', RotationController::class);
         Route::resource('assignments', AssignmentController::class);
+        Route::resource('self-evaluations', SelfEvaluationController::class);
         Route::resource('trainee-evaluations', TraineeEvaluationController::class);
+        Route::resource('evaluation-360', Evaluation360Controller::class);
+        Route::resource('rotation-evaluations', RotationEvaluationController::class);
+        Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
 
         Route::get('/pending', [ExamInvitationController::class, 'pendingExams'])->name('exams.pending');
         Route::get('/{exam}/send-invite', [ExamInvitationController::class, 'sendInvite'])->name('exams.send-invite');
@@ -101,7 +108,7 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
         Route::resource('dops', DopController::class);
         Route::resource('dop-steps', DopStepController::class);
-        Route::resource('self-evaluations', SelfEvaluationController::class);
+
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');

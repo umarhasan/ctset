@@ -6,25 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('longitudinal_requirements', function (Blueprint $table) {
+        Schema::create('evaluation_360_forms', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('course_title');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('longitudinal_requirements');
+        Schema::dropIfExists('evaluation_360_forms');
     }
 };

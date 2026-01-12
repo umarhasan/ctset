@@ -345,8 +345,18 @@
                 @endcan
                 {{-- Assignments Dropdown --}}
                 @can('assignments.index')
-                <li class="nav-item {{ request()->routeIs('assignments.*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->routeIs('assignments.*') ? 'active' : '' }}">
+                <li class="nav-item {{ request()->routeIs('assignments.*') ||
+                                    request()->routeIs('self-evaluations.*') ||
+                                   request()->routeIs('trainee-evaluations.*') ||
+                                    request()->routeIs('evaluation-360.*') ||
+                                    request()->routeIs('rotation-evaluations.*') ||
+                                    request()->routeIs('longitudinal-requirements.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('assignments.*') ||
+                                                request()->routeIs('self-evaluations.*') ||
+                                                request()->routeIs('trainee-evaluations.*') ||
+                                                request()->routeIs('evaluation-360.*') ||
+                                                request()->routeIs('rotation-evaluations.*') ||
+                                                request()->routeIs('longitudinal-requirements.*') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-journal-bookmark-fill"></i>
                         <p>
                             Forms
@@ -355,16 +365,73 @@
                     </a>
 
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('assignments.index') }}"
-                            class="nav-link {{ request()->routeIs('assignments.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Assignments</p>
-                            </a>
-                        </li>
+                        <!-- Existing Assignments -->
+                        @can('assignments.index')
+                            <li class="nav-item">
+                                <a href="{{ route('assignments.index') }}"
+                                class="nav-link {{ request()->routeIs('assignments.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-journal-text"></i>
+                                    <p>Assignments</p>
+                                </a>
+                            </li>
+                        @endcan
+
+                        <!-- Self Evaluations -->
+                        {{-- @can('self-evaluations.index') --}}
+                            <li class="nav-item">
+                                <a href="{{ route('self-evaluations.index') }}"
+                                class="nav-link {{ request()->routeIs('self-evaluations.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-person-lines-fill"></i>
+                                    <p>Self Evaluations</p>
+                                </a>
+                            </li>
+                        {{-- @endcan --}}
+                        <!-- Trainee Evaluations -->
+                        {{-- @can('trainee-evaluations.index') --}}
+                            <li class="nav-item">
+                                <a href="{{ route('trainee-evaluations.index') }}"
+                                class="nav-link {{ request()->routeIs('trainee-evaluations.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-person-check"></i>
+                                    <p>Trainee Evaluations</p>
+                                </a>
+                            </li>
+                        {{-- @endcan --}}
+
+                        <!-- 360° Evaluation -->
+                        {{-- @can('evaluation-360.index') --}}
+                            <li class="nav-item">
+                                <a href="{{ route('evaluation-360.index') }}"
+                                class="nav-link {{ request()->routeIs('evaluation-360.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-arrow-repeat"></i>
+                                    <p>360° Evaluations</p>
+                                </a>
+                            </li>
+                        {{-- @endcan --}}
+
+                        <!-- Rotation Evaluations -->
+                        {{-- @can('rotation-evaluations.index') --}}
+                            <li class="nav-item">
+                                <a href="{{ route('rotation-evaluations.index') }}"
+                                class="nav-link {{ request()->routeIs('rotation-evaluations.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-calendar-check"></i>
+                                    <p>Rotation Evaluations</p>
+                                </a>
+                            </li>
+                        {{-- @endcan --}}
+
+                        <!-- Longitudinal Requirements -->
+                        {{-- @can('longitudinal-requirements.index') --}}
+                            <li class="nav-item">
+                                <a href="{{ route('longitudinal-requirements.index') }}"
+                                class="nav-link {{ request()->routeIs('longitudinal-requirements.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-clipboard-check"></i>
+                                    <p>Longitudinal Requirements</p>
+                                </a>
+                            </li>
+                        {{-- @endcan --}}
                     </ul>
                 </li>
-                @endcan
+            @endcan
 
                 {{-- Timetable Events Dropdown --}}
                 @can('timetable-events.index')
