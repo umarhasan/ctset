@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('trainee_evaluations', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('action')->nullable(); // Action or description
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

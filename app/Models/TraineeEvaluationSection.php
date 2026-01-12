@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TraineeEvaluation extends Model
+class TraineeEvaluationSection extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
-    public function sections()
+    public function evaluation()
     {
-        return $this->hasMany(TraineeEvaluationSection::class)->orderBy('order');
+        return $this->belongsTo(TraineeEvaluation::class);
     }
 }

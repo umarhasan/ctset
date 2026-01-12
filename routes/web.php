@@ -68,6 +68,7 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('form-types', FormTypeController::class);
         Route::resource('rotations', RotationController::class);
         Route::resource('assignments', AssignmentController::class);
+        Route::resource('trainee-evaluations', TraineeEvaluationController::class);
 
         Route::get('/pending', [ExamInvitationController::class, 'pendingExams'])->name('exams.pending');
         Route::get('/{exam}/send-invite', [ExamInvitationController::class, 'sendInvite'])->name('exams.send-invite');

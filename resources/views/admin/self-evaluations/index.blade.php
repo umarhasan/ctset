@@ -217,7 +217,7 @@ $(document).ready(function() {
         $('#masterForm')[0].reset();
         $('#modalTitle').text('Add Self Evaluation Form');
         $('#status').val('active');
-        
+
         // Reset goal-plan container
         $('#goalPlanActionContainer').html(`
             <div class="row goal-plan-action-item mb-2 align-items-center">
@@ -312,16 +312,14 @@ $(document).ready(function() {
 
                 masterModal.show();
             },
-            error: function() {
-                toastr.error('Failed to load data');
-            }
+
         });
     };
 
     // Submit Form
     $('#masterForm').on('submit', function(e) {
         e.preventDefault();
-        
+
         let id = $('#record_id').val();
         let url = id ? `self-evaluations/${id}` : `self-evaluations`;
         let method = id ? 'PUT' : 'POST';
@@ -346,7 +344,7 @@ $(document).ready(function() {
             data: formData,
             success: function(response) {
                 if (response.success) {
-                    toastr.success(response.message);
+                    // toastr.success(response.message);
                     masterModal.hide();
                     setTimeout(() => {
                         location.reload();
@@ -394,7 +392,7 @@ $(document).ready(function() {
     window.addGoalPlanAction = function() {
         $('#goalPlanActionContainer').append(generateGoalPlanRow(goalPlanActionCount, '', ''));
         goalPlanActionCount++;
-        
+
         // Enable delete button for first item if there are more than 1
         if ($('#goalPlanActionContainer .goal-plan-action-item').length > 1) {
             $('#goalPlanActionContainer .goal-plan-action-item:first .btn-danger').prop('disabled', false);
@@ -403,18 +401,18 @@ $(document).ready(function() {
 
     window.removeGoalPlanAction = function(button) {
         $(button).closest('.goal-plan-action-item').remove();
-        
+
         // Re-index names
         $('#goalPlanActionContainer .goal-plan-action-item').each(function(index) {
             $(this).find('input[name*="[goal]"]').attr('name', `goal_plan_actions[${index}][goal]`);
             $(this).find('input[name*="[plan]"]').attr('name', `goal_plan_actions[${index}][plan]`);
         });
-        
+
         // Disable delete button for first item if only one remains
         if ($('#goalPlanActionContainer .goal-plan-action-item').length === 1) {
             $('#goalPlanActionContainer .goal-plan-action-item:first .btn-danger').prop('disabled', true);
         }
-        
+
         goalPlanActionCount = $('#goalPlanActionContainer .goal-plan-action-item').length;
     };
 
@@ -454,7 +452,7 @@ $(document).ready(function() {
     window.addQuestionAction = function() {
         $('#questionActionContainer').append(generateQuestionActionRow(questionActionCount, '', ''));
         questionActionCount++;
-        
+
         // Enable delete button for first item if there are more than 1
         if ($('#questionActionContainer .question-action-item').length > 1) {
             $('#questionActionContainer .question-action-item:first .btn-danger').prop('disabled', false);
@@ -463,18 +461,18 @@ $(document).ready(function() {
 
     window.removeQuestionAction = function(button) {
         $(button).closest('.question-action-item').remove();
-        
+
         // Re-index names
         $('#questionActionContainer .question-action-item').each(function(index) {
             $(this).find('input[name*="[title]"]').attr('name', `question_actions[${index}][title]`);
             $(this).find('input[name*="[question]"]').attr('name', `question_actions[${index}][question]`);
         });
-        
+
         // Disable delete button for first item if only one remains
         if ($('#questionActionContainer .question-action-item').length === 1) {
             $('#questionActionContainer .question-action-item:first .btn-danger').prop('disabled', true);
         }
-        
+
         questionActionCount = $('#questionActionContainer .question-action-item').length;
     };
 
