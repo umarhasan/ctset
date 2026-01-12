@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\TimetableEventController;
 use App\Http\Controllers\Admin\FormTypeController;
 use App\Http\Controllers\Admin\RotationController;
 use App\Http\Controllers\Admin\AssignmentController;
+use App\Http\Controllers\Admin\SelfEvaluationController;
 
 // Exam
 use App\Http\Controllers\Admin\ExamController;
@@ -99,7 +100,7 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
         Route::resource('dops', DopController::class);
         Route::resource('dop-steps', DopStepController::class);
-
+        Route::resource('self-evaluations', SelfEvaluationController::class);
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
