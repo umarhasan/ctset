@@ -1,187 +1,134 @@
 @extends('layouts.app')
-
-@section('title', 'Levels Management')
+@section('title','Levels')
 
 @section('content')
 <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">Levels</h3>
-        <div class="ms-auto">
-            <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
-                <i class="bi bi-plus-circle"></i> Add Level
-            </button>
-        </div>
+ <div class="card-header d-flex justify-content-between">
+  <h3>Levels</h3>
+    <div class="ms-auto">
+        <button class="btn btn-primary btn-sm" onclick="openCreateModal()">Add Levels</button>
     </div>
+ </div>
 
-    <div class="card-body">
-        <table class="table table-bordered" id="levelsTable">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Key</th>
-                    <th>Sequence</th>
-                    <th>Score</th>
-                    <th>Description</th>
-                    <th width="120">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($levels as $level)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $level->name }}</td>
-                    <td><span class="badge bg-secondary">{{ $level->key }}</span></td>
-                    <td><span class="badge bg-info">{{ $level->sequence }}</span></td>
-                    <td><span class="badge bg-success">{{ $level->score }}</span></td>
-                    <td>{{ Str::limit($level->description, 50) }}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $level->id }})">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $level->id }})">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+ <div class="card-body">
+  <table class="table table-bordered" id="tbl">
+   <thead>
+    <tr>
+     <th>#</th><th>Name</th><th>Key</th><th>Seq</th><th>Score</th><th>Desc</th><th>Act</th>
+    </tr>
+   </thead>
+   <tbody>
+    @foreach($levels as $l)
+    <tr>
+     <td>{{ $loop->iteration }}</td>
+     <td>{{ $l->name }}</td>
+     <td>{{ $l->key }}</td>
+     <td>{{ $l->sequence }}</td>
+     <td>{{ $l->score }}</td>
+     <td>{{ Str::limit($l->description,40) }}</td>
+     <td>
+      <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $l->id }})">Edit</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $l->id }})">Del</button>
+     </td>
+    </tr>
+    @endforeach
+   </tbody>
+  </table>
+ </div>
 </div>
 
-<!-- Modal -->
+{{-- MODAL --}}
 <div class="modal fade" id="masterModal">
-    <div class="modal-dialog">
-        <form id="masterForm">
-            @csrf
-            <input type="hidden" id="record_id">
-
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 id="modalTitle"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label>Name *</label>
-                        <input type="text" name="name" id="name" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Key *</label>
-                        <input type="text" name="key" id="key" class="form-control" required>
-                        <small class="text-muted">Unique identifier</small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Sequence *</label>
-                        <input type="number" name="sequence" id="sequence" class="form-control" min="1" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Score *</label>
-                        <input type="number" name="score" id="score" class="form-control" min="0" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Description *</label>
-                        <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">
-                        <i class="bi bi-save"></i> Save
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </form>
+ <div class="modal-dialog">
+  <form id="masterForm">@csrf
+   <input type="hidden" id="record_id">
+   <div class="modal-content">
+    <div class="modal-header bg-primary text-white">
+     <h5 id="modalTitle"></h5>
+     <button class="btn-close" data-bs-dismiss="modal"></button>
     </div>
+    <div class="modal-body">
+     <input class="form-control mb-1" name="name" id="name" placeholder="Name" required>
+     <small class="text-danger" id="err_name"></small>
+
+     <input class="form-control mb-1" name="key" id="key" placeholder="Key" required>
+     <small class="text-danger" id="err_key"></small>
+
+     <input class="form-control mb-1" type="number" name="sequence" id="sequence" placeholder="Sequence" required>
+     <small class="text-danger" id="err_sequence"></small>
+
+     <input class="form-control mb-1" type="number" name="score" id="score" placeholder="Score" required>
+     <small class="text-danger" id="err_score"></small>
+
+     <textarea class="form-control mb-1" name="description" id="description" placeholder="Description" required></textarea>
+     <small class="text-danger" id="err_description"></small>
+    </div>
+    <div class="modal-footer">
+     <button class="btn btn-success">Save</button>
+    </div>
+   </div>
+  </form>
+ </div>
 </div>
 @endsection
 
 @push('scripts')
 <script>
 $(function(){
-    $('#levelsTable').DataTable();
+ $('#tbl').DataTable();
 
-    // CREATE
-    window.openCreateModal = function(){
-        $('#record_id').val('');
-        $('#masterForm')[0].reset();
-        $('#modalTitle').text('Add Level');
-        new bootstrap.Modal('#masterModal').show();
-    }
+ window.openCreateModal=()=>{
+     $('#record_id').val(''); $('#masterForm')[0].reset();
+     $('#masterForm small.text-danger').text('');
+     $('#modalTitle').text('Add Level');
+     new bootstrap.Modal('#masterModal').show();
+ }
 
-    // EDIT
-    window.openEditModal = function(id){
-        $.get('levels/' + id + '/edit', function(res){
-            $('#record_id').val(res.id);
-            $('#name').val(res.name);
-            $('#key').val(res.key);
-            $('#sequence').val(res.sequence);
-            $('#score').val(res.score);
-            $('#description').val(res.description);
-            $('#modalTitle').text('Edit Level');
-            new bootstrap.Modal('#masterModal').show();
-        });
-    }
+ window.openEditModal=id=>{
+     $.get('levels/'+id+'/edit', r=>{
+         $('#record_id').val(r.id);
+         $('#name').val(r.name);
+         $('#key').val(r.key);
+         $('#sequence').val(r.sequence);
+         $('#score').val(r.score);
+         $('#description').val(r.description);
+         $('#masterForm small.text-danger').text('');
+         $('#modalTitle').text('Edit Level');
+         new bootstrap.Modal('#masterModal').show();
+     });
+ }
 
-    // SAVE/UPDATE
-    $('#masterForm').submit(function(e){
-        e.preventDefault();
+ $('#masterForm').submit(function(e){
+     e.preventDefault();
+     let id = $('#record_id').val();
+     $('#masterForm small.text-danger').text('');
 
-        let id = $('#record_id').val();
-        let url = id ? 'levels/' + id : 'levels';
-        let method = id ? 'PUT' : 'POST';
+     $.ajax({
+         url: id?'levels/'+id:'levels',
+         method:'POST',
+         data: $(this).serialize() + (id?'&_method=PUT':''),
+         success: function(res){
+             toastr.success('Saved successfully');
+             $('#masterModal').modal('hide');
+             setTimeout(()=>location.reload(),700);
+         },
+         error: function(xhr){
+             if(xhr.status==422){
+                 let errors = xhr.responseJSON.errors;
+                 for(let f in errors) $('#err_'+f).text(errors[f][0]);
+             } else toastr.error('Something went wrong');
+         }
+     });
+ });
 
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: $(this).serialize() + (id ? '&_method=PUT' : ''),
-            success: function(){
-                Swal.fire('Success!', 'Record saved successfully.', 'success');
-                $('#masterModal').modal('hide');
-                setTimeout(() => location.reload(), 1000);
-            },
-            error: function(xhr){
-                let errors = xhr.responseJSON.errors;
-                let errorMsg = '';
-                $.each(errors, function(key, value){
-                    errorMsg += value[0] + '\n';
-                });
-                Swal.fire('Error!', errorMsg, 'error');
-            }
-        });
-    });
-
-    // DELETE
-    window.deleteRecord = function(id){
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: 'levels/' + id,
-                    method: 'DELETE',
-                    data: {_token: '{{ csrf_token() }}'},
-                    success: function(){
-                        Swal.fire('Deleted!', 'Record has been deleted.', 'success');
-                        setTimeout(() => location.reload(), 1000);
-                    }
-                });
-            }
-        });
-    }
+ window.deleteRecord=id=>{
+     if(!confirm('Delete?'))return;
+     $.ajax({
+         url:'levels/'+id, method:'DELETE',
+         data:{_token:'{{ csrf_token() }}'},
+         success: ()=>location.reload()
+     });
+ }
 });
 </script>
 @endpush

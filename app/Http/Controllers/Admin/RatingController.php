@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rating;
-use App\Models\Competency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,28 +11,30 @@ class RatingController extends Controller
 {
     public function index()
     {
-        $ratings = Rating::with('competency')->ordered()->get();
-        $competencies = Competency::ordered()->get();
-        return view('admin.ratings.index', compact('ratings', 'competencies'));
+        $ratings = Rating::get();
+        return view('admin.ratings.index', compact('ratings'));
     }
 
-    public function store(Request $request)
+    public function store(Request $r)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
+        $validator = Validator::make($r->all(), [
+            'title' => 'required',
             'score' => 'required|integer|min:1|unique:ratings,score',
-            'competency_id' => 'required|exists:competencies,id'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors'  => $validator->errors(),
             ], 422);
         }
 
         Rating::create($validator->validated());
-        return response()->json(['success' => true]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Rating saved successfully',
+        ]);
     }
 
     public function edit(Rating $rating)
@@ -41,28 +42,42 @@ class RatingController extends Controller
         return response()->json($rating);
     }
 
-    public function update(Request $request, Rating $rating)
+    public function update(Request $r, Rating $rating)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
+        $validator = Validator::make($r->all(), [
+            'title' => 'required',
             'score' => 'required|integer|min:1|unique:ratings,score,' . $rating->id,
-            'competency_id' => 'required|exists:competencies,id'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors'  => $validator->errors(),
             ], 422);
         }
 
         $rating->update($validator->validated());
-        return response()->json(['success' => true]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Rating updated successfully',
+        ]);
     }
 
     public function destroy(Rating $rating)
     {
-        $rating->delete();
-        return response()->json(['success' => true]);
+        try {
+            $rating->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rating deleted successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to delete this record',
+            ], 500);
+        }
     }
 }
