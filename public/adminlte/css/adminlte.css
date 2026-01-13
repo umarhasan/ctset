@@ -13029,6 +13029,7 @@ textarea.form-control-lg {
 
 .sidebar-menu .nav-item > .nav-link {
   margin-bottom: 0.2rem;
+  font-size: 15px;
 }
 .sidebar-menu .nav-item > .nav-link .nav-arrow {
   transition: transform ease-in-out 0.3s;
