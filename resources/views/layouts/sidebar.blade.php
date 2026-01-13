@@ -229,13 +229,13 @@
                                 <p>Yes / No Options</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="{{ route('form-types.index') }}"
                             class="nav-link {{ request()->routeIs('form-types.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Form Types</p>
                             </a>
-                        </li>
+                        </li> --}}
 
                         <li class="nav-item">
                             <a href="{{ route('rotations.index') }}"
