@@ -26,8 +26,8 @@
      <td>{{ $c->sequence }}</td>
      <td>{{ Str::limit($c->description,40) }}</td>
      <td>
-      <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $c->id }})">Edit</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $c->id }})">Del</button>
+      <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $c->id }})"><i class="fa fa-edit"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $c->id }})"><i class="fa fa-trash"></i></button>
      </td>
     </tr>
     @endforeach

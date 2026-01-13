@@ -7,7 +7,7 @@
         <h3 class="card-title">Rotation Evaluation Forms</h3>
         <div class="ms-auto">
             <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
-                <i class="fa fa-plus"></i> Create Form
+                <i class="fa fa-plus"></i> Add Rotation Evaluation Forms
             </button>
         </div>
     </div>

@@ -27,8 +27,8 @@
      <td>{{ $l->score }}</td>
      <td>{{ Str::limit($l->description,40) }}</td>
      <td>
-      <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $l->id }})">Edit</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $l->id }})">Del</button>
+      <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $l->id }})"><i class="fa fa-edit"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $l->id }})"><i class="fa fa-trash"></i></button>
      </td>
     </tr>
     @endforeach

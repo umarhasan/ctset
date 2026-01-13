@@ -21,7 +21,7 @@
                     <th width="200">Login / End</th>
                     <th width="130">Created</th>
                     <th>Pending Invites</th>
-                        <th>Action</th>
+                    <th>Action</th>
 
                     </tr>
                 </thead>
@@ -31,7 +31,6 @@
                             <td>{{ $exam->exam_id }}</td>
                             <td>{{ $exam->testType->title ?? '-' }}</td>
                             <td>{{ $exam->exam_name }}</td>
-
                             <td>
                                 @foreach($exam->questionTypes as $qt)
                                     <div>{{ $qt->title }}</div>

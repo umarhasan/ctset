@@ -25,8 +25,8 @@
      <td>{{ $r->title }}</td>
      <td>{{ $r->score }}</td>
      <td>
-      <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $r->id }})">Edit</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $r->id }})">Del</button>
+      <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $r->id }})"><i class="fa fa-edit"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $r->id }})"><i class="fa fa-trash"></i></button>
      </td>
     </tr>
     @endforeach
