@@ -48,6 +48,7 @@ use App\Http\Controllers\Admin\RotationEvaluationController;
 use App\Http\Controllers\Admin\CompetencyController;
 use App\Http\Controllers\Admin\RatingController;
 use App\Http\Controllers\Admin\LevelController;
+use App\Http\Controllers\Admin\QrCategoryController;
 
 
 // Exam
@@ -83,8 +84,7 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('competencies', CompetencyController::class);
         Route::resource('ratings', RatingController::class);
         Route::resource('levels', LevelController::class);
-
-
+        Route::resource('qr-categories', QrCategoryController::class);
 
         Route::get('/pending', [ExamInvitationController::class, 'pendingExams'])->name('exams.pending');
         Route::get('/{exam}/send-invite', [ExamInvitationController::class, 'sendInvite'])->name('exams.send-invite');
