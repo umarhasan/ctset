@@ -639,7 +639,45 @@
                     </a>
                 </li>
                 @endrole
+                {{-- QR Management --}}
+                @canany(['qr-categories.index','qr-generates.index'])
+                <li class="nav-item {{ request()->routeIs('qr-categorie.*','qr-generate.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('qr-categories.*','qr-generates.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-qr-code"></i>
+                        <p>
+                            QR Management
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
 
+                    <ul class="nav nav-treeview">
+
+                        {{-- QR Category --}}
+                        @can('qr-categories.index')
+                        <li class="nav-item">
+                            <a href="{{ route('qr-categories.index') }}"
+                            class="nav-link {{ request()->routeIs('qr-categories.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>QR Categories</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        {{-- QR Generate --}}
+                        @can('qr-generates.index')
+                        <li class="nav-item">
+                            <a href="{{ route('qr-generate.index') }}"
+                            class="nav-link {{ request()->routeIs('qr-generate.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Generate QR</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                    </ul>
+                </li>
+                @endcanany
+            
                 {{-- Profile - Permission based --}}
                 @can('profile.view')
                 <li class="nav-item">
