@@ -35,7 +35,7 @@ table.dataTable { table-layout: fixed; }
     </div>
 
     <div class="card-body table-responsive">
-        <table id="examTable1" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
+        <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
             <thead class="table-light">
             <tr>
                 <th>Exam ID</th>

@@ -1,58 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <title>Faculty of Medicine</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- AdminLTE CSS -->
-    <link rel="stylesheet" href="{{ asset('adminlte/css/adminlte.css') }}">
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-    <!-- FontAwesome (FOR CRUD ICONS) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <meta charset="utf-8" />
+  <title>Faculty of Medicine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+  <meta name="author" content="ColorlibHQ" />
+  <meta
+    name="description"
+    content="AdminLTE is a Free Bootstrap 5 Admin Dashboard. Fully accessible with WCAG 2.1 AA compliance."
+  />
+  <link rel="preload" href="{{ asset('adminlte/css/adminlte.css') }}" as="style" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+    crossorigin="anonymous"
+    media="print"
+    onload="this.media='all'"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="{{ asset('adminlte/css/adminlte.css') }}" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+    crossorigin="anonymous"
+  />
 </head>
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-<div class="app-wrapper">
+
+
+<body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
+  <div class="app-wrapper">
 
     @include('layouts.header')
     @include('layouts.sidebar')
-
-    <div class="content-wrapper">
-        <section class="content pt-3">
-            <div class="container-fluid">
-                @yield('content')
-            </div>
-        </section>
+    <main class="app-main">
+    <div class="app-content">
+          <div class="container-fluid">
+            @yield('content')
+        </div>
     </div>
-
+    </main>  
     @include('layouts.footer')
-</div>
+  </div>
 
-<!-- ================= JS ================= -->
-
-<!-- jQuery (REQUIRED) -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-<!-- Bootstrap 5 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- AdminLTE -->
 <script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
-
-<!-- DataTables -->
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-   <script>
+<script>
 toastr.options = {
     closeButton: true,
     progressBar: true,
