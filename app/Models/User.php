@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable, HasRoles;
 
-    protected $fillable = ['name','email','password'];
+    protected $fillable = ['name','email','password','profile_image','signature_image','bio'];
     protected $hidden = ['password','remember_token'];
     protected $casts = ['email_verified_at'=>'datetime'];
 
@@ -50,5 +50,9 @@ class User extends Authenticatable
 
     public function examAttempts(){
         return $this->hasMany(ExamAttempt::class);
+    }
+
+    public function tabs(){
+        return $this->hasMany(ProfileTab::class);
     }
 }

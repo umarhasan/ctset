@@ -1,60 +1,139 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use App\Models\User;
+use App\Models\ProfileTab;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    public function index()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = auth()->user();
+        $tabs = $user->tabs()->get();
+        return view('profile.index', compact('user','tabs'));
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $user = auth()->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'password' => 'nullable|min:6',
+            'profile_image' => 'nullable|image|max:2048',
+            'signature_image' => 'nullable|image|max:2048',
+            'bio' => 'nullable',
+        ]);
+
+        /* ================= PASSWORD ================= */
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        } else {
+            unset($data['password']);
         }
 
-        $request->user()->save();
+        /* ================= PROFILE IMAGE ================= */
+        if ($request->hasFile('profile_image')) {
+            if ($user->profile_image) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+            $data['profile_image'] = $request->file('profile_image')->store('profiles', 'public');
+        }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        /* ================= SIGNATURE IMAGE ================= */
+        if ($request->hasFile('signature_image')) {
+            if ($user->signature_image) {
+                Storage::disk('public')->delete($user->signature_image);
+            }
+            $data['signature_image'] = $request->file('signature_image')->store('signatures', 'public');
+        }
+
+        $user->update($data);
+
+        /* ================= AJAX RESPONSE ================= */
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile updated successfully!',
+            ]);
+        }
+
+        return back()->with('success', 'Profile updated successfully!');
     }
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
+
+        public function saveTab(Request $request)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+        $data = $request->validate([
+            'tabid' => 'nullable|integer',
+            'tabname' => 'required',
+            'profile_type' => 'required|in:PU,PR',
+            'tabsdesc' => 'nullable'
         ]);
 
-        $user = $request->user();
+        try {
+            $tab = ProfileTab::updateOrCreate(
+                ['id' => $request->tabid],
+                [
+                    'user_id' => auth()->id(),
+                    'tabname' => $data['tabname'],
+                    'profile_type' => $data['profile_type'],
+                    'tabsdesc' => $data['tabsdesc']
+                ]
+            );
 
-        Auth::logout();
+            return response()->json([
+                'success' => true,
+                'message' => 'Tab saved successfully!',
+                'tab' => $tab
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+    public function deleteTab($id)
+    {
+        try {
+            $tab = ProfileTab::where('id', $id)
+                ->where('user_id', auth()->id())
+                ->first();
+            
+            if (!$tab) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tab not found or you do not have permission to delete it.'
+                ], 404);
+            }
+            
+            $tab->delete();
+            
+            // For AJAX requests, return JSON response
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Tab deleted successfully!'
+                ]);
+            }
+            
+            return back()->with('success', 'Tab deleted successfully!');
+            
+        } catch (\Exception $e) {
+            // For AJAX requests
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error deleting tab: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return back()->with('error', 'Error deleting tab: ' . $e->getMessage());
+        }
     }
 }

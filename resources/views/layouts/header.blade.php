@@ -101,9 +101,17 @@
           </li>
 
           <li class="user-footer">
-            <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary">
-              Profile
-            </a>
+            @if(auth()->user()->hasRole('Admin'))
+                <a href="#"
+                  class="btn btn-outline-secondary">
+                    Settings
+                </a>
+            @else
+                <a href="{{ route('profile.index') }}"
+                  class="btn btn-outline-secondary">
+                    Profile
+                </a>
+            @endif
 
             <form method="POST" action="{{ route('logout') }}" class="float-end">
               @csrf

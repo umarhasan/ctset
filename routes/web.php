@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Assessor\AssessorDashboardController;
 use App\Http\Controllers\Trainee\TraineeDashboardController;
@@ -119,12 +120,21 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('dops', DopController::class);
         Route::resource('dop-steps', DopStepController::class);
 
-        Route::prefix('profile')->group(function () {
-            Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
-            Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
-            Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        });
+        Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
+        Route::post('/profile/update',[ProfileController::class,'update'])->name('profile.update');
 
+        Route::post('/profile/tab/save',[ProfileController::class,'saveTab'])->name('profile.tab.save');
+        Route::delete('/profile/tab/{id}',[ProfileController::class,'deleteTab'])->name('profile.tab.delete');
+        // Route::prefix('profile')->group(function () {
+        //     Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
+        //     Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
+        //     Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        // });
+         Route::get('change-password', [ChangePasswordController::class, 'edit'])
+        ->name('password.edit');
+
+    Route::put('change-password', [ChangePasswordController::class, 'update'])
+        ->name('password.update');
 
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');

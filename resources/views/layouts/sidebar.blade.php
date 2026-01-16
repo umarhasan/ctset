@@ -678,14 +678,28 @@
                 </li>
                 @endcanany
             
-                {{-- Profile - Permission based --}}
                 @can('profile.view')
-                <li class="nav-item">
-                    <a href="{{ route('profile.edit') }}"
-                       class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                <li class="nav-item has-treeview {{ request()->routeIs('profile.*') || request()->routeIs('dashboard.password.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('profile.*','profile.*') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-person"></i>
-                        <p>Settings</p>
+                        <p>
+                            Settings
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
                     </a>
+
+                    <ul class="nav nav-treeview">
+                        {{-- Profile --}}
+                        
+                        {{-- Change Password --}}
+                        <li class="nav-item">
+                            <a href="{{ route('password.edit') }}"
+                            class="nav-link {{ request()->routeIs('dashboard.password.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-key"></i>
+                                <p>Change Password</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 @endcan
 
