@@ -14,7 +14,7 @@
     </button>
 
     <!-- Table -->
-    <table class="table table-bordered">
+    <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
         <thead>
             <tr>
                 <th>#</th>

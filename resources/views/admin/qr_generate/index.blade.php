@@ -32,7 +32,7 @@
 </form>
 
 <!-- LIST -->
-<table class="table table-bordered">
+<table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
 <tr>
 <th>#</th><th>Category</th><th>Date</th><th>QR</th><th>Action</th>
 </tr>

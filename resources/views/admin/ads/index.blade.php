@@ -14,7 +14,7 @@
     </div>
 
     <div class="card-body">
-        <table class="table table-bordered" id="adsTable">
+            <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -92,7 +92,6 @@
 <script>
 $(function(){
     $('#adsTable').DataTable();
-
     // CREATE
     window.openCreateModal = function(){
         $('#record_id').val('');

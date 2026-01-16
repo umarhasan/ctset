@@ -12,7 +12,7 @@
     </div>
 
     <div class="card-body">
-        <table class="table table-hover table-striped table-bordered" id="masterTable">
+        <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
             <thead class="table-light">
                 <tr>
                     <th>Category Name</th>
