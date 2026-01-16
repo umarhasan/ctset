@@ -14,6 +14,8 @@
     content="AdminLTE is a Free Bootstrap 5 Admin Dashboard. Fully accessible with WCAG 2.1 AA compliance."
   />
   <link rel="preload" href="{{ asset('adminlte/css/adminlte.css') }}" as="style" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
@@ -24,11 +26,6 @@
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
-    crossorigin="anonymous"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     crossorigin="anonymous"
   />
   <link rel="stylesheet" href="{{ asset('adminlte/css/adminlte.css') }}" />
@@ -42,7 +39,6 @@
     href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
     crossorigin="anonymous"
   />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 
 
