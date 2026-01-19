@@ -52,6 +52,7 @@ use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\QrCategoryController;
 use App\Http\Controllers\Admin\GeneratedQrController;
 use App\Http\Controllers\Admin\PdfController;
+
 // Exam
 use App\Http\Controllers\Admin\ExamController;
     Route::get('/', function () {
@@ -121,7 +122,8 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('dop-steps', DopStepController::class);
         Route::resource('pdfs', PdfController::class);
         Route::get('pdfs/{page_name}', [PdfController::class, 'show'])->name('pdfs.show');
-        
+        Route::get('/pdfs/stream/{filename}', [PdfController::class, 'streamPdf'])->name('pdfs.stream');
+
         Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
         Route::post('/profile/update',[ProfileController::class,'update'])->name('profile.update');
 

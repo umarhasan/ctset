@@ -30,7 +30,6 @@
                 <tr>
                     <input type="hidden" name="pdfs[{{ $i }}][id]" value="{{ $pdf->id }}">
 
-                    {{-- Dropdown Name --}}
                     <td>
                         <select class="form-control" name="pdfs[{{ $i }}][page_name]">
                             <option value="Academic Input" @selected($pdf->page_name=="Academic Input")>Academic Input</option>
@@ -38,34 +37,28 @@
                         </select>
                     </td>
 
-                    {{-- Permission Key (auto from first 2 words) --}}
                     <td>
                         <input class="form-control permission-key" name="pdfs[{{ $i }}][page_key]" value="{{ $pdf->page_key }}" readonly>
                     </td>
 
-                    {{-- Title --}}
                     <td>
                         <input class="form-control title-input" name="pdfs[{{ $i }}][title]" value="{{ $pdf->title }}">
                     </td>
 
-                    {{-- Upload PDF --}}
                     <td>
                         <input type="file" class="pdf-upload" name="pdfs[{{ $i }}][file]">
                     </td>
 
-                    {{-- View --}}
                     <td class="text-center">
                         @if($pdf->file)
-                            <a href="{{ asset('storage/'.$pdf->file) }}" target="_blank" class="btn btn-primary btn-sm">View</a>
+                            <a href="{{ route('pdfs.stream', basename($pdf->file)) }}" target="_blank" class="btn btn-primary btn-sm">View</a>
                         @else — @endif
                     </td>
 
-                    {{-- Pages (auto from PDF) --}}
                     <td>
                         <input class="form-control total-pages" name="pdfs[{{ $i }}][total_pages]" value="{{ $pdf->total_pages }}" readonly>
                     </td>
 
-                    {{-- Status --}}
                     <td>
                         <select class="form-control" name="pdfs[{{ $i }}][status]">
                             <option value="1" @selected($pdf->status)>Active</option>
@@ -73,7 +66,6 @@
                         </select>
                     </td>
 
-                    {{-- Action --}}
                     <td class="text-center">
                         <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this, {{ $pdf->id ?? 0 }})">
                             <i class="fa fa-trash"></i>
