@@ -54,27 +54,7 @@
                 @endcan
                 {{-- My Trainee --}}
                 {{-- Exam Menu - Permission based --}}
-                @can('trainee.invitations')
-                    <li class="nav-item {{ request()->routeIs('trainee.invitations.*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs('trainee.invitations.*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-journal-text"></i>
-                            <p>
-                                My invitations
-                                <i class="nav-arrow bi bi-chevron-right"></i>
-                            </p>
-                        </a>
 
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('trainee.invitations') }}"
-                                class="nav-link {{ request()->routeIs('exams.index') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Trainee Invitations</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endcan
                 {{-- Exam Invite Dropdown - Permission based --}}
                 @php
                     // Check if user has any exam invite permission
@@ -623,7 +603,7 @@
                     </li>
                     @endcan
 
-                
+
         @role('Trainee')
             @php
                 // Active PDFs grouped by page_name
@@ -636,7 +616,7 @@
                     <i class="nav-icon fas fa-file-pdf"></i>
                     <p>
                         {{ $page_name }}
-                        <i class="right fas fa-angle-left"></i>
+                        <i class="nav-arrow bi bi-chevron-right"></i>
                     </p>
                 </a>
 
@@ -652,7 +632,27 @@
                 </ul>
             </li>
             @endforeach
-                
+                 @can('trainee.invitations')
+                    <li class="nav-item {{ request()->routeIs('trainee.invitations.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('trainee.invitations.*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-journal-text"></i>
+                            <p>
+                                My invitations
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('trainee.invitations') }}"
+                                class="nav-link {{ request()->routeIs('exams.index') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Trainee Invitations</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
                 <li class="nav-item">
                     <a href="{{ route('trainee.exams') }}"
                     class="nav-link {{ request()->routeIs('trainee.results.*') ? 'active' : '' }}">
@@ -706,7 +706,7 @@
                     </ul>
                 </li>
                 @endcanany
-            
+
                 @can('settings')
                 <li class="nav-item has-treeview {{ request()->routeIs('profile.*') || request()->routeIs('dashboard.password.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->routeIs('profile.*','profile.*') ? 'active' : '' }}">
@@ -723,7 +723,7 @@
                                 <i class="nav-icon fas fa-file-pdf"></i>
                                 <p>Manage PDFs</p>
                             </a>
-                        </li>   
+                        </li>
 
                         <li class="nav-item">
                             <a href="{{ route('password.edit') }}"
