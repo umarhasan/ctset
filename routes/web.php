@@ -151,6 +151,7 @@ use App\Http\Controllers\Admin\ExamController;
         Route::prefix('trainee')->name('trainee.')->group(function () {
             Route::get('/dashboard', [TraineeDashboardController::class, 'index'])->name('dashboard');
             Route::get('pdfs/{page_name}/{page_key}/{file?}', [TraineeDashboardController::class, 'show'])->name('pdfs.show');
+
             Route::get('/invitations', [ExamInvitationController::class, 'myInvitations'])->name('invitations');
 
             Route::get('exams',[TraineeExamController::class,'index'])->name('exams');

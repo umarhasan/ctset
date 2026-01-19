@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Trainee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pdf;
+use Illuminate\Support\Facades\Storage;
+
 class TraineeDashboardController extends Controller
 {
     public function index()
@@ -11,6 +13,9 @@ class TraineeDashboardController extends Controller
         return view('trainee.dashboard');
     }
 
+    /**
+     * Show PDF viewer for a page
+     */
     public function show($page_name, $page_key, $file = 1)
     {
         $pdf = Pdf::active()
@@ -18,21 +23,35 @@ class TraineeDashboardController extends Controller
             ->where('page_key', $page_key)
             ->firstOrFail();
 
-        // If you have a single PDF file
-        $pdfPath = $pdf->file; // This should be the full path to your PDF
+        // Single PDF path
+        $pdfPath = $pdf->file;
 
-        // OR if you have split PDFs like in your current setup
-        $pdfBasePath = $pdf->file . '/' . $pdf->title . '_';
-        $totalPages  = $pdf->total_pages;
+        // If split PDFs: base path
+        $pdfBasePath = $pdf->file ? $pdf->title . '_' : '';
+        $totalPages  = $pdf->total_pages ?? 1;
 
         return view('trainee.pdfs.show', compact(
             'pdf',
             'page_name',
             'page_key',
-            'pdfPath', // Use this for single PDF
-            'pdfBasePath', // Use this for split PDFs
+            'pdfPath',
+            'pdfBasePath',
             'file',
             'totalPages'
         ));
+    }
+
+    /**
+     * Stream PDF from storage
+     */
+    public function streamPdf($filename)
+    {
+        $filePath = 'pdfs/' . $filename;
+
+        if (!Storage::disk('public')->exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->file(storage_path('app/public/' . $filePath));
     }
 }
