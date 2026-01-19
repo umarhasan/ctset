@@ -51,7 +51,7 @@ use App\Http\Controllers\Admin\RatingController;
 use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\QrCategoryController;
 use App\Http\Controllers\Admin\GeneratedQrController;
-
+use App\Http\Controllers\Admin\PdfController;
 // Exam
 use App\Http\Controllers\Admin\ExamController;
     Route::get('/', function () {
@@ -119,7 +119,9 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
         Route::resource('dops', DopController::class);
         Route::resource('dop-steps', DopStepController::class);
-
+        Route::resource('pdfs', PdfController::class);
+        Route::get('pdfs/{page_name}', [PdfController::class, 'show'])->name('pdfs.show');
+        
         Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
         Route::post('/profile/update',[ProfileController::class,'update'])->name('profile.update');
 
@@ -133,7 +135,7 @@ use App\Http\Controllers\Admin\ExamController;
          Route::get('change-password', [ChangePasswordController::class, 'edit'])
         ->name('password.edit');
 
-    Route::put('change-password', [ChangePasswordController::class, 'update'])
+        Route::put('change-password', [ChangePasswordController::class, 'update'])
         ->name('password.update');
 
         Route::prefix('admin')->name('admin.')->group(function () {
@@ -146,6 +148,7 @@ use App\Http\Controllers\Admin\ExamController;
 
         Route::prefix('trainee')->name('trainee.')->group(function () {
             Route::get('/dashboard', [TraineeDashboardController::class, 'index'])->name('dashboard');
+            Route::get('pdfs/{page_name}/{page_key}/{file?}', [TraineeDashboardController::class, 'show'])->name('pdfs.show');
             Route::get('/invitations', [ExamInvitationController::class, 'myInvitations'])->name('invitations');
 
             Route::get('exams',[TraineeExamController::class,'index'])->name('exams');

@@ -623,7 +623,36 @@
                     </li>
                     @endcan
 
-                @role('Trainee')
+                
+        @role('Trainee')
+            @php
+                // Active PDFs grouped by page_name
+                $pdfGroups = \App\Models\Pdf::active()->get()->groupBy('page_name');
+            @endphp
+
+            @foreach($pdfGroups as $page_name => $pdfs)
+            <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-file-pdf"></i>
+                    <p>
+                        {{ $page_name }}
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+
+                <ul class="nav nav-treeview">
+                    @foreach($pdfs as $pdf)
+                    <li class="nav-item">
+                        <a href="{{ route('trainee.pdfs.show', ['page_name' => $pdf->title,'page_key' => $pdf->page_key, 'file' => 1]) }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>{{ $pdf->title }}</p>
+                        </a>
+                    </li>
+                    @endforeach
+                </ul>
+            </li>
+            @endforeach
+                
                 <li class="nav-item">
                     <a href="{{ route('trainee.exams') }}"
                     class="nav-link {{ request()->routeIs('trainee.results.*') ? 'active' : '' }}">
@@ -678,7 +707,7 @@
                 </li>
                 @endcanany
             
-                @can('profile.view')
+                @can('settings')
                 <li class="nav-item has-treeview {{ request()->routeIs('profile.*') || request()->routeIs('dashboard.password.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->routeIs('profile.*','profile.*') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-person"></i>
@@ -689,9 +718,13 @@
                     </a>
 
                     <ul class="nav nav-treeview">
-                        {{-- Profile --}}
-                        
-                        {{-- Change Password --}}
+                        <li class="nav-item">
+                            <a href="{{ route('pdfs.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-file-pdf"></i>
+                                <p>Manage PDFs</p>
+                            </a>
+                        </li>   
+
                         <li class="nav-item">
                             <a href="{{ route('password.edit') }}"
                             class="nav-link {{ request()->routeIs('dashboard.password.*') ? 'active' : '' }}">
