@@ -52,6 +52,7 @@ use App\Http\Controllers\Admin\LevelController;
 use App\Http\Controllers\Admin\QrCategoryController;
 use App\Http\Controllers\Admin\GeneratedQrController;
 use App\Http\Controllers\Admin\PdfController;
+use App\Http\Controllers\Admin\GrandWardRoundController;
 
 // Exam
 use App\Http\Controllers\Admin\ExamController;
@@ -82,6 +83,16 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('evaluation-360', Evaluation360Controller::class);
         Route::resource('rotation-evaluations', RotationEvaluationController::class);
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
+        Route::resource('grand-ward-rounds', GrandWardRoundController::class);
+        // Route::get('grand-ward-rounds/end/{round}', [\App\Http\Controllers\Admin\GrandWardRoundController::class, 'endActivity'])->name('grand-ward-rounds.end');
+
+        Route::get('grand-ward-rounds/{round}/end',[GrandWardRoundController::class,'end'])->name('grand-ward-rounds.end');
+        Route::post('grand-ward-rounds/{round}/toggle',[GrandWardRoundController::class,'toggleStatus']);
+
+        // ✅ PERFORMANCE CHART
+        Route::get('grand-ward-rounds/performance/data',
+            [GrandWardRoundController::class,'performanceData']
+        );
 
         Route::resource('competencies', CompetencyController::class);
         Route::resource('ratings', RatingController::class);

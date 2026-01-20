@@ -40,8 +40,11 @@
     crossorigin="anonymous"
   />
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-</head>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
+</head>
 
 
 <body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
@@ -55,7 +58,7 @@
             @yield('content')
         </div>
     </div>
-    </main>  
+    </main>
     @include('layouts.footer')
   </div>
 
@@ -63,8 +66,18 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 <script>
 toastr.options = {
     closeButton: true,
@@ -75,33 +88,57 @@ toastr.options = {
 </script>
 @stack('scripts')
 <script>
-    $(function () {
-        $('#examTable').DataTable({
-            scrollX: true,
-            autoWidth: true,
-            paging: true,
-            searching: true,
-            ordering: true,
-            info: true,
-            lengthChange: true,
-
-            dom:
-                "<'row mb-2'<'col-md-6'l><'col-md-6 text-end'f>>" +
-                "<'row'<'col-md-12'tr>>" +
-                "<'row mt-2'<'col-md-5'i><'col-md-7 text-end'p>>",
-
-            columnDefs: [
-                { targets: -1, orderable: false }
-            ],
-
-            language: {
-                search: "",
-                searchPlaceholder: "Search exams..."
-            }
-        });
-
-            $('[data-bs-toggle="tooltip"]').tooltip();
+$(function () {
+    // Existing examTable
+    $('#examTable').DataTable({
+        scrollX: true,
+        autoWidth: true,
+        paging: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        lengthChange: true,
+        dom:
+            "<'row mb-2'<'col-md-6'l><'col-md-6 text-end'f>>" +
+            "<'row'<'col-md-12'tr>>" +
+            "<'row mt-2'<'col-md-5'i><'col-md-7 text-end'p>>",
+        columnDefs: [
+            { targets: -1, orderable: false }
+        ],
+        language: {
+            search: "",
+            searchPlaceholder: "Search exams..."
+        }
     });
+
+    $('[data-bs-toggle="tooltip"]').tooltip();
+
+    // New table with Excel/PDF buttons
+    $('#roundsTable').DataTable({
+        responsive: true,
+        scrollX: true,
+        autoWidth: true,
+        paging: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        lengthChange: true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                title: 'Rounds Export'
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Rounds Export'
+            }
+        ],
+        columnDefs: [
+            { targets: -1, orderable: false } // last column no ordering
+        ]
+    });
+});
 </script>
 
 </body>
