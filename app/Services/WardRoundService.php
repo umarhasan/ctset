@@ -9,7 +9,7 @@ class WardRoundService
     {
         $round->update([
             'to_time' => now()->format('H:i'),
-            'involvement' => 'P',
+            'involvement' => 'A',
             'ended_at' => now()
         ]);
     }

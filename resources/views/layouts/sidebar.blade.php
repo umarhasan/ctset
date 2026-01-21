@@ -605,33 +605,54 @@
 
 
         @role('Trainee')
-            @php
-                // Active PDFs grouped by page_name
-                $pdfGroups = \App\Models\Pdf::active()->get()->groupBy('page_name');
-            @endphp
+                @php
+                    // Active PDFs grouped by page_name
+                    $pdfGroups = \App\Models\Pdf::active()->get()->groupBy('page_name');
+                @endphp
 
-            @foreach($pdfGroups as $page_name => $pdfs)
-            <li class="nav-item has-treeview">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-file-pdf"></i>
-                    <p>
-                        {{ $page_name }}
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                    </p>
-                </a>
+                @foreach($pdfGroups as $page_name => $pdfs)
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-file-pdf"></i>
+                        <p>
+                            {{ $page_name }}
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
 
-                <ul class="nav nav-treeview">
-                    @foreach($pdfs as $pdf)
-                    <li class="nav-item">
-                        <a href="{{ route('trainee.pdfs.show', ['page_name' => $pdf->title,'page_key' => $pdf->page_key, 'file' => 1]) }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>{{ $pdf->title }}</p>
+                    <ul class="nav nav-treeview">
+                        @foreach($pdfs as $pdf)
+                        <li class="nav-item">
+                            <a href="{{ route('trainee.pdfs.show', ['page_name' => $pdf->title,'page_key' => $pdf->page_key, 'file' => 1]) }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ $pdf->title }}</p>
+                            </a>
+                        </li>
+                        @endforeach
+                    </ul>
+                </li>
+                @endforeach
+                {{-- @can('grand-ward-rounds.index') --}}
+                    <li class="nav-item {{ request()->routeIs('grand-ward-rounds.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('grand-ward-rounds.*') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-heart-pulse-fill"></i>
+                            <p>
+                                Clinical Activities
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
                         </a>
+
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('grand-ward-rounds.index') }}"
+                                class="nav-link {{ request()->routeIs('grand-ward-rounds.index') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Grand CICU / Ward Round</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
-                    @endforeach
-                </ul>
-            </li>
-            @endforeach
+                    {{-- @endcan --}}
                  @can('trainee.invitations')
                     <li class="nav-item {{ request()->routeIs('trainee.invitations.*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->routeIs('trainee.invitations.*') ? 'active' : '' }}">

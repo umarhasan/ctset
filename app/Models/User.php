@@ -55,4 +55,16 @@ class User extends Authenticatable
     public function tabs(){
         return $this->hasMany(ProfileTab::class);
     }
+
+    public function grandWardRounds(): HasMany
+    {
+        return $this->hasMany(GrandWardRound::class, 'user_id');
+    }
+
+    // Consultant ke ward rounds
+    public function consultantRounds(): HasMany
+    {
+        return $this->hasMany(GrandWardRound::class, 'consultant_id');
+    }
+
 }
