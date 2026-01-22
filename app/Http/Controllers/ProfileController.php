@@ -19,12 +19,13 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
+        /* ================= VALIDATION ================= */
         $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'password' => 'nullable|min:6',
-            'profile_image' => 'nullable|image|max:2048',
+            'name'            => 'required|string|max:255',
+            'password'        => 'nullable|min:6',
+            'profile_image'   => 'nullable|image|max:2048',
             'signature_image' => 'nullable|image|max:2048',
-            'bio' => 'nullable',
+            'bio'             => 'nullable|string',
         ]);
 
         /* ================= PASSWORD ================= */
@@ -34,25 +35,40 @@ class ProfileController extends Controller
             unset($data['password']);
         }
 
-        /* ================= PROFILE IMAGE ================= */
+        /* ================= PROFILE IMAGE → storage/app/public/profiles ================= */
         if ($request->hasFile('profile_image')) {
+
             if ($user->profile_image) {
                 Storage::disk('public')->delete($user->profile_image);
             }
-            $data['profile_image'] = $request->file('profile_image')->store('profiles', 'public');
+
+            $file = $request->file('profile_image');
+            $filename = 'profile_'.$user->id.'_'.time().'.'.$file->getClientOriginalExtension();
+
+            $path = $file->storeAs('profiles', $filename, 'public');
+
+            $data['profile_image'] = $path; // profiles/filename.jpg
         }
 
-        /* ================= SIGNATURE IMAGE ================= */
+        /* ================= SIGNATURE IMAGE → storage/app/public/signatures ================= */
         if ($request->hasFile('signature_image')) {
+
             if ($user->signature_image) {
                 Storage::disk('public')->delete($user->signature_image);
             }
-            $data['signature_image'] = $request->file('signature_image')->store('signatures', 'public');
+
+            $file = $request->file('signature_image');
+            $filename = 'signature_'.$user->id.'_'.time().'.'.$file->getClientOriginalExtension();
+
+            $path = $file->storeAs('signatures', $filename, 'public');
+
+            $data['signature_image'] = $path; // signatures/filename.png
         }
 
+        /* ================= UPDATE USER ================= */
         $user->update($data);
 
-        /* ================= AJAX RESPONSE ================= */
+        /* ================= RESPONSE ================= */
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
@@ -64,7 +80,8 @@ class ProfileController extends Controller
     }
 
 
-        public function saveTab(Request $request)
+
+    public function saveTab(Request $request)
     {
         $data = $request->validate([
             'tabid' => 'nullable|integer',
