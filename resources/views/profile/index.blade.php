@@ -46,10 +46,18 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label>Profile Image</label>
+                        <div class="col-md-6 mb-3">
+                            <label>Profile Image</label><br>
                             <input type="file" name="profile_image" class="form-control">
+                            <img src="{{ $user->profile_image ? route('user.profile.stream', $user->profile_image) : asset('adminlte/assets/img/avatar.png') }}" width="100" class="mb-2">
                         </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Signature Image</label><br>
+                            <input type="file" name="signature_image" class="form-control">
+                            <img src="{{ $user->signature_image ? route('user.signature.stream', $user->signature_image) : asset('adminlte/assets/img/default-signature.png') }}" width="150" class="mb-2">
+                        </div>
+                    </div>
 
                         @if($user->hasAnyRole(['doctor','trainee']))
                         <div class="col-md-6">

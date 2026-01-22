@@ -361,7 +361,7 @@ body {font-family: Verdana, sans-serif;}
                 <div class="bio-profile-pg-tab-inner-content">
                     <div class="bio-profile-pg-col-left">
                         <div class="bio-profile-pg-profile-left">
-                            <img src="{{ $user->profile_image ? route('file',$user->profile_image) : asset('adminlte/assets/img/avatar.png') }}" alt="Profile Image">
+                            <img src="{{ $user->profile_image ? route('user.profile.stream', $user->profile_image) : asset('adminlte/assets/img/avatar.png') }}" width="100" class="mb-2">
                         </div>
                         <div class="bio-profile-pg-profile-right">
                             <h1>{{ $user->name ?? 'No Name' }}</h1>

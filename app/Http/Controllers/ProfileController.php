@@ -15,60 +15,59 @@ class ProfileController extends Controller
         return view('profile.index', compact('user','tabs'));
     }
 
-    public function update(Request $request)
+     public function update(Request $request)
     {
         $user = auth()->user();
 
-        /* ================= VALIDATION ================= */
         $data = $request->validate([
-            'name'            => 'required|string|max:255',
-            'password'        => 'nullable|min:6',
-            'profile_image'   => 'nullable|image|max:2048',
+            'name' => 'required|string|max:255',
+            'password' => 'nullable|min:6',
+            'bio' => 'nullable|string',
+            'profile_image' => 'nullable|image|max:2048',
             'signature_image' => 'nullable|image|max:2048',
-            'bio'             => 'nullable|string',
         ]);
 
-        /* ================= PASSWORD ================= */
+        // ================= PASSWORD =================
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         } else {
             unset($data['password']);
         }
 
-        /* ================= PROFILE IMAGE → storage/app/public/profiles ================= */
+        // ================= PROFILE IMAGE =================
         if ($request->hasFile('profile_image')) {
 
-            if ($user->profile_image) {
-                Storage::disk('public')->delete($user->profile_image);
+            // Delete old file
+            if ($user->profile_image && Storage::disk('public')->exists('profiles/'.$user->profile_image)) {
+                Storage::disk('public')->delete('profiles/'.$user->profile_image);
             }
 
+            // Store new file
             $file = $request->file('profile_image');
             $filename = 'profile_'.$user->id.'_'.time().'.'.$file->getClientOriginalExtension();
+            $file->storeAs('profiles', $filename, 'public');
 
-            $path = $file->storeAs('profiles', $filename, 'public');
-
-            $data['profile_image'] = $path; // profiles/filename.jpg
+            $data['profile_image'] = $filename; // only filename saved
         }
 
-        /* ================= SIGNATURE IMAGE → storage/app/public/signatures ================= */
+        // ================= SIGNATURE IMAGE =================
         if ($request->hasFile('signature_image')) {
 
-            if ($user->signature_image) {
-                Storage::disk('public')->delete($user->signature_image);
+            // Delete old file
+            if ($user->signature_image && Storage::disk('public')->exists('signatures/'.$user->signature_image)) {
+                Storage::disk('public')->delete('signatures/'.$user->signature_image);
             }
 
+            // Store new file
             $file = $request->file('signature_image');
             $filename = 'signature_'.$user->id.'_'.time().'.'.$file->getClientOriginalExtension();
+            $file->storeAs('signatures', $filename, 'public');
 
-            $path = $file->storeAs('signatures', $filename, 'public');
-
-            $data['signature_image'] = $path; // signatures/filename.png
+            $data['signature_image'] = $filename;
         }
 
-        /* ================= UPDATE USER ================= */
         $user->update($data);
 
-        /* ================= RESPONSE ================= */
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
@@ -77,6 +76,30 @@ class ProfileController extends Controller
         }
 
         return back()->with('success', 'Profile updated successfully!');
+    }
+
+    // ================= STREAM PROFILE IMAGE =================
+    public function streamProfileImage($filename)
+    {
+        $filePath = 'profiles/' . $filename;
+
+        if (!Storage::disk('public')->exists($filePath)) {
+            abort(404, 'Profile image not found');
+        }
+
+        return response()->file(storage_path('app/public/' . $filePath));
+    }
+
+    // ================= STREAM SIGNATURE IMAGE =================
+    public function streamSignatureImage($filename)
+    {
+        $filePath = 'signatures/' . $filename;
+
+        if (!Storage::disk('public')->exists($filePath)) {
+            abort(404, 'Signature image not found');
+        }
+
+        return response()->file(storage_path('app/public/' . $filePath));
     }
 
 

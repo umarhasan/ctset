@@ -132,8 +132,12 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('pdfs', PdfController::class);
         Route::get('pdfs/{page_name}', [PdfController::class, 'show'])->name('pdfs.show');
         Route::get('/pdfs/stream/{filename}', [PdfController::class, 'streamPdf'])->name('pdfs.stream');
-        Route::get('/user/profile-image/{filename}', [UserController::class, 'profileImage'])->name('user.profile.image');
-        Route::get('/user/signature-image/{filename}', [UserController::class, 'signatureImage'])->name('user.signature.image');        
+        // Stream images
+        Route::get('/user/profile/{filename}', [ProfileController::class, 'streamProfileImage'])
+            ->name('user.profile.stream')->middleware('auth');
+
+        Route::get('/user/signature/{filename}', [ProfileController::class, 'streamSignatureImage'])
+            ->name('user.signature.stream')->middleware('auth');       
         
         Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
         Route::get('/my-profile',[ProfileController::class, 'myProfile'])->name('my.profile');
