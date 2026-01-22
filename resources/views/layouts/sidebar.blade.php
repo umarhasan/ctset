@@ -29,6 +29,39 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                @unlessrole('Admin')
+                <li class="nav-item {{ request()->routeIs('profile.*','public.profile.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('profile.*','public.profile.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-person-circle"></i>
+                        <p>
+                            Profiles
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        {{-- My Profile --}}
+                        <li class="nav-item">
+                            <a href="{{ route('my.profile') }}"
+                            class="nav-link {{ request()->routeIs('my.profile') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-person"></i>
+                                <p>My Profile</p>
+                            </a>
+                        </li>
+
+                        {{-- My Public Profile --}}
+                        <li class="nav-item">
+                            <a href="{{ route('public.profile', auth()->user()->id) }}"
+                            class="nav-link {{ request()->routeIs('public.profile.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-globe"></i>
+                                <p>Public Profile</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                @endunlessrole
 
                 {{-- Exam Menu - Permission based --}}
                 @can('exams.index')

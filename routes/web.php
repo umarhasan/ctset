@@ -133,8 +133,9 @@ use App\Http\Controllers\Admin\ExamController;
         Route::get('/pdfs/stream/{filename}', [PdfController::class, 'streamPdf'])->name('pdfs.stream');
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
+        Route::get('/my-profile',[ProfileController::class, 'myProfile'])->name('my.profile');
+        Route::get('/public-profile', [ProfileController::class, 'publicProfile'])->name('public.profile');
         Route::post('/profile/update',[ProfileController::class,'update'])->name('profile.update');
-
         Route::post('/profile/tab/save',[ProfileController::class,'saveTab'])->name('profile.tab.save');
         Route::delete('/profile/tab/{id}',[ProfileController::class,'deleteTab'])->name('profile.tab.delete');
         // Route::prefix('profile')->group(function () {

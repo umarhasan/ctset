@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ProfileTab;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Storage;
 class ProfileController extends Controller
 {
     public function index()
@@ -135,5 +135,35 @@ class ProfileController extends Controller
             
             return back()->with('error', 'Error deleting tab: ' . $e->getMessage());
         }
+    }
+
+    public function myProfile()
+    {
+        $user = auth()->user();
+
+        // Sirf PUBLIC tabs
+        $tabs = ProfileTab::where('user_id', $user->id)
+                    ->where('profile_type', 'PU')
+                    ->get();
+
+        return view('profile.my-profile', compact('user','tabs'));
+    }
+
+    public function publicProfile(Request $request)
+    {
+        $uid = $request->query('uid');
+
+        $user = null;
+        $tabs = collect(); // empty collection by default
+
+        if($uid) {
+            // Fetch user only if uid is provided
+            $user = User::find($uid);
+            if ($user) {
+                $tabs = ProfileTab::where('user_id', $uid)->get();
+            }
+        }
+
+        return view('profile.public-profile', compact('user', 'tabs'));
     }
 }
