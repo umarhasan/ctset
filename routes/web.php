@@ -54,6 +54,7 @@ use App\Http\Controllers\Admin\GeneratedQrController;
 use App\Http\Controllers\Admin\PdfController;
 use App\Http\Controllers\Admin\GrandWardRoundController;
 
+
 // Exam
 use App\Http\Controllers\Admin\ExamController;
     Route::get('/', function () {
@@ -131,7 +132,9 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('pdfs', PdfController::class);
         Route::get('pdfs/{page_name}', [PdfController::class, 'show'])->name('pdfs.show');
         Route::get('/pdfs/stream/{filename}', [PdfController::class, 'streamPdf'])->name('pdfs.stream');
-
+        Route::get('/user/profile-image/{filename}', [UserController::class, 'profileImage'])->name('user.profile.image');
+        Route::get('/user/signature-image/{filename}', [UserController::class, 'signatureImage'])->name('user.signature.image');        
+        
         Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
         Route::get('/my-profile',[ProfileController::class, 'myProfile'])->name('my.profile');
         Route::get('/public-profile', [ProfileController::class, 'publicProfile'])->name('public.profile');

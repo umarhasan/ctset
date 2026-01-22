@@ -24,7 +24,10 @@
             <div class="bio-profile-pg-tab-inner-content">
                 <div class="bio-profile-pg-col-left">
                     <div class="bio-profile-pg-profile-left">
-                        <img src="{{ $user->profile_image ? asset('storage/'.$user->profile_image) : asset('adminlte/assets/img/avatar.png') }}" alt="Profile Image">
+                        <img src="{{ $user->profile_image 
+    ? route('user.profile.image', ['filename' => $user->profile_image]) 
+    : asset('adminlte/assets/img/avatar.png') }}" 
+    alt="Profile Image">
                     </div>
                     <div class="bio-profile-pg-profile-right">
                         <h1>{{ $user->name }}</h1>
