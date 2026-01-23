@@ -1,0 +1,28 @@
+@font-face{
+    font-family: 'Circular Air-Light';
+    src: url('../fonts/Circular Air-Light.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'Circular Air-Medium';
+    src: url('../fonts/Circular Air-Medium.ttf') format('truetype');
+}
+@font-face{
+    font-family: 'CircularStd-Book';
+    src: url('../fonts/CircularStd-Book.otf') format('opentype');
+}
+@font-face{
+    font-family: 'CircularStd-Medium';
+    src: url('../fonts/CircularStd-Medium.otf') format('opentype');
+}
+@font-face{
+    font-family: 'ChaletNewYorkNineteenEighty';
+    src: url('../fonts/ChaletNewYorkNineteenEighty.ttf') format('truetype');
+}
+body {
+    background-color: #fff;
+    font-family: 'CircularStd-Book';
+}
+.wb-head {
+    font-size: 32px;
+    color: #28435b;
+}
