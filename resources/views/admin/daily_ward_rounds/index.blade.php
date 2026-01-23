@@ -5,15 +5,15 @@
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>
-            GRAND CICU / WARD ROUND
+            DAILY CICU / WARD ROUND
             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRoundModal">
                 <i class="fas fa-plus"></i>
             </button>
         </h3>
 
         <div>
-            <a href="{{ route('grand-ward-rounds.export.excel') }}" class="btn btn-success btn-sm">Excel</a>
-            <a href="{{ route('grand-ward-rounds.export.pdf') }}" class="btn btn-danger btn-sm">PDF</a>
+            <a href="{{ route('daily-ward-rounds.export.excel') }}" class="btn btn-success btn-sm">Excel</a>
+            <a href="{{ route('daily-ward-rounds.export.pdf') }}" class="btn btn-danger btn-sm">PDF</a>
             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#performanceModal">Performance</button>
         </div>
     </div>
@@ -23,10 +23,10 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    {{-- GRAND WARD ROUND TABLE --}}
+    {{-- DAILY WARD ROUND TABLE --}}
     <div class="card">
         <div class="card-body">
-            <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
+            <table id="examTable" class="table table-bordered table-hover text-center w-100">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
@@ -38,8 +38,7 @@
                         <th>Rotation</th>
                         <th>Involvement</th>
                         <th>Consultant</th>
-                        <th>Consultant Signature</th>
-
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,7 +50,7 @@
                             <td>{{ $r->from_time }}</td>
                             <td>
                                 @if(!$r->to_time)
-                                <a href="{{ route('grand-ward-rounds.end',$r) }}" onclick="return confirm('End activity?')" class="btn btn-danger btn-sm">End activity</a>
+                                <a href="{{ route('daily-ward-rounds.end',$r) }}" onclick="return confirm('End activity?')" class="btn btn-danger btn-sm">End</a>
                                 @else
                                 {{ $r->to_time }}
                                 @endif
@@ -62,24 +61,19 @@
                                 <span class="badge bg-{{ $r->involvement=='A'?'success':'secondary' }}">
                                     {{ $r->involvement=='A'?'Active':'Waiting' }}
                                 </span>
-                                @if(auth()->user()->userType == 4)
-                                <br>
-                                <label class="switch">
-                                    <input type="checkbox" {{ $r->involvement=='A'?'checked':'' }} onchange="toggleInvolvement({{ $r->id }})">
-                                    <span class="slider round"></span>
-                                </label>
-                                @endif
                             </td>
                             <td>{{ $r->consultant->name ?? $r->consultant_free_text ?? '-' }}</td>
                             <td>
-                                @if($r->consultant_signature)
-                                    <img src="{{ asset('sign/'.$r->consultant_signature) }}" width="80">
-                                @endif
+                                <form method="POST" action="{{ route('daily-ward-rounds.destroy',$r) }}">
+                                    @csrf @method('DELETE')
+                                    <button class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </td>
-
                         </tr>
                     @empty
-                        <tr><td colspan="11">No records found</td></tr>
+                        <tr><td colspan="10">No records found</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -91,10 +85,10 @@
 {{-- ADD ROUND MODAL --}}
 <div class="modal fade" id="addRoundModal" tabindex="-1">
     <div class="modal-dialog">
-        <form method="POST" action="{{ route('grand-ward-rounds.store') }}" class="modal-content">
+        <form method="POST" action="{{ route('daily-ward-rounds.store') }}" class="modal-content">
             @csrf
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">Add Round</h5>
+                <h5 class="modal-title">Add Daily Round</h5>
                 <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
 
@@ -154,9 +148,6 @@
                         <label>Consultant Free Text</label>
                         <input type="text" name="consultant_free_text" class="form-control">
                     </div>
-
-                    <div id="feesContainer"></div>
-                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="addFeeRow()">+ Add Fee</button>
                 </div>
 
             </div>
@@ -221,7 +212,6 @@
 @endsection
 
 @push('scripts')
-
 <script>
 document.addEventListener('DOMContentLoaded',function(){
 
@@ -252,7 +242,7 @@ function switchTab(t){ tab=t; loadData(currentPeriod); }
 function loadData(period){
     currentPeriod=period;
     document.getElementById('loader').style.display='block';
-    fetch(`{{ route('grand-ward-rounds.performance') }}?period=${period}`)
+    fetch(`{{ route('daily-ward-rounds.performance') }}?period=${period}`)
     .then(r=>r.json())
     .then(res=>{
         document.getElementById('loader').style.display='none';

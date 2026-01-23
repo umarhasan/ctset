@@ -53,7 +53,8 @@ use App\Http\Controllers\Admin\QrCategoryController;
 use App\Http\Controllers\Admin\GeneratedQrController;
 use App\Http\Controllers\Admin\PdfController;
 use App\Http\Controllers\Admin\GrandWardRoundController;
-
+use App\Http\Controllers\Admin\DailyWardRoundController;
+use App\Http\Controllers\Admin\CicuWardRoundController;
 
 // Exam
 use App\Http\Controllers\Admin\ExamController;
@@ -90,7 +91,36 @@ use App\Http\Controllers\Admin\ExamController;
         Route::get('grand-ward-rounds/export/excel', [GrandWardRoundController::class, 'exportExcel'])->name('grand-ward-rounds.export.excel');
         Route::get('grand-ward-rounds/export/pdf', [GrandWardRoundController::class, 'exportPdf'])->name('grand-ward-rounds.export.pdf');
         Route::get('grand-ward-rounds/performance/analysis', [GrandWardRoundController::class, 'performanceAnalysis'])->name('grand-ward-rounds.performance');
+        // Default Resource Routes
+        Route::resource('daily-ward-rounds', DailyWardRoundController::class);
+        Route::get('/daily-ward-rounds/{daily_ward_round}/end', [DailyWardRoundController::class, 'end'])->name('daily-ward-rounds.end');
+        Route::get('daily-ward-rounds/export/excel', [DailyWardRoundController::class, 'exportExcel'])->name('daily-ward-rounds.export.excel');
+        Route::get('daily-ward-rounds/export/pdf', [DailyWardRoundController::class, 'exportPdf'])->name('daily-ward-rounds.export.pdf');
+        Route::get('daily-ward-rounds/performance/analysis', [DailyWardRoundController::class, 'performanceAnalysis'])->name('daily-ward-rounds.performance');
 
+        Route::prefix('cicu-ward-rounds')->group(function() {
+            Route::get('performance', [CicuWardRoundController::class,'performanceAnalysis'])
+                ->name('cicu-ward-rounds.performance');
+            Route::get('export/excel', [CicuWardRoundController::class,'exportExcel'])
+                ->name('cicu-ward-rounds.export.excel');
+            Route::get('export/pdf', [CicuWardRoundController::class,'exportPdf'])
+                ->name('cicu-ward-rounds.export.pdf');
+            Route::get('end/{cicu_ward_round}/end', [CicuWardRoundController::class,'end'])
+                ->name('cicu-ward-rounds.end');
+
+            // Resource route with proper names
+            Route::resource('/', CicuWardRoundController::class)
+                ->parameters(['' => 'cicu_ward_round'])
+                ->names([
+                    'index'   => 'cicu-ward-rounds.index',
+                    'create'  => 'cicu-ward-rounds.create',
+                    'store'   => 'cicu-ward-rounds.store',
+                    'show'    => 'cicu-ward-rounds.show',
+                    'edit'    => 'cicu-ward-rounds.edit',
+                    'update'  => 'cicu-ward-rounds.update',
+                    'destroy' => 'cicu-ward-rounds.destroy',
+                ]);
+        });
 
         Route::resource('competencies', CompetencyController::class);
         Route::resource('ratings', RatingController::class);
@@ -137,8 +167,8 @@ use App\Http\Controllers\Admin\ExamController;
             ->name('user.profile.stream')->middleware('auth');
 
         Route::get('/user/signature/{filename}', [ProfileController::class, 'streamSignatureImage'])
-            ->name('user.signature.stream')->middleware('auth');       
-        
+            ->name('user.signature.stream')->middleware('auth');
+
         Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
         Route::get('/my-profile',[ProfileController::class, 'myProfile'])->name('my.profile');
         Route::get('/public-profile', [ProfileController::class, 'publicProfile'])->name('public.profile');

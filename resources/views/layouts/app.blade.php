@@ -61,6 +61,7 @@
     @include('layouts.footer')
   </div>
 
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
@@ -79,6 +80,8 @@
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
 
+
+
 <script>
 toastr.options = {
     closeButton: true,
@@ -91,31 +94,8 @@ toastr.options = {
 <script>
 $(function () {
     // Existing examTable
+    $(document).ready(function () {
     $('#examTable').DataTable({
-        scrollX: true,
-        autoWidth: true,
-        paging: true,
-        searching: true,
-        ordering: true,
-        info: true,
-        lengthChange: true,
-        dom:
-            "<'row mb-2'<'col-md-6'l><'col-md-6 text-end'f>>" +
-            "<'row'<'col-md-12'tr>>" +
-            "<'row mt-2'<'col-md-5'i><'col-md-7 text-end'p>>",
-        columnDefs: [
-            { targets: -1, orderable: true }
-        ],
-        language: {
-            search: "",
-            searchPlaceholder: "Search exams..."
-        }
-    });
-
-    $('[data-bs-toggle="tooltip"]').tooltip();
-
-    // New table with Excel/PDF buttons
-    $('#roundsTable').DataTable({
         responsive: true,
         scrollX: true,
         autoWidth: true,
@@ -123,22 +103,17 @@ $(function () {
         searching: true,
         ordering: true,
         info: true,
-        lengthChange: true,
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                title: 'Rounds Export'
-            },
-            {
-                extend: 'pdfHtml5',
-                title: 'Rounds Export'
-            }
-        ],
+        lengthChange: false,
         columnDefs: [
-            { targets: -1, orderable: false } // last column no ordering
+            { targets: -1, orderable: true } // last column (action/signature) no ordering
         ]
     });
+
+});
+
+    $('[data-bs-toggle="tooltip"]').tooltip();
+
+
 });
 </script>
 <script type="text/javascript" src="https://sellfy.com/js/api_buttons.js"></script>

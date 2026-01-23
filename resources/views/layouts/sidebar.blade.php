@@ -666,8 +666,8 @@
                 </li>
                 @endforeach
                 {{-- @can('grand-ward-rounds.index') --}}
-                    <li class="nav-item {{ request()->routeIs('grand-ward-rounds.*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs('grand-ward-rounds.*') ? 'active' : '' }}">
+                    <li class="nav-item {{ request()->routeIs('grand-ward-rounds.*','daily-ward-rounds.*','cicu-ward-rounds.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('grand-ward-rounds.*','daily-ward-rounds.*','cicu-ward-rounds.*') ? 'active' : '' }}">
                             <i class="nav-icon bi bi-heart-pulse-fill"></i>
                             <p>
                                 Clinical Activities
@@ -676,13 +676,34 @@
                         </a>
 
                         <ul class="nav nav-treeview">
+                            {{-- Grand CICU / Ward Round --}}
                             <li class="nav-item">
                                 <a href="{{ route('grand-ward-rounds.index') }}"
-                                class="nav-link {{ request()->routeIs('grand-ward-rounds.index') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('grand-ward-rounds.*') ? 'active' : '' }}">
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>Grand CICU / Ward Round</p>
                                 </a>
                             </li>
+
+                            {{-- Daily Ward Round --}}
+                            <li class="nav-item">
+                                <a href="{{ route('daily-ward-rounds.index') }}"
+                                class="nav-link {{ request()->routeIs('daily-ward-rounds.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Daily Ward Round</p>
+                                </a>
+                            </li>
+
+                            {{-- Performance Dashboard --}}
+                            <li class="nav-item">
+                                <a href="{{ route('cicu-ward-rounds.index') }}"
+                                class="nav-link {{ request()->routeIs('cicu-ward-rounds.index') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>CICU Ward Rounds</p>
+                                </a>
+                            </li>
+
+
                         </ul>
                     </li>
                     {{-- @endcan --}}
