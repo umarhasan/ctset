@@ -105,6 +105,8 @@
             </div>
 
             <div class="modal-body">
+                <input type="hidden" id="lat" name="lat" value="" />
+                <input type="hidden" id="long" name="long" value="" />
                 <div class="mb-2">
                     <label>Date</label>
                     <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required>
@@ -169,7 +171,6 @@
     </div>
 </div>
 
-{{-- ================= PERFORMANCE MODAL ================= --}}
 <div class="modal fade" id="performanceModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -235,7 +236,10 @@ let tab = 'top5';
 let currentPeriod = 'all';
 
 /* DEFAULT */
-document.addEventListener('DOMContentLoaded',()=>loadData('all'));
+document.addEventListener('DOMContentLoaded', function () {
+    loadData('all');
+    getlocation();
+});
 
 /* CONSULTANT */
 function toggleConsultant(sel){
@@ -299,13 +303,30 @@ function drawBar(data){
     s.dataFields.categoryX="name";
 }
 
-/* TABLE */
 function fillTop5(data){
     let html='';
     data.forEach((d,i)=>{
         html+=`<tr><td>${i+1}</td><td>${d.name}</td><td>${d.type}</td><td>${d.value}</td></tr>`;
     });
     top5Body.innerHTML=html;
+}
+
+
+function getlocation() {
+    if (!navigator.geolocation) {
+        console.warn('Geolocation not supported');
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        function(position){
+            document.getElementById('lat').value = position.coords.latitude;
+            document.getElementById('long').value = position.coords.longitude;
+        },
+        function(){
+            console.warn('Location permission denied');
+        }
+    );
 }
 </script>
 @endpush
