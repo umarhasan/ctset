@@ -57,7 +57,8 @@ use App\Http\Controllers\Admin\DailyWardRoundController;
 use App\Http\Controllers\Admin\CicuWardRoundController;
 use App\Http\Controllers\Admin\ClinicalSessionController;
 use App\Http\Controllers\Admin\TraineeDopsController;
-
+use App\Http\Controllers\Admin\DiagnosisController;
+use App\Http\Controllers\Admin\ProcedureController;
 
 // Exam
 use App\Http\Controllers\Admin\ExamController;
@@ -88,14 +89,16 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('evaluation-360', Evaluation360Controller::class);
         Route::resource('rotation-evaluations', RotationEvaluationController::class);
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
-
+        Route::resource('diagnoses', DiagnosisController::class);
+        Route::resource('procedures', ProcedureController::class);
+        
         // Grand Ward Rounds
         Route::resource('grand-ward-rounds', GrandWardRoundController::class);
         Route::get('/grand-ward-rounds/{grand_ward_round}/end', [GrandWardRoundController::class, 'end'])->name('grand-ward-rounds.end');
         Route::get('grand-ward-rounds/export/excel', [GrandWardRoundController::class, 'exportExcel'])->name('grand-ward-rounds.export.excel');
         Route::get('grand-ward-rounds/export/pdf', [GrandWardRoundController::class, 'exportPdf'])->name('grand-ward-rounds.export.pdf');
         Route::get('grand-ward-rounds/performance/analysis', [GrandWardRoundController::class, 'performanceAnalysis'])->name('grand-ward-rounds.performance');
-
+        
         // Clinical Sessions
         Route::resource('clinical-sessions', ClinicalSessionController::class);
         Route::get('/clinical-sessions/{clinical_session}/end', [ClinicalSessionController::class, 'end'])->name('clinical-sessions.end');
@@ -133,6 +136,7 @@ use App\Http\Controllers\Admin\ExamController;
                     'destroy' => 'cicu-ward-rounds.destroy',
                 ]);
         });
+
 
         Route::resource('competencies', CompetencyController::class);
         Route::resource('ratings', RatingController::class);
@@ -218,10 +222,14 @@ use App\Http\Controllers\Admin\ExamController;
             Route::get('results',[TraineeResultController::class,'index'])->name('results.index');
             Route::get('results/{exam}',[TraineeResultController::class,'view'])->name('results.view');
 
-           Route::get('/get-dops/{rotation}', [TraineeDopsController::class, 'getDops']); // For rotation → DOPS dropdown
-           Route::resource('/dops', TraineeDopsController::class);
+            Route::resource('/dops', TraineeDopsController::class);
+            Route::get('/get-dops/{rotation}', [TraineeDopsController::class, 'getDops']); // For rotation → DOPS dropdown
+            Route::get('/dops/{traine_dops}/end', [TraineeDopsController::class, 'end'])->name('dops.end');
+            Route::get('/dops/export/excel', [TraineeDopsController::class, 'exportExcel'])->name('dops.export.excel');
+            Route::get('/dops/export/pdf', [TraineeDopsController::class, 'exportPdf'])->name('dops.export.pdf');
 
-        });
+
+            });
     });
 
 require __DIR__.'/auth.php';

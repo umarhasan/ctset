@@ -1,18 +1,34 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
 
-<div class="d-flex justify-content-between mb-2">
-    <h4>Trainee DOPS</h4>
-    <button class="btn btn-outline-secondary btn-sm">Activity</button>
-</div>
+<div class="container-fluid">
 
-@if(session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
-@endif
+    {{-- HEADER --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>
+            Trainee DOPS
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#dopsModal" onclick="openAdd()">
+                <i class="fas fa-plus"></i>
+            </button>
+        </h3>
 
-<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#dopsModal" onclick="openAdd()">+ Add DOPS</button>
+        <div>
+            <a href="{{ route('trainee.dops.export.excel') }}" class="btn btn-success btn-sm">Excel</a>
+            <a href="{{ route('trainee.dops.export.pdf') }}" class="btn btn-danger btn-sm">PDF</a>
+            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#performanceModal">Performance</button>
+        </div>
+    </div>
 
+    {{-- SUCCESS --}}
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    {{-- GRAND WARD ROUND TABLE --}}
+    <div class="card">
+        <div class="card-body">
+            <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
+                <thead class="table-dark">
 <table class="table table-bordered">
 <thead>
 <tr>

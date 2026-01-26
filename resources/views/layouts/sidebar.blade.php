@@ -595,54 +595,86 @@
 
                 {{-- DOPS Dropdown --}}
                 @can('dops')
-                    <li class="nav-item {{ request()->routeIs('competencies.*') ||
-                                            request()->routeIs('ratings.*') ||
-                                            request()->routeIs('levels.*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs('competencies.*') ||
-                                                    request()->routeIs('ratings.*') ||
-                                                    request()->routeIs('levels.*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-bar-chart-line-fill"></i>
-                            <p>
-                                DOPS
-                                <i class="nav-arrow bi bi-chevron-right"></i>
-                            </p>
-                        </a>
+<li class="nav-item {{
+    request()->routeIs('competencies.*') ||
+    request()->routeIs('ratings.*') ||
+    request()->routeIs('levels.*') ||
+    request()->routeIs('diagnoses.*') ||
+    request()->routeIs('procedures.*') ||
+    request()->routeIs('dops.*')
+        ? 'menu-open' : '' }}">
 
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('competencies.index') }}"
-                                class="nav-link {{ request()->routeIs('competencies.*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-list-check"></i>
-                                    <p>Competencies</p>
-                                </a>
-                            </li>
+    <a href="#" class="nav-link {{
+        request()->routeIs('competencies.*') ||
+        request()->routeIs('ratings.*') ||
+        request()->routeIs('levels.*') ||
+        request()->routeIs('diagnoses.*') ||
+        request()->routeIs('procedures.*') ||
+        request()->routeIs('dops.*')
+            ? 'active' : '' }}">
+        <i class="nav-icon bi bi-bar-chart-line-fill"></i>
+        <p>
+            DOPS
+            <i class="nav-arrow bi bi-chevron-right"></i>
+        </p>
+    </a>
 
-                            <li class="nav-item">
-                                <a href="{{ route('ratings.index') }}"
-                                class="nav-link {{ request()->routeIs('ratings.*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-star-fill"></i>
-                                    <p>Ratings</p>
-                                </a>
-                            </li>
+    <ul class="nav nav-treeview">
 
-                            <li class="nav-item">
-                                <a href="{{ route('levels.index') }}"
-                                class="nav-link {{ request()->routeIs('levels.*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-graph-up"></i>
-                                    <p>Levels</p>
-                                </a>
-                            </li>
+        <li class="nav-item">
+            <a href="{{ route('competencies.index') }}"
+               class="nav-link {{ request()->routeIs('competencies.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-list-check"></i>
+                <p>Competencies</p>
+            </a>
+        </li>
 
-                            <li class="nav-item">
-                                <a href="{{ route('dops.index') }}"
-                                class="nav-link {{ request()->routeIs('dops.*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-journal-text"></i>
-                                    <p>DOPS</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    @endcan
+        <li class="nav-item">
+            <a href="{{ route('ratings.index') }}"
+               class="nav-link {{ request()->routeIs('ratings.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-star-fill"></i>
+                <p>Ratings</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('levels.index') }}"
+               class="nav-link {{ request()->routeIs('levels.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-graph-up"></i>
+                <p>Levels</p>
+            </a>
+        </li>
+
+        {{-- 🔹 Diagnosis --}}
+        <li class="nav-item">
+            <a href="{{ route('diagnoses.index') }}"
+               class="nav-link {{ request()->routeIs('diagnoses.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-clipboard-pulse"></i>
+                <p>Diagnosis</p>
+            </a>
+        </li>
+
+        {{-- 🔹 Procedure --}}
+        <li class="nav-item">
+            <a href="{{ route('procedures.index') }}"
+               class="nav-link {{ request()->routeIs('procedures.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-tools"></i>
+                <p>Procedure</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('dops.index') }}"
+               class="nav-link {{ request()->routeIs('dops.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-journal-text"></i>
+                <p>DOPS</p>
+            </a>
+        </li>
+
+    </ul>
+</li>
+@endcan
+
 
 
         @role('Trainee')
@@ -674,46 +706,68 @@
                 </li>
                 @endforeach
                 {{-- @can('grand-ward-rounds.index') --}}
-                    <li class="nav-item {{ request()->routeIs('grand-ward-rounds.*','daily-ward-rounds.*','cicu-ward-rounds.*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs('grand-ward-rounds.*','daily-ward-rounds.*','cicu-ward-rounds.*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-heart-pulse-fill"></i>
-                            <p>
-                                Clinical Activities
-                                <i class="nav-arrow bi bi-chevron-right"></i>
-                            </p>
-                        </a>
+                    <li class="nav-item {{
+    request()->routeIs(
+        'grand-ward-rounds.*',
+        'daily-ward-rounds.*',
+        'cicu-ward-rounds.*',
+        'trainee.dops.*'
+    ) ? 'menu-open' : '' }}">
 
-                        <ul class="nav nav-treeview">
-                            {{-- Grand CICU / Ward Round --}}
-                            <li class="nav-item">
-                                <a href="{{ route('grand-ward-rounds.index') }}"
-                                class="nav-link {{ request()->routeIs('grand-ward-rounds.*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Grand CICU / Ward Round</p>
-                                </a>
-                            </li>
+    <a href="#" class="nav-link {{
+        request()->routeIs(
+            'grand-ward-rounds.*',
+            'daily-ward-rounds.*',
+            'cicu-ward-rounds.*',
+            'trainee.dops.*'
+        ) ? 'active' : '' }}">
+        <i class="nav-icon bi bi-heart-pulse-fill"></i>
+        <p>
+            Clinical Activities
+            <i class="nav-arrow bi bi-chevron-right"></i>
+        </p>
+    </a>
 
-                            {{-- Daily Ward Round --}}
-                            <li class="nav-item">
-                                <a href="{{ route('daily-ward-rounds.index') }}"
-                                class="nav-link {{ request()->routeIs('daily-ward-rounds.*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Daily Ward Round</p>
-                                </a>
-                            </li>
+    <ul class="nav nav-treeview">
+        {{-- Grand CICU / Ward Round --}}
+        <li class="nav-item">
+            <a href="{{ route('grand-ward-rounds.index') }}"
+               class="nav-link {{ request()->routeIs('grand-ward-rounds.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Grand CICU / Ward Round</p>
+            </a>
+        </li>
 
-                            {{-- Performance Dashboard --}}
-                            <li class="nav-item">
-                                <a href="{{ route('cicu-ward-rounds.index') }}"
-                                class="nav-link {{ request()->routeIs('cicu-ward-rounds.index') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>CICU Ward Rounds</p>
-                                </a>
-                            </li>
+        {{-- Daily Ward Round --}}
+        <li class="nav-item">
+            <a href="{{ route('daily-ward-rounds.index') }}"
+               class="nav-link {{ request()->routeIs('daily-ward-rounds.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Daily Ward Round</p>
+            </a>
+        </li>
 
+        {{-- CICU Ward Rounds --}}
+        <li class="nav-item">
+            <a href="{{ route('cicu-ward-rounds.index') }}"
+               class="nav-link {{ request()->routeIs('cicu-ward-rounds.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>CICU Ward Rounds</p>
+            </a>
+        </li>
 
-                        </ul>
-                    </li>
+        {{-- 🔹 DOPS (Trainee) --}}
+        <li class="nav-item">
+            <a href="{{ route('trainee.dops.index') }}"
+               class="nav-link {{ request()->routeIs('trainee.dops.*') ? 'active' : '' }}">
+                <i class="nav-icon bi bi-journal-check"></i>
+                <p>DOPS</p>
+            </a>
+        </li>
+
+    </ul>
+</li>
+
                     {{-- @endcan --}}
                  @can('trainee.invitations')
                     <li class="nav-item {{ request()->routeIs('trainee.invitations.*') ? 'menu-open' : '' }}">

@@ -8,6 +8,11 @@ use App\Models\DopsAttempt;
 use App\Models\Rotation;
 use App\Models\Dops;
 use App\Models\DopsRotation;
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Exports\TraineeDopsExport;
 
 class TraineeDopsController extends Controller
 {
@@ -20,7 +25,7 @@ class TraineeDopsController extends Controller
             ->latest()
             ->get();
 
-        return view('trainee.dops.index', compact('rotations','traineeDops'));
+        return view('admin.trainee.dops.index', compact('rotations','traineeDops'));
     }
 
     // AJAX: rotation → dops
@@ -120,5 +125,29 @@ class TraineeDopsController extends Controller
             ];
         }
         return $out;
+    }
+
+    public function end(DopsAttempt $traine_dops)
+    {
+        $traine_dops->update([
+            'to_time' => now()->format('H:i')
+        ]);
+
+        return back()->with('success','Activity Ended');
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(
+            new TraineeDopsExport,
+            'trainee-dops-'.date('Y-m-d').'.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $rounds = DopsAttempt::with(['dops'])->get();
+        $pdf = Pdf::loadView('admin.trainee.dops.pdf', compact('rounds'));
+        return $pdf->download('trainee-dops.pdf');
     }
 }
