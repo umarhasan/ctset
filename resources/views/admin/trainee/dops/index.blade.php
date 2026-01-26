@@ -33,11 +33,12 @@
 <thead>
 <tr>
     <th>#</th>
-    <th>Trainee</th>
-    <th>Rotation</th>
-    <th>DOPS</th>
+    <th>By</th>
     <th>Date</th>
-    <th>Time</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Involvement</th>
+    <th>DOPS</th>
     <th>Action</th>
 </tr>
 </thead>
@@ -46,10 +47,28 @@
 <tr>
     <td>{{ $k+1 }}</td>
     <td>{{ $d->trainee->name }}</td>
-    <td>{{ $d->rotation->title }}</td>
-    <td>{{ $d->dops->title }}</td>
     <td>{{ $d->date }}</td>
     <td>{{ $d->from_time }}</td>
+    <td>
+    @if(!$d->to_time)
+        <a href="{{ route('trainee.dops.end',$d) }}" onclick="return confirm('End activity?')" class="btn btn-danger btn-sm">End activity</a>
+        @else
+        {{ $d->to_time }}
+        @endif
+    </td>
+<td>
+                                <span class="badge bg-{{ $d->involvement=='A'?'success':'secondary' }}">
+                                    {{ $d->involvement=='A'?'Active':'Waiting' }}
+                                </span>
+                                @if(auth()->user()->userType == 4)
+                                <br>
+                                <label class="switch">
+                                    <input type="checkbox" {{ $d->involvement=='A'?'checked':'' }} onchange="toggleInvolvement({{ $r->id }})">
+                                    <span class="slider round"></span>
+                                </label>
+                                @endif
+                            </td>
+    <td>{{ $d->dops->title }}</td>
     <td>
         <button class="btn btn-sm btn-warning" onclick="editDops({{ $d->id }})">Edit</button>
         <form method="POST" action="{{ route('trainee.dops.destroy',$d->id) }}" class="d-inline">
