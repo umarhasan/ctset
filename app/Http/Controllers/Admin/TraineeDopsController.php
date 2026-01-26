@@ -146,8 +146,8 @@ class TraineeDopsController extends Controller
 
     public function exportPdf()
     {
-        $rounds = DopsAttempt::with(['dops'])->get();
-        $pdf = Pdf::loadView('admin.trainee.dops.pdf', compact('rounds'));
+        $attempts = DopsAttempt::with(['dops'])->get();
+        $pdf = Pdf::loadView('admin.trainee.dops.pdf', compact('attempts'));
         return $pdf->download('trainee-dops.pdf');
     }
 }
