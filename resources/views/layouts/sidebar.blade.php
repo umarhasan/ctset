@@ -594,7 +594,7 @@
                 @endcan
 
                 {{-- DOPS Dropdown --}}
-                @can('competencies.index')
+                @can('dops')
                     <li class="nav-item {{ request()->routeIs('competencies.*') ||
                                             request()->routeIs('ratings.*') ||
                                             request()->routeIs('levels.*') ? 'menu-open' : '' }}">
@@ -630,6 +630,14 @@
                                 class="nav-link {{ request()->routeIs('levels.*') ? 'active' : '' }}">
                                     <i class="nav-icon bi bi-graph-up"></i>
                                     <p>Levels</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('dops.index') }}"
+                                class="nav-link {{ request()->routeIs('dops.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-journal-text"></i>
+                                    <p>DOPS</p>
                                 </a>
                             </li>
                         </ul>
@@ -781,6 +789,7 @@
                     </ul>
                 </li>
                 @endcanany
+
 
                 @can('settings')
                 <li class="nav-item has-treeview {{ request()->routeIs('profile.*') || request()->routeIs('dashboard.password.*') ? 'menu-open' : '' }}">

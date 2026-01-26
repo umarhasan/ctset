@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('dops', function (Blueprint $table) {
             $table->id();
-            $table->string('title');                        // DOP title
-            $table->string('requirement_name')->nullable(); // Requirement name
-            $table->json('rotations')->nullable();         // Rotation multiple select (JSON)
-            $table->json('levels')->nullable();            // Level multiple select (JSON)
-            $table->json('ratings')->nullable();           // Rating multiple select (JSON)
-            $table->text('steps')->nullable();             // Steps to be performed
+            $table->text('title');
+            $table->tinyInteger('level');
+            $table->text('steps');
+            $table->text('raiting');
+            $table->text('competencies');
+            $table->tinyInteger('status')->default(1);
+            $table->engine = 'MyISAM';
             $table->timestamps();
         });
     }

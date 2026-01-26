@@ -55,6 +55,7 @@ use App\Http\Controllers\Admin\PdfController;
 use App\Http\Controllers\Admin\GrandWardRoundController;
 use App\Http\Controllers\Admin\DailyWardRoundController;
 use App\Http\Controllers\Admin\CicuWardRoundController;
+use App\Http\Controllers\Admin\ClinicalSessionController;
 
 // Exam
 use App\Http\Controllers\Admin\ExamController;
@@ -85,12 +86,21 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('evaluation-360', Evaluation360Controller::class);
         Route::resource('rotation-evaluations', RotationEvaluationController::class);
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
-
+        
+        // Grand Ward Rounds    
         Route::resource('grand-ward-rounds', GrandWardRoundController::class);
         Route::get('/grand-ward-rounds/{grand_ward_round}/end', [GrandWardRoundController::class, 'end'])->name('grand-ward-rounds.end');
         Route::get('grand-ward-rounds/export/excel', [GrandWardRoundController::class, 'exportExcel'])->name('grand-ward-rounds.export.excel');
         Route::get('grand-ward-rounds/export/pdf', [GrandWardRoundController::class, 'exportPdf'])->name('grand-ward-rounds.export.pdf');
         Route::get('grand-ward-rounds/performance/analysis', [GrandWardRoundController::class, 'performanceAnalysis'])->name('grand-ward-rounds.performance');
+        
+        // Clinical Sessions
+        Route::resource('clinical-sessions', ClinicalSessionController::class);
+        Route::get('/clinical-sessions/{clinical_session}/end', [ClinicalSessionController::class, 'end'])->name('clinical-sessions.end');
+        Route::get('clinical-sessions/export/excel', [ClinicalSessionController::class, 'exportExcel'])->name('clinical-sessions.export.excel');
+        Route::get('clinical-sessions/export/pdf', [ClinicalSessionController::class, 'exportPdf'])->name('clinical-sessions.export.pdf');
+        Route::get('clinical-sessions/performance/analysis', [ClinicalSessionController::class, 'performanceAnalysis'])->name('clinical-sessions.performance');
+
         // Default Resource Routes
         Route::resource('daily-ward-rounds', DailyWardRoundController::class);
         Route::get('/daily-ward-rounds/{daily_ward_round}/end', [DailyWardRoundController::class, 'end'])->name('daily-ward-rounds.end');

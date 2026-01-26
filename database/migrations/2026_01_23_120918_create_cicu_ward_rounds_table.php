@@ -18,7 +18,7 @@ return new class extends Migration
             $table->time('from_time');
             $table->time('to_time')->nullable();
             $table->foreignId('hospital_id')->constrained('hospitals');
-            $table->enum('involvement', ['Active', 'Passive', 'Waiting'])->default('Waiting');
+            $table->enum('involvement', ['A', 'P', 'W'])->default('W');
             $table->string('consultant_sign')->nullable();
             $table->timestamps();
         });
