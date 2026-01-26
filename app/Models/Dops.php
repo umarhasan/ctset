@@ -9,24 +9,71 @@ class Dops extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    
-    public function competencies()
+
+    protected $casts = [
+        'status' => 'boolean'
+    ];
+
+
+
+    // ===== RELATIONS =====
+    public function rotations()
     {
-        return $this->hasMany(DopsCompetencyDefinition::class, 'dopsid');
+        return $this->hasMany(DopsRotation::class,'dopsid');
     }
 
     public function levels()
     {
-        return $this->hasMany(DopsLevel::class, 'dopsid');
+        return $this->hasMany(DopsLevel::class,'dopsid');
     }
 
-    public function rotations()
+    public function ratings()
     {
-        return $this->hasMany(DopsRotation::class, 'dopsid');
+        return $this->hasMany(DopsRating::class,'dropsid');
     }
 
-    public function requests()
+    public function competencies()
     {
-        return $this->hasMany(DopsRequest::class, 'dopsid');
+        return $this->hasMany(DopsCompetencyDefinition::class,'dopsid');
     }
+
+    // ===== HELPER ACCESSORS =====
+    public function getRotationIdsAttribute()
+    {
+        return $this->rotations->pluck('rotationid')->toArray();
+    }
+
+    public function getLevelIdsAttribute()
+    {
+        return $this->levels->pluck('levelid')->toArray();
+    }
+
+    public function getRatingIdsAttribute()
+    {
+        return $this->ratings->pluck('ratingid')->toArray();
+    }
+
+// In your Dops model
+    protected $appends = ['competencies_array'];
+
+
+
+
+    public function competenciesWithDefinitions()
+    {
+        return $this->hasMany(DopsCompetencyDefinition::class,'dopsid')
+            ->with('definitions');
+    }
+    public function getCompetenciesArrayAttribute()
+    {
+        return $this->competenciesWithDefinitions->map(function($item){
+            return [
+                'id' => $item->id,
+                'competency_id' => $item->cdid,   // column name in DopsCompetencyDefinition
+                'order' => $item->dcdseq,
+                'definitions' => $item->definitions->pluck('title')->toArray()
+            ];
+        })->toArray();
+    }
+
 }

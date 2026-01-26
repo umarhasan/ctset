@@ -12,9 +12,6 @@ class DopsCompetencyDefinitionDetail extends Model
 
     public function competency()
     {
-        return $this->belongsTo(
-            DopsCompetencyDefinition::class,
-            'dcdid'
-        );
+        return $this->belongsTo(DopsCompetencyDefinition::class, 'dcdid');
     }
 }

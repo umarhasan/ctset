@@ -9,17 +9,14 @@ class DopsCompetencyDefinition extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    
+
     public function dops()
     {
-        return $this->belongsTo(Dops::class, 'dopsid');
+        return $this->belongsTo(Dops::class,'dopsid');
     }
 
-    public function details()
+    public function definitions()
     {
-        return $this->hasMany(
-            DopsCompetencyDefinitionDetail::class,
-            'dcdid'
-        );
+        return $this->hasMany(DopsCompetencyDefinitionDetail::class, 'dcdid');
     }
 }
