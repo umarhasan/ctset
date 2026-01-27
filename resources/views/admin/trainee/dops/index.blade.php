@@ -28,58 +28,61 @@
     <div class="card">
         <div class="card-body">
             <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
-                <thead class="table-dark">
-<table class="table table-bordered">
-<thead>
-<tr>
-    <th>#</th>
-    <th>By</th>
-    <th>Date</th>
-    <th>From</th>
-    <th>To</th>
-    <th>Involvement</th>
-    <th>DOPS</th>
-    <th>Action</th>
-</tr>
-</thead>
-<tbody>
-@foreach($traineeDops as $k=>$d)
-<tr>
-    <td>{{ $k+1 }}</td>
-    <td>{{ $d->trainee->name }}</td>
-    <td>{{ $d->date }}</td>
-    <td>{{ $d->from_time }}</td>
-    <td>
-    @if(!$d->to_time)
-        <a href="{{ route('trainee.dops.end',$d) }}" onclick="return confirm('End activity?')" class="btn btn-danger btn-sm">End activity</a>
-        @else
-        {{ $d->to_time }}
-        @endif
-    </td>
-<td>
-                                <span class="badge bg-{{ $d->involvement=='A'?'success':'secondary' }}">
-                                    {{ $d->involvement=='A'?'Active':'Waiting' }}
-                                </span>
-                                @if(auth()->user()->userType == 4)
-                                <br>
-                                <label class="switch">
-                                    <input type="checkbox" {{ $d->involvement=='A'?'checked':'' }} onchange="toggleInvolvement({{ $r->id }})">
-                                    <span class="slider round"></span>
-                                </label>
-                                @endif
-                            </td>
-    <td>{{ $d->dops->title }}</td>
-    <td>
-        <button class="btn btn-sm btn-warning" onclick="editDops({{ $d->id }})">Edit</button>
-        <form method="POST" action="{{ route('trainee.dops.destroy',$d->id) }}" class="d-inline">
-            @csrf @method('DELETE')
-            <button class="btn btn-sm btn-danger">Delete</button>
-        </form>
-    </td>
-</tr>
-@endforeach
-</tbody>
-</table>
+            <thead class="table-dark">
+
+                <tr>
+                    <th>#</th>
+                    <th>By</th>
+                    <th>Date</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Involvement</th>
+                    <th>DOPS</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($traineeDops as $k=>$d)
+                <tr>
+                    <td>{{ $k+1 }}</td>
+                    <td>{{ $d->trainee->name }}</td>
+                    <td>{{ $d->date }}</td>
+                    <td>{{ $d->from_time }}</td>
+                    <td>
+                    @if(!$d->to_time)
+                        <a href="{{ route('trainee.dops.end',$d) }}" onclick="return confirm('End activity?')" class="btn btn-danger btn-sm">End activity</a>
+                        @else
+                        {{ $d->to_time }}
+                        @endif
+                    </td>
+                <td>
+                                                <span class="badge bg-{{ $d->involvement=='A'?'success':'secondary' }}">
+                                                    {{ $d->involvement=='A'?'Active':'Waiting' }}
+                                                </span>
+                                                @if(auth()->user()->userType == 4)
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" {{ $d->involvement=='A'?'checked':'' }} onchange="toggleInvolvement({{ $r->id }})">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                                @endif
+                                            </td>
+                    <td>{{ $d->dops->title }}</td>
+                    <td>
+                        <a href="{{ route('trainee.dops.show', $d->dops_id) }}"
+       class="btn btn-sm btn-info">
+        View
+    </a>
+                        <button class="btn btn-sm btn-warning" onclick="editDops({{ $d->id }})">Edit</button>
+                        <form method="POST" action="{{ route('trainee.dops.destroy',$d->id) }}" class="d-inline">
+                            @csrf @method('DELETE')
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+                </tbody>
+                </table>
 
 {{-- MODAL --}}
 <div class="modal fade" id="dopsModal">

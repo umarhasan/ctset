@@ -9,28 +9,33 @@ use App\Models\Rotation;
 use App\Models\Diagnosis;
 use App\Models\Procedure;
 use App\Models\Dops;
+use App\Models\DopsLevel;
+use App\Models\DopsRating;
 use App\Models\DopsRotation;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 
 use App\Exports\TraineeDopsExport;
+use App\Models\DopsCompetencyDefinition;
+use App\Models\DopsCompetencyDefinitionDetail;
 
 class TraineeDopsController extends Controller
 {
     public function index()
     {
         $rotations = Rotation::all();
-        $diagnosis = Diagnosis::all();
-        $procedure = Procedure::all();
+        $diagnosis = Diagnosis::get();
+        $procedure = Procedure::get();
 
         $traineeDops = DopsAttempt::with(['rotation','diagnosis','procedure','dops','trainee'])
             ->where('trainee_id', auth()->id())
             ->latest()
             ->get();
 
-        return view('admin.trainee.dops.index', compact('rotations','traineeDops'));
+        return view('admin.trainee.dops.index', compact('rotations','diagnosis','procedure','traineeDops'));
     }
+
 
     // AJAX: rotation → dops
     public function getDops($rotation)
@@ -109,6 +114,43 @@ class TraineeDopsController extends Controller
         ]);
 
         return back()->with('success','DOPS Updated Successfully');
+    }
+
+    // public function show($id)
+    // {
+
+    //     $dops = Dops::findOrFail($id);
+
+    //     $levels = DopsLevel::with('levels')->where('dopsid', $dops->id)->get();
+
+    //     $ratings = DopsRating::with('ratings')->where('dropsid', $dops->id)->get();
+    //     $competencies = DopsCompetencyDefinition::with('definitions')
+    //         ->where('dopsid', $dops->id)
+    //         ->get();
+
+    //     return view('admin.trainee.dops.show', compact(
+    //         'dops',
+    //         'levels',
+    //         'ratings',
+    //         'competencies'
+    //     ));
+    // }
+
+    public function show($id)
+    {
+        $dops = Dops::with([
+            'Dopsattempt',
+            'Dopsattempt.trainee',
+            'levels.level',
+            'ratings.rating',
+
+        ])->findOrFail($id);
+
+        $competencies = DopsCompetencyDefinition::with('definitions','competencies')
+            ->where('dopsid', $id)
+            ->get();
+
+        return view('admin.trainee.dops.show', compact('dops','competencies'));
     }
 
     public function destroy($id)

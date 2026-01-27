@@ -22,6 +22,8 @@ class Dops extends Model
         return $this->hasMany(DopsRotation::class,'dopsid');
     }
 
+
+
     public function levels()
     {
         return $this->hasMany(DopsLevel::class,'dopsid');
@@ -37,6 +39,10 @@ class Dops extends Model
         return $this->hasMany(DopsCompetencyDefinition::class,'dopsid');
     }
 
+    public function Dopsattempt()
+    {
+        return $this->hasMany( DopsAttempt::class,'dops_id');
+    }
     // ===== HELPER ACCESSORS =====
     public function getRotationIdsAttribute()
     {
@@ -47,6 +53,7 @@ class Dops extends Model
     {
         return $this->levels->pluck('levelid')->toArray();
     }
+
 
     public function getRatingIdsAttribute()
     {
@@ -75,5 +82,7 @@ class Dops extends Model
             ];
         })->toArray();
     }
+
+
 
 }

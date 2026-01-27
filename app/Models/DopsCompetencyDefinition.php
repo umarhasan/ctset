@@ -19,4 +19,11 @@ class DopsCompetencyDefinition extends Model
     {
         return $this->hasMany(DopsCompetencyDefinitionDetail::class, 'dcdid');
     }
+
+    public function competencies()
+    {
+        return $this->belongsTo(Competency::class, 'cdid');
+    }
+
+
 }

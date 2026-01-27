@@ -14,4 +14,9 @@ class DopsRating extends Model
     {
         return $this->belongsTo(Dops::class, 'dropsid');
     }
+
+     public function rating()
+    {
+        return $this->belongsTo(Rating::class, 'ratingid');
+    }
 }

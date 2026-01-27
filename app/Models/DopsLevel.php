@@ -14,4 +14,10 @@ class DopsLevel extends Model
     {
         return $this->belongsTo(Dops::class, 'dopsid');
     }
+
+     public function level()
+    {
+        return $this->belongsTo(Level::class, 'levelid');
+    }
+
 }
