@@ -18,6 +18,14 @@ class DopsAttempt extends Model
         return $this->belongsTo(Rotation::class);
     }
 
+    public function diagnosis(){
+        return $this->belongsTo(Diagnosis::class);
+    }
+
+    public function procedure(){
+        return $this->belongsTo(Procedure::class);
+    }
+
     public function dops(){
         return $this->belongsTo(Dops::class);
     }

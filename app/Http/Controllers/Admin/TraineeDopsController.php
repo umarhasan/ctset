@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DopsAttempt;
 use App\Models\Rotation;
+use App\Models\Diagnosis;
+use App\Models\Procedure;
 use App\Models\Dops;
 use App\Models\DopsRotation;
 use Carbon\Carbon;
@@ -19,8 +21,10 @@ class TraineeDopsController extends Controller
     public function index()
     {
         $rotations = Rotation::all();
+        $diagnosis = Diagnosis::all();
+        $procedure = Procedure::all();
 
-        $traineeDops = DopsAttempt::with(['rotation','dops','trainee'])
+        $traineeDops = DopsAttempt::with(['rotation','diagnosis','procedure','dops','trainee'])
             ->where('trainee_id', auth()->id())
             ->latest()
             ->get();

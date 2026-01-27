@@ -114,20 +114,18 @@
 {{-- Diagnosis --}}
 <label>Diagnosis</label>
 <select id="diagnosis_select" class="form-control mb-2">
-<option value="">Select</option>
-<option value="1">Diagnosis 1</option>
-<option value="2">Diagnosis 2</option>
-<option value="3">Diagnosis 3</option>
+@foreach($diagnosis as $r)
+<option value="{{ $r->id }}">{{ $r->title }}</option>
+@endforeach
 </select>
 <div id="diagnosis_inputs"></div>
 
 {{-- Procedure --}}
 <label>Procedure</label>
 <select id="procedure_select" class="form-control mb-2">
-<option value="">Select</option>
-<option value="1">Procedure 1</option>
-<option value="2">Procedure 2</option>
-<option value="3">Procedure 3</option>
+@foreach($procedure as $r)
+<option value="{{ $r->id }}">{{ $r->title }}</option>
+@endforeach
 </select>
 <div id="procedure_inputs"></div>
 
