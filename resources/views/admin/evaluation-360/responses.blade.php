@@ -269,10 +269,6 @@ function loadTable(){
                     <button class="btn btn-warning btn-sm" onclick="openEdit(${r.id})">Edit</button>
                     <button class="btn btn-info btn-sm" onclick="openView(${r.id})">View</button>
                     <button class="btn btn-danger btn-sm" onclick="removeForm(${r.id})">Delete</button>
-                   <a href="evaluation-360/${r.id}/responses"
-   class="btn btn-secondary btn-sm">
-   Responses
-</a>
                 </td>
             </tr>`;
         });

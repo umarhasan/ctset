@@ -1,33 +1,41 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Evaluation360Form;
 use App\Models\Evaluation360Section;
+use App\Models\Evaluation360FormShare;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Auth;
 
 class Evaluation360Controller extends Controller
 {
-    /**
-     * Display a listing of evaluation forms.
-     */
+    // List forms (Admin / Assessor / Trainee)
     public function index()
     {
-        // Return JSON if AJAX, or Blade if normal
-        $evaluations = Evaluation360Form::with('sections')->orderBy('id','desc')->get();
+        $user = Auth::user();
 
-        if(request()->ajax()) {
-            return response()->json($evaluations);
+        if($user->hasRole('Admin')){
+            $evaluations = Evaluation360Form::with('sections')->orderBy('id','desc')->get();
+            if(request()->ajax()) return response()->json($evaluations);
+            return view('admin.evaluation-360.index');
         }
 
-        return view('admin.evaluation-360.index');
+        if($user->hasRole('Assessor')){
+            $assignedForms = $user->assigned360Forms()->with('sections','shares')->get();
+            return view('assessor.360-results', compact('assignedForms'));
+        }
+
+        if($user->hasRole('Trainee')){
+            $completedForms = $user->completed360Forms()->with('sections','shares')->get();
+            return view('assessor.360-results', compact('completedForms'));
+        }
+
+        abort(403);
     }
 
-    /**
-     * Store a newly created evaluation form.
-     */
+    // Create Form
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -52,7 +60,7 @@ class Evaluation360Controller extends Controller
                 'status' => $request->status ?? 'active'
             ]);
 
-            if($request->has('sections')){
+            if($request->sections){
                 foreach($request->sections as $index => $section){
                     Evaluation360Section::create([
                         'evaluation_360_form_id' => $evaluation->id,
@@ -74,18 +82,14 @@ class Evaluation360Controller extends Controller
         }
     }
 
-    /**
-     * Show the form for editing a specific evaluation.
-     */
+    // Edit Form
     public function edit($id)
     {
         $evaluation = Evaluation360Form::with('sections')->findOrFail($id);
         return response()->json($evaluation);
     }
 
-    /**
-     * Update the specified evaluation form.
-     */
+    // Update Form
     public function update(Request $request, $id)
     {
         $evaluation = Evaluation360Form::findOrFail($id);
@@ -101,9 +105,7 @@ class Evaluation360Controller extends Controller
             'sections.*.ue' => 'nullable|string|max:255',
         ]);
 
-        if($validator->fails()){
-            return response()->json(['success'=>false,'errors'=>$validator->errors()],422);
-        }
+        if($validator->fails()) return response()->json(['success'=>false,'errors'=>$validator->errors()],422);
 
         \DB::beginTransaction();
         try{
@@ -116,7 +118,7 @@ class Evaluation360Controller extends Controller
             $evaluation->sections()->delete();
 
             // Add new sections
-            if($request->has('sections')){
+            if($request->sections){
                 foreach($request->sections as $index => $section){
                     Evaluation360Section::create([
                         'evaluation_360_form_id' => $evaluation->id,
@@ -138,14 +140,19 @@ class Evaluation360Controller extends Controller
         }
     }
 
-    /**
-     * Remove the specified evaluation form.
-     */
+    // Delete Form
     public function destroy($id)
     {
         $evaluation = Evaluation360Form::findOrFail($id);
         $evaluation->delete();
-
         return response()->json(['success'=>true,'message'=>'Form deleted successfully']);
+    }
+
+    // View all responses for a form (Admin)
+    public function responses($id)
+    {
+        $form = Evaluation360Form::findOrFail($id);
+
+        return view('admin.evaluation-360.responses', compact('form'));
     }
 }

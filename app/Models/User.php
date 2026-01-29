@@ -67,4 +67,24 @@ class User extends Authenticatable
         return $this->hasMany(GrandWardRound::class, 'consultant_id');
     }
 
+     // Sections of this form
+    public function sections(): HasMany
+    {
+        return $this->hasMany(Evaluation360Section::class, 'evaluation_id');
+    }
+
+    public function shared360Forms()
+    {
+        return $this->hasMany(Evaluation360FormShare::class,'shared_by');
+    }
+
+    // Student → received results
+    public function received360Results()
+    {
+        return $this->hasMany(Evaluation360FormShare::class,'student_id')
+                    ->where('status','A');
+    }
+
+
+
 }

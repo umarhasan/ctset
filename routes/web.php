@@ -45,6 +45,9 @@ use App\Http\Controllers\Admin\RotationController;
 use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\SelfEvaluationController;
 use App\Http\Controllers\Admin\Evaluation360Controller;
+use App\Http\Controllers\Admin\Evaluation360ShareController;
+use App\Http\Controllers\ExternalEvaluation360Controller;
+use App\Http\Controllers\StudentEvaluation360Controller;
 use App\Http\Controllers\Admin\RotationEvaluationController;
 use App\Http\Controllers\Admin\CompetencyController;
 use App\Http\Controllers\Admin\RatingController;
@@ -87,18 +90,25 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('self-evaluations', SelfEvaluationController::class);
         Route::resource('trainee-evaluations', TraineeEvaluationController::class);
         Route::resource('evaluation-360', Evaluation360Controller::class);
+        Route::post('evaluation-360/{id}/share', [Evaluation360ShareController::class,'store']);
+        Route::post('evaluation-360/share/{id}/approve', [Evaluation360ShareController::class,'approve']);
+        Route::post('evaluation-360/share/{id}/unlock', [Evaluation360ShareController::class,'unlock']);
+        Route::get('evaluation-360/{id}/responses', [Evaluation360Controller::class,'responses'])->name('evaluation-360.responses');
+        // EXTERNAL (NO LOGIN)
+        Route::get('360/evaluation/{share}', [ExternalEvaluation360Controller::class,'show']);
+        Route::post('360/evaluation/{share}/save', [ExternalEvaluation360Controller::class,'save']);
+        Route::post('360/evaluation/{share}/submit', [ExternalEvaluation360Controller::class,'submit']);
+        Route::get('student/360-result', [StudentEvaluation360Controller::class,'index']);
         Route::resource('rotation-evaluations', RotationEvaluationController::class);
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
         Route::resource('diagnoses', DiagnosisController::class);
         Route::resource('procedures', ProcedureController::class);
-        
         // Grand Ward Rounds
         Route::resource('grand-ward-rounds', GrandWardRoundController::class);
         Route::get('/grand-ward-rounds/{grand_ward_round}/end', [GrandWardRoundController::class, 'end'])->name('grand-ward-rounds.end');
         Route::get('grand-ward-rounds/export/excel', [GrandWardRoundController::class, 'exportExcel'])->name('grand-ward-rounds.export.excel');
         Route::get('grand-ward-rounds/export/pdf', [GrandWardRoundController::class, 'exportPdf'])->name('grand-ward-rounds.export.pdf');
         Route::get('grand-ward-rounds/performance/analysis', [GrandWardRoundController::class, 'performanceAnalysis'])->name('grand-ward-rounds.performance');
-        
         // Clinical Sessions
         Route::resource('clinical-sessions', ClinicalSessionController::class);
         Route::get('/clinical-sessions/{clinical_session}/end', [ClinicalSessionController::class, 'end'])->name('clinical-sessions.end');
@@ -208,6 +218,14 @@ use App\Http\Controllers\Admin\ExamController;
 
         Route::prefix('assessor')->name('assessor.')->group(function () {
             Route::get('/dashboard', [AssessorDashboardController::class, 'index'])->name('dashboard');
+                    // List assigned forms
+            Route::get('evaluation-360', [Evaluation360Controller::class,'index'])->name('360.index');
+            // Open assigned form
+            Route::get('evaluation-360/{id}', [ExternalEvaluation360Controller::class,'show'])->name('360.show');
+           // Save / Submit
+            Route::post('evaluation-360/{share}/save', [ExternalEvaluation360Controller::class,'save'])->name('360.save');
+            Route::post('evaluation-360/{share}/submit', [ExternalEvaluation360Controller::class,'submit'])->name('360.submit');
+
         });
 
         Route::prefix('trainee')->name('trainee.')->group(function () {
@@ -228,7 +246,7 @@ use App\Http\Controllers\Admin\ExamController;
             Route::get('/dops/export/excel', [TraineeDopsController::class, 'exportExcel'])->name('dops.export.excel');
             Route::get('/dops/export/pdf', [TraineeDopsController::class, 'exportPdf'])->name('dops.export.pdf');
 
-
+            Route::get('360-result', [StudentEvaluation360Controller::class,'index'])->name('360.index');
             });
     });
 
