@@ -6,7 +6,7 @@
 <div class="card shadow-sm mb-4">
     <div class="card-body table-responsive">
         <table class="table table-bordered table-hover text-center w-100">
-            <thead class="table-light">
+             <thead class="table-dark">
                 <tr>
                     <th>#</th>
                     <th>Evaluator / Name</th>

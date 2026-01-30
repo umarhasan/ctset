@@ -14,7 +14,7 @@
 <body>
     <h3>Trainee DOPS Report</h3>
     <table>
-        <thead>
+         <thead class="table-dark">
             <tr>
                 <th>ID</th>
                 <th>Trainee</th>

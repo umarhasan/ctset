@@ -15,7 +15,7 @@
 
     <div class="card-body table-responsive">
         <table class="table table-bordered">
-            <thead>
+             <thead class="table-dark">
                 <tr>
                     <th width="40">#</th>
                     <th>Title</th>

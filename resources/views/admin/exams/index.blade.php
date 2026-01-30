@@ -36,7 +36,7 @@ table.dataTable { table-layout: fixed; }
 
     <div class="card-body table-responsive">
         <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
-            <thead class="table-light">
+             <thead class="table-dark">
             <tr>
                 <th>Exam ID</th>
                 <th>Test Type</th>

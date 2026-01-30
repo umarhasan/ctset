@@ -12,7 +12,7 @@
 
     <div class="card-body">
         <table class="table table-bordered align-middle">
-            <thead>
+             <thead class="table-dark">
                 <tr>
                     <th>Dropdown Name</th>
                     <th>Permission Key</th>

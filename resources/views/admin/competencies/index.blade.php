@@ -12,7 +12,7 @@
 
  <div class="card-body">
   <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
-   <thead>
+    <thead class="table-dark">
     <tr>
      <th>#</th><th>Name</th><th>Key</th><th>Seq</th><th>Desc</th><th>Act</th>
     </tr>

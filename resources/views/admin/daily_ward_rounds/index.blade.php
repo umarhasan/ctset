@@ -192,7 +192,7 @@
 
                 <div id="top5Table" class="mt-3">
                     <table class="table table-bordered">
-                        <thead>
+                         <thead class="table-dark">
                             <tr>
                                 <th>#</th>
                                 <th>Name</th>

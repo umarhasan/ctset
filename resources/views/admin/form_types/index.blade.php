@@ -11,7 +11,7 @@
 
     <div class="card-body">
         <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
-            <thead>
+             <thead class="table-dark">
                 <tr>
                     <th>Title</th>
                     <th width="120">Action</th>
