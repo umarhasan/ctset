@@ -190,19 +190,19 @@ function loadTable(){
                 <td>${r.title}</td>
                 <td>${r.status}</td>
                 <td>
-                    @endcan('evaluation-360-update')
+                    @can('evaluation-360-update')
                         <button class="btn btn-warning btn-sm" onclick="openEdit(${r.id})">Edit</button>
                     @endcan
-                    @endcan('evaluation-360-update')
+                    @can('evaluation-360-update')
                         <button class="btn btn-info btn-sm" onclick="openView(${r.id})">View</button>
                     @endcan
-                    @endcan('evaluation-360-delete')
+                    @can('evaluation-360-delete')
                         <button class="btn btn-danger btn-sm" onclick="removeForm(${r.id})">Delete</button>
                     @endcan
-                    @endcan('evaluation-360-response')
+                    @can('evaluation-360-response')
                         <a href="evaluation-360/${r.id}/responses" class="btn btn-secondary btn-sm">Responses</a>
                     @endcan
-                    @endcan('evaluation-360-share')
+                    @can('evaluation-360-share')
                         <button class="btn btn-success btn-sm" onclick="openShare(${r.id})">Share</button>
                     @endcan
                 </td>
