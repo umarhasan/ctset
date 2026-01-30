@@ -5,14 +5,12 @@
 
 @foreach($evaluations as $e)
 <div class="card p-3 mb-3">
-    <h6>{{ $e->form->title }}</h6>
-
-    @foreach($e->responses as $r)
+    <h6>{{ $e->title }}</h6>
         <p>
-            <strong>{{ $r->section->section_title }}</strong> :
-            {{ $r->score_1_5 }} / {{ $r->score_6_7 }}
+            <strong>{{ $e->sections[0]['section_title'] }}</strong> :
+            {{ $e->score_1_5 }} / {{ $e->score_6_7 }}
         </p>
-    @endforeach
+
 </div>
 @endforeach
 

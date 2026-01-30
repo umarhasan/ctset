@@ -7,19 +7,19 @@ use Illuminate\Http\Request;
 
 class Evaluation360ShareController extends Controller
 {
-    // Share form with external evaluator
     public function store(Request $request, $formId)
     {
+
         $share = Evaluation360FormShare::create([
-            'evaluation_360_form_id' => $formId,
-            'shared_by' => auth()->id(),
-            'student_id' => $request->student_id ?? null,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'details' => $request->details,
-            'pin' => rand(1000,9999),
-            'status' => 'W'
+            'evaluation_360_form_id'=>$formId,
+            'shared_by'=>auth()->id(),
+            'assigned_to'=>$request->student_id ?? null,
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'phone'=>$request->phone,
+            'details'=>$request->details,
+            'pin'=>rand(1000,9999),
+            'status'=>'W'
         ]);
 
         return response()->json([
@@ -28,14 +28,12 @@ class Evaluation360ShareController extends Controller
         ]);
     }
 
-    // Approve a submitted form
     public function approve($id)
     {
         Evaluation360FormShare::findOrFail($id)->update(['status'=>'A']);
         return back()->with('success','Approved');
     }
 
-    // Unlock a submitted form
     public function unlock($id)
     {
         Evaluation360FormShare::findOrFail($id)->update([

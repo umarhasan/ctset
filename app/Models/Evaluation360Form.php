@@ -11,14 +11,14 @@ class Evaluation360Form extends Model
     protected $guarded = [];
     protected $table = 'evaluation_360_forms';
 
-     public function sections()
+    public function sections()
     {
         return $this->hasMany(Evaluation360Section::class, 'evaluation_360_form_id')->orderBy('order');
     }
 
     public function shares()
     {
-        return $this->hasMany(Evaluation360FormShare::class);
+        return $this->hasMany(Evaluation360FormShare::class,'evaluation_360_form_id');
     }
 
 

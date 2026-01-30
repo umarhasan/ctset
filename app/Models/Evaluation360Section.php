@@ -13,10 +13,10 @@ class Evaluation360Section extends Model
 
     public function evaluationForm()
     {
-        return $this->belongsTo(Evaluation360Form::class, 'evaluation_360_form_id');
+        return $this->belongsTo(Evaluation360Form::class,'evaluation_360_form_id');
     }
 
-     public function responses()
+    public function responses()
     {
         return $this->hasMany(Evaluation360Response::class,'section_id');
     }

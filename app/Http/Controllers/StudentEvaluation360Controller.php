@@ -7,7 +7,7 @@ class StudentEvaluation360Controller extends Controller
 {
     public function index()
     {
-        $evaluations = Evaluation360FormShare::where('student_id',auth()->id())
+        $evaluations = Evaluation360FormShare::where('assigned_to',auth()->id())
             ->where('status','A')
             ->with('form','responses.section')
             ->get();

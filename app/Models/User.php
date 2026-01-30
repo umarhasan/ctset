@@ -81,10 +81,20 @@ class User extends Authenticatable
     // Student → received results
     public function received360Results()
     {
-        return $this->hasMany(Evaluation360FormShare::class,'student_id')
+        return $this->hasMany(Evaluation360FormShare::class,'assigned_to')
                     ->where('status','A');
     }
 
+    public function assigned360Forms()
+    {
+        return $this->hasMany(Evaluation360FormShare::class, 'email', 'email');
+    }
+    // Student ko jo final approved results mile
+    public function completed360Forms()
+    {
+        return $this->hasMany(Evaluation360FormShare::class, 'assigned_to')
+                    ->where('status', 'A');
+    }
 
 
 }

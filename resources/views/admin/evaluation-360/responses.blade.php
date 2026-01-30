@@ -1,101 +1,57 @@
 @extends('layouts.app')
 @section('content')
 
-<style>
-/* ================= VIEW MODAL ================= */
-#viewBody {
-    font-size: 0.95rem;
-}
+<h3>Responses for Form: {{ $form->title }}</h3>
 
-#viewBody .card {
-    border-radius: 0.75rem;
-    border: 1px solid #dee2e6;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-#viewBody .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
-
-#viewBody .card-header {
-    font-size: 1rem;
-    border-bottom: none;
-}
-
-#viewBody .card-body p {
-    margin-bottom: 0.5rem;
-}
-
-#viewBody .row > div {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-}
-
-#viewBody .badge {
-    font-size: 0.85rem;
-    padding: 0.45em 0.7em;
-}
-
-@media (max-width: 768px){
-    #viewBody .col-md-6 {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-}
-</style>
-
-{{-- =================== ADMIN SECTION =================== --}}
-@role('Admin')
 <div class="card shadow-sm mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-        <h4 class="mb-0">360 Evaluation Forms</h4>
-        <button class="btn btn-light btn-sm" onclick="openCreate()">
-            <i class="bi bi-plus-lg"></i> Add 360 Evaluation
-        </button>
-    </div>
-    <div class="card-body">
-        <table id="adminTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
-            <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th class="text-center" width="200">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="formTable">
-                {{-- AJAX data --}}
-            </tbody>
-        </table>
-    </div>
-</div>
-@endrole
-
-{{-- =================== ASSESSOR SECTION =================== --}}
-@role('Assessor')
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-success text-white">
-        <h4 class="mb-0">Assigned 360 Forms</h4>
-    </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
         <table class="table table-bordered table-hover text-center w-100">
             <thead class="table-light">
                 <tr>
-                    <th>ID</th>
-                    <th>Title</th>
+                    <th>#</th>
+                    <th>Evaluator / Name</th>
+                    <th>Email / Phone</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Submitted At</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($assignedForms as $form)
+                @foreach($form->shares as $k => $share)
                 <tr>
-                    <td>{{ $form->id }}</td>
-                    <td>{{ $form->title }}</td>
-                    <td>{{ $form->status }}</td>
+                    <td>{{ $k + 1 }}</td>
+                    <td>{{ $share->name ?? ($share->student->name ?? '-') }}</td>
                     <td>
-                        <button class="btn btn-info btn-sm" onclick="openView({{ $form->id }})">View / Fill</button>
+                        {{ $share->email ?? '-' }}<br>
+                        {{ $share->phone ?? '-' }}
+                    </td>
+                    <td>
+                        @if($share->status === 'W')
+                            <span class="badge bg-warning">Waiting</span>
+                        @elseif($share->status === 'I')
+                            <span class="badge bg-danger">Submitted / Locked</span>
+                        @elseif($share->status === 'A')
+                            <span class="badge bg-success">Approved</span>
+                        @elseif($share->status === 'U')
+                            <span class="badge bg-info">Unlocked</span>
+                        @endif
+                    </td>
+                    <td>{{ $share->locked_at?->format('d M, Y H:i') ?? '-' }}</td>
+                    <td>
+                        @if($share->status === 'W')
+                            <button class="btn btn-sm btn-primary" onclick="sendLink('{{ $share->id }}')">Send Link</button>
+                        @endif
+                        @if($share->status === 'I')
+                            <form action="{{ url('evaluation-360/share/'.$share->id.'/approve') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button class="btn btn-sm btn-success">Approve</button>
+                            </form>
+                            <form action="{{ url('evaluation-360/share/'.$share->id.'/unlock') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button class="btn btn-sm btn-info">Unlock</button>
+                            </form>
+                        @endif
+                        <button class="btn btn-sm btn-secondary" onclick="viewResponses({{ $share->id }})">View Responses</button>
                     </td>
                 </tr>
                 @endforeach
@@ -103,104 +59,16 @@
         </table>
     </div>
 </div>
-@endrole
 
-{{-- =================== TRAINEE SECTION =================== --}}
-@role('Trainee')
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-info text-white">
-        <h4 class="mb-0">Your 360 Evaluation Results</h4>
-    </div>
-    <div class="card-body">
-        <table class="table table-bordered table-hover text-center w-100">
-            <thead class="table-light">
-                <tr>
-                    <th>Form</th>
-                    <th>Score</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($completedForms as $form)
-                <tr>
-                    <td>{{ $form->title }}</td>
-                    <td>{{ $form->score ?? 'Pending' }}</td>
-                    <td>{{ $form->status }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-@endrole
-
-{{-- =================== CREATE/EDIT MODAL (Admin) =================== --}}
-@role('Admin')
-<div class="modal fade" id="formModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <form id="mainForm">
-            @csrf
-            <input type="hidden" id="form_id">
-
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 id="modalTitle" class="mb-0">Create Form</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Form Title</label>
-                        <input type="text" class="form-control" id="form_title" placeholder="Enter form title" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Status</label>
-                        <select id="status" class="form-select">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="mb-0">Sections</h5>
-                        <button type="button" class="btn btn-primary btn-sm" onclick="addSection()">
-                            <i class="bi bi-plus-lg"></i> Add Section
-                        </button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Title</th>
-                                    <th class="text-center" width="15%">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="sectionsContainer"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-success"><i class="bi bi-save"></i> Save</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-@endrole
-
-{{-- =================== VIEW MODAL (All Roles) =================== --}}
-<div class="modal fade" id="viewModal" tabindex="-1">
+{{-- ================= VIEW RESPONSES MODAL ================= --}}
+<div class="modal fade" id="responsesModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-info text-white">
-                <h5 id="viewTitle" class="mb-0">View Form</h5>
+                <h5 class="mb-0">Responses</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body" id="viewBody"></div>
+            <div class="modal-body" id="responsesBody"></div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
@@ -208,201 +76,33 @@
     </div>
 </div>
 
-{{-- =================== TEMPLATES (Admin) =================== --}}
-@role('Admin')
-<template id="sectionTemplate">
-<tr class="section-row">
-    <td>
-        <input type="text" class="form-control section-title" placeholder="Section Title">
-    </td>
-    <td class="text-center">
-        <button type="button" class="btn btn-outline-primary btn-sm me-1" onclick="toggleExpand(this)">+</button>
-        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeSection(this)">🗑</button>
-    </td>
-</tr>
-</template>
-
-<template id="expandTemplate">
-<tr class="expand-row bg-light">
-    <td>
-        <input type="text" class="form-control mb-2 subtitle" placeholder="Sub Title">
-        <div class="row text-center g-2">
-            <div class="col-md-4">
-                <small>1 2 3 4 5</small>
-                <input type="text" class="form-control mt-1 col1">
-            </div>
-            <div class="col-md-4">
-                <small>6 7</small>
-                <input type="text" class="form-control mt-1 col2">
-            </div>
-            <div class="col-md-4">
-                <small>UE</small>
-                <input type="text" class="form-control mt-1 ue">
-            </div>
-        </div>
-    </td>
-    <td></td>
-</tr>
-</template>
-@endrole
-
 @endsection
 
 @push('scripts')
 <script>
-let viewModal = new bootstrap.Modal(document.getElementById('viewModal'));
+let responsesModal = new bootstrap.Modal(document.getElementById('responsesModal'));
 
-@role('Admin')
-let modal = new bootstrap.Modal(document.getElementById('formModal'));
-
-/* ================= ADMIN TABLE ================= */
-function loadTable(){
-    $.get('evaluation-360', res => {
-        let html = '';
-        res.forEach(r => {
-            html += `
-            <tr>
-                <td>${r.id}</td>
-                <td>${r.title}</td>
-                <td>${r.status}</td>
-                <td>
-                    <button class="btn btn-warning btn-sm" onclick="openEdit(${r.id})">Edit</button>
-                    <button class="btn btn-info btn-sm" onclick="openView(${r.id})">View</button>
-                    <button class="btn btn-danger btn-sm" onclick="removeForm(${r.id})">Delete</button>
-                </td>
-            </tr>`;
-        });
-        $('#formTable').html(html);
-    });
-}
-
-loadTable();
-
-/* ================= CREATE ================= */
-function openCreate(){
-    $('#modalTitle').text('Create Form');
-    $('#mainForm')[0].reset();
-    $('#form_id').val('');
-    $('#sectionsContainer').empty();
-    addSection();
-    modal.show();
-}
-
-/* ================= EDIT ================= */
-function openEdit(id){
-    $.get(`evaluation-360/${id}/edit`, res => {
-        $('#modalTitle').text('Edit Form');
-        $('#form_id').val(res.id);
-        $('#form_title').val(res.title);
-        $('#status').val(res.status || 'active');
-        $('#sectionsContainer').empty();
+function viewResponses(shareId){
+    $.get(`{{ url('evaluation-360') }}/${shareId}/edit`, res => {
+        let html = `<h5>Form: ${res.title}</h5>`;
+        html += `<hr>`;
 
         res.sections.forEach(s => {
-            addSection();
-            let row = $('.section-row').last();
-            row.find('.section-title').val(s.section_title);
-            toggleExpand(row.find('button')[0]);
-            let exp = row.next('.expand-row');
-            exp.find('.subtitle').val(s.subtitle);
-            exp.find('.col1').val(s.col_1_5);
-            exp.find('.col2').val(s.col_6_7);
-            exp.find('.ue').val(s.ue);
-        });
-
-        modal.show();
-    });
-}
-
-/* ================= SECTION FUNCTIONS ================= */
-function addSection(){
-    $('#sectionsContainer').append($('#sectionTemplate').html());
-}
-
-function toggleExpand(btn){
-    let row = $(btn).closest('tr');
-    if(row.data('open')){
-        row.next('.expand-row').remove();
-        row.data('open', false);
-        $(btn).text('+');
-    } else {
-        row.after($('#expandTemplate').html());
-        row.data('open', true);
-        $(btn).text('-');
-    }
-}
-
-function removeSection(btn){
-    let row = $(btn).closest('tr');
-    if(row.data('open')) row.next('.expand-row').remove();
-    row.remove();
-}
-
-/* ================= SAVE FORM ================= */
-$('#mainForm').submit(function(e){
-    e.preventDefault();
-    let id = $('#form_id').val();
-    let url = id ? `evaluation-360/${id}` : `evaluation-360`;
-
-    let sections = [];
-    $('.section-row').each(function(){
-        let open = $(this).data('open');
-        let exp = open ? $(this).next('.expand-row') : null;
-
-        sections.push({
-            title: $(this).find('.section-title').val(),
-            subtitle: exp ? exp.find('.subtitle').val() : '',
-            col_1_5: exp ? exp.find('.col1').val() : '',
-            col_6_7: exp ? exp.find('.col2').val() : '',
-            ue: exp ? exp.find('.ue').val() : ''
-        });
-    });
-
-    $.post(url, {
-        _token: '{{ csrf_token() }}',
-        _method: id ? 'PUT' : 'POST',
-        title: $('#form_title').val(),
-        status: $('#status').val(),
-        sections: sections
-    }, () => {
-        modal.hide();
-        loadTable();
-    });
-});
-
-/* ================= DELETE ================= */
-function removeForm(id){
-    if(!confirm('Are you sure you want to delete this form?')) return;
-
-    $.post(`evaluation-360/${id}`, {
-        _token: '{{ csrf_token() }}',
-        _method: 'DELETE'
-    }, () => loadTable());
-}
-@endrole
-
-/* ================= VIEW MODAL ================= */
-function openView(id){
-    $.get(`evaluation-360/${id}/edit`, res => {
-        $('#viewTitle').text('View Form - '+res.title);
-        let html = `<p><strong>Title:</strong> ${res.title}</p>`;
-        html += `<p><strong>Status:</strong> ${res.status}</p>`;
-        html += `<h5 class="mt-3">Sections:</h5>`;
-
-        res.sections.forEach(s => {
+            let resp = res.responses?.find(r => r.section_id == s.id);
             html += `<div class="card p-2 mb-2">
                         <p><strong>Section:</strong> ${s.section_title}</p>
-                        <p><strong>Sub Title:</strong> ${s.subtitle}</p>
-                        <div class="row text-center">
-                            <div class="col-md-4"><small>1-5:</small> ${s.col_1_5}</div>
-                            <div class="col-md-4"><small>6-7:</small> ${s.col_6_7}</div>
-                            <div class="col-md-4"><small>UE:</small> ${s.ue}</div>
-                        </div>
+                        <p><strong>Score / Response:</strong> ${resp?.score ?? '-'}</p>
                      </div>`;
         });
 
-        $('#viewBody').html(html);
-        viewModal.show();
+        $('#responsesBody').html(html);
+        responsesModal.show();
     });
+}
+
+function sendLink(shareId){
+    let url = prompt('Copy this link to send via Email/WhatsApp:', `{{ url('360/evaluation') }}/${shareId}`);
+    if(url) alert('Link copied! Share it with evaluator.');
 }
 </script>
 @endpush

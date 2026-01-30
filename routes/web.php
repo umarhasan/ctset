@@ -89,16 +89,16 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('assignments', AssignmentController::class);
         Route::resource('self-evaluations', SelfEvaluationController::class);
         Route::resource('trainee-evaluations', TraineeEvaluationController::class);
+
         Route::resource('evaluation-360', Evaluation360Controller::class);
         Route::post('evaluation-360/{id}/share', [Evaluation360ShareController::class,'store']);
         Route::post('evaluation-360/share/{id}/approve', [Evaluation360ShareController::class,'approve']);
         Route::post('evaluation-360/share/{id}/unlock', [Evaluation360ShareController::class,'unlock']);
         Route::get('evaluation-360/{id}/responses', [Evaluation360Controller::class,'responses'])->name('evaluation-360.responses');
-        // EXTERNAL (NO LOGIN)
-        Route::get('360/evaluation/{share}', [ExternalEvaluation360Controller::class,'show']);
-        Route::post('360/evaluation/{share}/save', [ExternalEvaluation360Controller::class,'save']);
-        Route::post('360/evaluation/{share}/submit', [ExternalEvaluation360Controller::class,'submit']);
+
         Route::get('student/360-result', [StudentEvaluation360Controller::class,'index']);
+
+
         Route::resource('rotation-evaluations', RotationEvaluationController::class);
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
         Route::resource('diagnoses', DiagnosisController::class);
@@ -249,5 +249,11 @@ use App\Http\Controllers\Admin\ExamController;
             Route::get('360-result', [StudentEvaluation360Controller::class,'index'])->name('360.index');
             });
     });
+            // External evaluation
+    Route::get('360/evaluation/{share}', [ExternalEvaluation360Controller::class,'show']);
+    Route::post('360/evaluation/{share}/save', [ExternalEvaluation360Controller::class,'save']);
+    Route::post('360/evaluation/{share}/submit', [ExternalEvaluation360Controller::class,'submit']);
+    Route::get('360/evaluation/{share}/enter-pin', [ExternalEvaluation360Controller::class,'enterPinView']);
+    Route::post('360/evaluation/{share}/check-pin', [ExternalEvaluation360Controller::class,'checkPin']);
 
 require __DIR__.'/auth.php';
