@@ -259,8 +259,6 @@
                         </li>
                     </ul>
                 </li>
-
-
                 @endrole
                 @can('exam_matrices.index')
                     <li class="nav-item {{ request()->routeIs('exam_matrices.*') ? 'menu-open' : '' }}">
@@ -537,7 +535,7 @@
                         @endcan
 
                         <!-- Self Evaluations -->
-                        {{-- @can('self-evaluations.index') --}}
+                        @can('self-evaluations-index')
                             <li class="nav-item">
                                 <a href="{{ route('self-evaluations.index') }}"
                                 class="nav-link {{ request()->routeIs('self-evaluations.*') ? 'active' : '' }}">
@@ -545,9 +543,9 @@
                                     <p>Self Evaluations</p>
                                 </a>
                             </li>
-                        {{-- @endcan --}}
+                        @endcan
                         <!-- Trainee Evaluations -->
-                        {{-- @can('trainee-evaluations.index') --}}
+                        @can('trainee-evaluations-index')
                             <li class="nav-item">
                                 <a href="{{ route('trainee-evaluations.index') }}"
                                 class="nav-link {{ request()->routeIs('trainee-evaluations.*') ? 'active' : '' }}">
@@ -555,10 +553,10 @@
                                     <p>Trainee Evaluations</p>
                                 </a>
                             </li>
-                        {{-- @endcan --}}
+                        @endcan
 
                         <!-- 360° Evaluation -->
-                        {{-- @can('evaluation-360.index') --}}
+                        @can('evaluation-360-index')
                             <li class="nav-item">
                                 <a href="{{ route('evaluation-360.index') }}"
                                 class="nav-link {{ request()->routeIs('evaluation-360.*') ? 'active' : '' }}">
@@ -566,10 +564,10 @@
                                     <p>360° Evaluations</p>
                                 </a>
                             </li>
-                        {{-- @endcan --}}
+                        @endcan
 
                         <!-- Rotation Evaluations -->
-                        {{-- @can('rotation-evaluations.index') --}}
+                        @can('rotation-evaluations-index')
                             <li class="nav-item">
                                 <a href="{{ route('rotation-evaluations.index') }}"
                                 class="nav-link {{ request()->routeIs('rotation-evaluations.*') ? 'active' : '' }}">
@@ -577,10 +575,10 @@
                                     <p>Rotation Evaluations</p>
                                 </a>
                             </li>
-                        {{-- @endcan --}}
+                        @endcan
 
                         <!-- Longitudinal Requirements -->
-                        {{-- @can('longitudinal-requirements.index') --}}
+                        @can('longitudinal-requirements-index')
                             <li class="nav-item">
                                 <a href="{{ route('longitudinal-requirements.index') }}"
                                 class="nav-link {{ request()->routeIs('longitudinal-requirements.*') ? 'active' : '' }}">
@@ -588,92 +586,92 @@
                                     <p>Longitudinal Requirements</p>
                                 </a>
                             </li>
-                        {{-- @endcan --}}
+                        @endcan
                     </ul>
                 </li>
                 @endcan
 
                 {{-- DOPS Dropdown --}}
                 @can('dops')
-<li class="nav-item {{
-    request()->routeIs('competencies.*') ||
-    request()->routeIs('ratings.*') ||
-    request()->routeIs('levels.*') ||
-    request()->routeIs('diagnoses.*') ||
-    request()->routeIs('procedures.*') ||
-    request()->routeIs('dops.*')
-        ? 'menu-open' : '' }}">
+                <li class="nav-item {{
+                    request()->routeIs('competencies.*') ||
+                    request()->routeIs('ratings.*') ||
+                    request()->routeIs('levels.*') ||
+                    request()->routeIs('diagnoses.*') ||
+                    request()->routeIs('procedures.*') ||
+                    request()->routeIs('dops.*')
+                        ? 'menu-open' : '' }}">
 
-    <a href="#" class="nav-link {{
-        request()->routeIs('competencies.*') ||
-        request()->routeIs('ratings.*') ||
-        request()->routeIs('levels.*') ||
-        request()->routeIs('diagnoses.*') ||
-        request()->routeIs('procedures.*') ||
-        request()->routeIs('dops.*')
-            ? 'active' : '' }}">
-        <i class="nav-icon bi bi-bar-chart-line-fill"></i>
-        <p>
-            DOPS
-            <i class="nav-arrow bi bi-chevron-right"></i>
-        </p>
-    </a>
+                    <a href="#" class="nav-link {{
+                        request()->routeIs('competencies.*') ||
+                        request()->routeIs('ratings.*') ||
+                        request()->routeIs('levels.*') ||
+                        request()->routeIs('diagnoses.*') ||
+                        request()->routeIs('procedures.*') ||
+                        request()->routeIs('dops.*')
+                            ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-bar-chart-line-fill"></i>
+                        <p>
+                            DOPS
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
 
-    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview">
 
-        <li class="nav-item">
-            <a href="{{ route('competencies.index') }}"
-               class="nav-link {{ request()->routeIs('competencies.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-list-check"></i>
-                <p>Competencies</p>
-            </a>
-        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('competencies.index') }}"
+                            class="nav-link {{ request()->routeIs('competencies.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-list-check"></i>
+                                <p>Competencies</p>
+                            </a>
+                        </li>
 
-        <li class="nav-item">
-            <a href="{{ route('ratings.index') }}"
-               class="nav-link {{ request()->routeIs('ratings.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-star-fill"></i>
-                <p>Ratings</p>
-            </a>
-        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('ratings.index') }}"
+                            class="nav-link {{ request()->routeIs('ratings.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-star-fill"></i>
+                                <p>Ratings</p>
+                            </a>
+                        </li>
 
-        <li class="nav-item">
-            <a href="{{ route('levels.index') }}"
-               class="nav-link {{ request()->routeIs('levels.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-graph-up"></i>
-                <p>Levels</p>
-            </a>
-        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('levels.index') }}"
+                            class="nav-link {{ request()->routeIs('levels.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-graph-up"></i>
+                                <p>Levels</p>
+                            </a>
+                        </li>
 
-        {{-- 🔹 Diagnosis --}}
-        <li class="nav-item">
-            <a href="{{ route('diagnoses.index') }}"
-               class="nav-link {{ request()->routeIs('diagnoses.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-clipboard-pulse"></i>
-                <p>Diagnosis</p>
-            </a>
-        </li>
+                        {{-- 🔹 Diagnosis --}}
+                        <li class="nav-item">
+                            <a href="{{ route('diagnoses.index') }}"
+                            class="nav-link {{ request()->routeIs('diagnoses.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-clipboard-pulse"></i>
+                                <p>Diagnosis</p>
+                            </a>
+                        </li>
 
-        {{-- 🔹 Procedure --}}
-        <li class="nav-item">
-            <a href="{{ route('procedures.index') }}"
-               class="nav-link {{ request()->routeIs('procedures.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-tools"></i>
-                <p>Procedure</p>
-            </a>
-        </li>
+                        {{-- 🔹 Procedure --}}
+                        <li class="nav-item">
+                            <a href="{{ route('procedures.index') }}"
+                            class="nav-link {{ request()->routeIs('procedures.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-tools"></i>
+                                <p>Procedure</p>
+                            </a>
+                        </li>
 
-        <li class="nav-item">
-            <a href="{{ route('dops.index') }}"
-               class="nav-link {{ request()->routeIs('dops.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-journal-text"></i>
-                <p>DOPS</p>
-            </a>
-        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('dops.index') }}"
+                            class="nav-link {{ request()->routeIs('dops.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-journal-text"></i>
+                                <p>DOPS</p>
+                            </a>
+                        </li>
 
-    </ul>
-</li>
-@endcan
+                    </ul>
+                </li>
+                @endcan
 
 
 
@@ -707,66 +705,66 @@
                 @endforeach
                 {{-- @can('grand-ward-rounds.index') --}}
                     <li class="nav-item {{
-    request()->routeIs(
-        'grand-ward-rounds.*',
-        'daily-ward-rounds.*',
-        'cicu-ward-rounds.*',
-        'trainee.dops.*'
-    ) ? 'menu-open' : '' }}">
+                    request()->routeIs(
+                        'grand-ward-rounds.*',
+                        'daily-ward-rounds.*',
+                        'cicu-ward-rounds.*',
+                        'trainee.dops.*'
+                    ) ? 'menu-open' : '' }}">
 
-    <a href="#" class="nav-link {{
-        request()->routeIs(
-            'grand-ward-rounds.*',
-            'daily-ward-rounds.*',
-            'cicu-ward-rounds.*',
-            'trainee.dops.*'
-        ) ? 'active' : '' }}">
-        <i class="nav-icon bi bi-heart-pulse-fill"></i>
-        <p>
-            Clinical Activities
-            <i class="nav-arrow bi bi-chevron-right"></i>
-        </p>
-    </a>
+                    <a href="#" class="nav-link {{
+                        request()->routeIs(
+                            'grand-ward-rounds.*',
+                            'daily-ward-rounds.*',
+                            'cicu-ward-rounds.*',
+                            'trainee.dops.*'
+                        ) ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-heart-pulse-fill"></i>
+                        <p>
+                            Clinical Activities
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
 
-    <ul class="nav nav-treeview">
-        {{-- Grand CICU / Ward Round --}}
-        <li class="nav-item">
-            <a href="{{ route('grand-ward-rounds.index') }}"
-               class="nav-link {{ request()->routeIs('grand-ward-rounds.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-circle"></i>
-                <p>Grand CICU / Ward Round</p>
-            </a>
-        </li>
+                    <ul class="nav nav-treeview">
+                        {{-- Grand CICU / Ward Round --}}
+                        <li class="nav-item">
+                            <a href="{{ route('grand-ward-rounds.index') }}"
+                            class="nav-link {{ request()->routeIs('grand-ward-rounds.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Grand CICU / Ward Round</p>
+                            </a>
+                        </li>
 
-        {{-- Daily Ward Round --}}
-        <li class="nav-item">
-            <a href="{{ route('daily-ward-rounds.index') }}"
-               class="nav-link {{ request()->routeIs('daily-ward-rounds.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-circle"></i>
-                <p>Daily Ward Round</p>
-            </a>
-        </li>
+                        {{-- Daily Ward Round --}}
+                        <li class="nav-item">
+                            <a href="{{ route('daily-ward-rounds.index') }}"
+                            class="nav-link {{ request()->routeIs('daily-ward-rounds.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Daily Ward Round</p>
+                            </a>
+                        </li>
 
-        {{-- CICU Ward Rounds --}}
-        <li class="nav-item">
-            <a href="{{ route('cicu-ward-rounds.index') }}"
-               class="nav-link {{ request()->routeIs('cicu-ward-rounds.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-circle"></i>
-                <p>CICU Ward Rounds</p>
-            </a>
-        </li>
+                        {{-- CICU Ward Rounds --}}
+                        <li class="nav-item">
+                            <a href="{{ route('cicu-ward-rounds.index') }}"
+                            class="nav-link {{ request()->routeIs('cicu-ward-rounds.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>CICU Ward Rounds</p>
+                            </a>
+                        </li>
 
-        {{-- 🔹 DOPS (Trainee) --}}
-        <li class="nav-item">
-            <a href="{{ route('trainee.dops.index') }}"
-               class="nav-link {{ request()->routeIs('trainee.dops.*') ? 'active' : '' }}">
-                <i class="nav-icon bi bi-journal-check"></i>
-                <p>DOPS</p>
-            </a>
-        </li>
+                        {{-- 🔹 DOPS (Trainee) --}}
+                        <li class="nav-item">
+                            <a href="{{ route('trainee.dops.index') }}"
+                            class="nav-link {{ request()->routeIs('trainee.dops.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-journal-check"></i>
+                                <p>DOPS</p>
+                            </a>
+                        </li>
 
-    </ul>
-</li>
+                    </ul>
+                </li>
 
                     {{-- @endcan --}}
                  @can('trainee.invitations')
@@ -789,7 +787,76 @@
                             </li>
                         </ul>
                     </li>
-                @endcan
+                 @endcan
+
+
+                <li class="nav-item {{ request()->routeIs('assignments.*') ||
+                                    request()->routeIs('self-evaluations.*') ||
+                                   request()->routeIs('trainee-evaluations.*') ||
+                                    request()->routeIs('evaluation-360.*') ||
+                                    request()->routeIs('rotation-evaluations.*') ||
+                                    request()->routeIs('longitudinal-requirements.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs('assignments.*') ||
+                                                request()->routeIs('self-evaluations.*') ||
+                                                request()->routeIs('trainee-evaluations.*') ||
+                                                request()->routeIs('evaluation-360.*') ||
+                                                request()->routeIs('rotation-evaluations.*') ||
+                                                request()->routeIs('longitudinal-requirements.*') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-journal-bookmark-fill"></i>
+                        <p>
+                             Evaluation Form
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('evaluation-360.index') }}"
+                                class="nav-link {{ request()->routeIs('evaluation-360.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-arrow-repeat"></i>
+                                    <p>360° Evaluations</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('self-evaluations.index') }}"
+                                class="nav-link {{ request()->routeIs('self-evaluations.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-person-lines-fill"></i>
+                                    <p>Self Evaluations</p>
+                                </a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a href="{{ route('trainee-evaluations.index') }}"
+                                class="nav-link {{ request()->routeIs('trainee-evaluations.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-person-check"></i>
+                                    <p>Trainee Evaluations</p>
+                                </a>
+                            </li>
+
+
+
+
+
+                            <li class="nav-item">
+                                <a href="{{ route('rotation-evaluations.index') }}"
+                                class="nav-link {{ request()->routeIs('rotation-evaluations.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-calendar-check"></i>
+                                    <p>Rotation Evaluations</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('longitudinal-requirements.index') }}"
+                                class="nav-link {{ request()->routeIs('longitudinal-requirements.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-clipboard-check"></i>
+                                    <p>Longitudinal Requirements</p>
+                                </a>
+                            </li>
+
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('trainee.exams') }}"
                     class="nav-link {{ request()->routeIs('trainee.results.*') ? 'active' : '' }}">
