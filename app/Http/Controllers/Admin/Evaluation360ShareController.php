@@ -9,11 +9,10 @@ class Evaluation360ShareController extends Controller
 {
     public function store(Request $request, $formId)
     {
-
         $share = Evaluation360FormShare::create([
             'evaluation_360_form_id'=>$formId,
             'shared_by'=>auth()->id(),
-            'assigned_to'=>$request->student_id ?? null,
+            'assigned_to'=>$request->assigned_to ?? null,
             'name'=>$request->name,
             'email'=>$request->email,
             'phone'=>$request->phone,

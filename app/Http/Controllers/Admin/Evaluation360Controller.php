@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Evaluation360Form;
 use App\Models\Evaluation360Section;
 use App\Models\Evaluation360FormShare;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +18,19 @@ class Evaluation360Controller extends Controller
         $user = Auth::user();
 
         if($user->hasRole('Admin')){
+
             $evaluations = Evaluation360Form::with('sections')->orderBy('id','desc')->get();
+
+            // All users jinke role Assessor ya Trainee ho
+            $users = User::whereHas('roles', function($q){
+                $q->whereIn('name', ['Assessor', 'Trainee']);
+            })->orderBy('name')->get();
+
+            // Ajax check for table only
             if(request()->ajax()){
                 return response()->json($evaluations);
             }
-            return view('admin.evaluation-360.index');
+            return view('admin.evaluation-360.index', compact('evaluations','users'));
         }
 
         if($user->hasRole('Assessor') || $user->hasRole('Trainee')){
@@ -33,7 +42,7 @@ class Evaluation360Controller extends Controller
                     $q->where('email', $user->email)->orWhere('assigned_to', $user->id);
                 }
                 $q->with(['sharedBy','assignedTo']);
-            },'sections'])->orderBy('id','desc')->get();
+            },'sections'])->get();
 
             return view('admin.evaluation-360.index', compact('evaluations'));
         }

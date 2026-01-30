@@ -19,31 +19,60 @@
 
     <div class="card-body">
         <table id="formTable" class="table table-bordered table-hover table-striped w-100 text-center">
-            <thead class="table-dark">
-                @role('Admin')
+    <thead class="table-dark">
+        @role('Admin')
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        @else
+            <tr>
+                <th>No.</th>
+                <th>Share To</th>
+                <th>Title</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Email</th>
+                <th>PIN</th>
+                <th>Status</th>
+                <th>Share</th>
+                <th>Action</th>
+            </tr>
+        @endrole
+    </thead>
+    <tbody>
+        @role('Admin')
+            {{-- Admin table will load via AJAX --}}
+        @else
+            @foreach($evaluations as $index => $eval)
+                @foreach($eval->shares as $share)
                     <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $share->name }}</td>
+                        <td>{{ $eval->title }}</td>
+                        <td>{{ $share->sharedBy->name ?? '-' }}</td>
+                        <td>{{ $share->assignedTo->name ?? '-' }}</td>
+                        <td>{{ $share->email ?? '-' }}</td>
+                        <td>{{ $share->pin ?? '-' }}</td>
+                        <td>{{ $share->status }}</td>
+                        <td>
+                            @if($share->status === 'W')
+                                <button class="btn btn-success btn-sm">Accept</button>
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="viewForm({{ $eval->id }})">View</button>
+                        </td>
                     </tr>
-                @else
-                    <tr>
-                        <th>No.</th>
-                        <th>Share To</th>
-                        <th>Title</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Email</th>
-                        <th>PIN</th>
-                        <th>Status</th>
-                        <th>Share</th>
-                        <th>Action</th>
-                    </tr>
-                @endrole
-            </thead>
-            <tbody></tbody>
-        </table>
+                @endforeach
+            @endforeach
+        @endrole
+    </tbody>
+</table>
     </div>
 </div>
 
@@ -114,6 +143,15 @@
                     <div class="mb-3">
                         <label class="form-label">Evaluator Name</label>
                         <input type="text" id="share_name" class="form-control" placeholder="Enter name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Assign To (User)</label>
+                        <select id="assigned_to" class="form-select">
+                            <option value="">-- Select User --</option>
+                            @foreach($users as $u)
+                                <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Email (optional)</label>
@@ -316,19 +354,21 @@ $(document).ready(function(){
         });
     });
 
+
     $('#shareForm').submit(function(e){
         e.preventDefault();
         let formId = $('#share_form_id').val();
         $.post(`evaluation-360/${formId}/share`, {
             _token:'{{ csrf_token() }}',
-            name:$('#share_name').val(),
-            email:$('#share_email').val(),
-            phone:$('#share_phone').val(),
-            details:$('#share_details').val()
+            assigned_to: $('#assigned_to').val(),
+            name: $('#share_name').val(),
+            email: $('#share_email').val(),
+            phone: $('#share_phone').val(),
+            details: $('#share_details').val()
         }, function(res){
             shareModal.hide();
             alert('Form shared! Link:\n' + res.link);
-            loadTable();
+            console.log('Share link:', res.link);
         });
     });
 
