@@ -33,6 +33,13 @@ class Evaluation360FormShare extends Model
         return $this->belongsTo(User::class,'shared_by');
     }
 
+
+
+    public function assignedTo()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
     public function isLocked()
     {
         return $this->status === 'I';

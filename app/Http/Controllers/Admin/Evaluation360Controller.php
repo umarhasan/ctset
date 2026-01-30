@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Evaluation360Form;
 use App\Models\Evaluation360Section;
+use App\Models\Evaluation360FormShare;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -17,18 +18,24 @@ class Evaluation360Controller extends Controller
 
         if($user->hasRole('Admin')){
             $evaluations = Evaluation360Form::with('sections')->orderBy('id','desc')->get();
-            if(request()->ajax()) return response()->json($evaluations);
+            if(request()->ajax()){
+                return response()->json($evaluations);
+            }
             return view('admin.evaluation-360.index');
         }
 
-        if($user->hasRole('Assessor')){
-            $assignedForms = $user->assigned360Forms()->with('sections','shares')->get();
-            return view('assessor.360-results', compact('assignedForms'));
-        }
+        if($user->hasRole('Assessor') || $user->hasRole('Trainee')){
+            $evaluations = Evaluation360Form::with(['shares'=>function($q) use($user){
+                // Assessor/Trainee only see shares assigned to them or themselves
+                if($user->hasRole('Assessor')){
+                    $q->where('assigned_to', $user->id);
+                } else {
+                    $q->where('email', $user->email)->orWhere('assigned_to', $user->id);
+                }
+                $q->with(['sharedBy','assignedTo']);
+            },'sections'])->orderBy('id','desc')->get();
 
-        if($user->hasRole('Trainee')){
-            $evaluations = Evaluation360Form::with('sections')->orderBy('id','desc')->get();
-            return view('trainee.360-results', compact('evaluations'));
+            return view('admin.evaluation-360.index', compact('evaluations'));
         }
 
         abort(403);
