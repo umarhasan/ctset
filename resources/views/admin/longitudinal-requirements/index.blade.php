@@ -6,9 +6,11 @@
     <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Longitudinal Requirement Forms</h3>
         <div class="ms-auto">
-            <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
-                <i class="fa fa-plus"></i> Add Longitudinal Requirement Forms
-            </button>
+            @can('longitudinal-requirements-create')
+                <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
+                    <i class="fa fa-plus"></i> Add Longitudinal Requirement Forms
+                </button>
+            @endcan
         </div>
     </div>
 
@@ -39,12 +41,16 @@
                     </td>
                     <td>{{ $requirement->created_at->format('Y-m-d') }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $requirement->id }})">
-                            <i class="fa fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $requirement->id }})">
-                            <i class="fa fa-trash"></i>
-                        </button>
+                        @can('longitudinal-requirements-update')
+                            <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $requirement->id }})">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        @endcan
+                        @can('longitudinal-requirements-delete')
+                            <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $requirement->id }})">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        @endcan
                     </td>
                 </tr>
                 @endforeach

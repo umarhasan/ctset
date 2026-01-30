@@ -5,9 +5,11 @@
     <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Trainee Evaluation Forms</h3>
         <div class="ms-auto">
-            <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
-                <i class="fa fa-plus"></i> Add Trainee Evaluation Forms
-            </button>
+            @can('trainee-evaluations-create')
+                <button class="btn btn-primary btn-sm" onclick="openCreateModal()">
+                    <i class="fa fa-plus"></i> Add Trainee Evaluation Forms
+                </button>
+            @endcan
         </div>
     </div>
 
@@ -40,12 +42,16 @@
                     </td>
                     <td>{{ $evaluation->created_at->format('Y-m-d') }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $evaluation->id }})">
-                            <i class="fa fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $evaluation->id }})">
-                            <i class="fa fa-trash"></i>
-                        </button>
+                        @can('trainee-evaluations-update')
+                            <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $evaluation->id }})">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        @endcan
+                        @can('trainee-evaluations-delete')
+                            <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $evaluation->id }})">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        @endcan
                     </td>
                 </tr>
                 @endforeach

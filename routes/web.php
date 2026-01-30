@@ -249,7 +249,7 @@ use App\Http\Controllers\Admin\ExamController;
             Route::get('360-result', [StudentEvaluation360Controller::class,'index'])->name('360.index');
             });
     });
-            // External evaluation
+    // External evaluation
     Route::get('360/evaluation/{share}', [ExternalEvaluation360Controller::class,'show']);
     Route::post('360/evaluation/{share}/save', [ExternalEvaluation360Controller::class,'save']);
     Route::post('360/evaluation/{share}/submit', [ExternalEvaluation360Controller::class,'submit']);
