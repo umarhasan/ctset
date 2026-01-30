@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="container mt-5">
-    <h3>{{ $share->evaluation360Form->title }}</h3>
+    <h3>{{ $share->form->title }}</h3>
     <p><strong>Status:</strong> {{ $share->status }}</p>
 
-    @foreach($share->evaluation360Form->sections as $section)
+    @foreach($share->form->sections as $section)
         <div class="card mb-3">
             <div class="card-header bg-light">
                 <strong>{{ $section->section_title }}</strong>
