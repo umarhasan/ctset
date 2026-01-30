@@ -50,8 +50,7 @@ class ExternalEvaluation360Controller extends Controller
             return redirect()->back()->with('error','Invalid PIN!');
         }
 
-        // Redirect to the actual form page
-        return redirect()->route('external.evaluation.view', ['share'=>$share->id]);
+        return view('external.evaluation.show', ['share' => $share->id]);
     }
     public function submit(Evaluation360FormShare $share)
     {
