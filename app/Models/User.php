@@ -96,5 +96,8 @@ class User extends Authenticatable
                     ->where('status', 'A');
     }
 
-
+    public function cvs()
+    {
+        return $this->hasMany(Cv::class);
+    }
 }

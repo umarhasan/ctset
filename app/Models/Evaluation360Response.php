@@ -18,6 +18,6 @@ class Evaluation360Response extends Model
 
     public function section()
     {
-        return $this->belongsTo(Evaluation360Section::class,'section_id');
+        return $this->belongsTo(Evaluation360Response::class,'section_id');
     }
 }

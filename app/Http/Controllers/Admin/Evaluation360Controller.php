@@ -145,7 +145,7 @@ class Evaluation360Controller extends Controller
 
     public function responses($id)
     {
-        $form = Evaluation360Form::with('shares.responses.sections')->findOrFail($id);
+        $form = Evaluation360Form::with('shares.responses.section')->findOrFail($id);
         return view('admin.evaluation-360.responses', compact('form'));
     }
 }

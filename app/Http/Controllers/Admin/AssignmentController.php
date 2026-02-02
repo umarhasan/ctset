@@ -17,7 +17,6 @@ class AssignmentController extends Controller
         $fromTypes   = AssignmentFromType::all();
         $rotations   = Rotation::all();
 
-        // ✅ ONLY TRAINEE USERS (Spatie)
         $users = User::role('Trainee')->get();
 
         return view('admin.assignments.index', compact(
@@ -28,7 +27,7 @@ class AssignmentController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'from_type_id' => 'required|exists:from_types,id',
+            'from_type_id' => 'required|exists:assignment_from_types,id',
             'from'         => 'required|string',
             'to'           => 'required|string',
             'users'        => 'required|array',

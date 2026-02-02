@@ -29,7 +29,8 @@ class ExternalEvaluation360Controller extends Controller
         if($share->status === 'I') abort(403);
 
         foreach($request->responses as $sectionId => $data){
-            Evaluation360Response::updateOrCreate(
+        
+        Evaluation360Response::updateOrCreate(
                 ['share_id'=>$share->id,'section_id'=>$sectionId],
                 $data
             );

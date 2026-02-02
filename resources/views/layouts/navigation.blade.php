@@ -16,6 +16,9 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                 <x-nav-link :href="route('cv.dashboard')" :active="request()->routeIs('cv.*')">
+                    {{ __('CV Builder') }}
+                </x-nav-link>
             </div>
 
             <!-- Settings Dropdown -->

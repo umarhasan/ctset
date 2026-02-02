@@ -63,6 +63,15 @@ use App\Http\Controllers\Admin\TraineeDopsController;
 use App\Http\Controllers\Admin\DiagnosisController;
 use App\Http\Controllers\Admin\ProcedureController;
 
+use App\Http\Controllers\CVBuilder\DashboardController;
+use App\Http\Controllers\CVBuilder\CvController;
+use App\Http\Controllers\CVBuilder\EducationClinicalController;
+use App\Http\Controllers\CVBuilder\ResearchAwardController;
+use App\Http\Controllers\CVBuilder\MilestoneController;
+use App\Http\Controllers\CVBuilder\DocumentController;
+use App\Http\Controllers\CVBuilder\TemplateController;
+use App\Http\Controllers\CVBuilder\ProfileController as CvProfileController;
+
 // Exam
 use App\Http\Controllers\Admin\ExamController;
     Route::get('/', function () {
@@ -192,6 +201,10 @@ use App\Http\Controllers\Admin\ExamController;
         Route::get('/user/profile/{filename}', [ProfileController::class, 'streamProfileImage'])
             ->name('user.profile.stream')->middleware('auth');
 
+        Route::get('/cv/document/{filename}', [DocumentController::class, 'streamDocument'])
+        ->name('cv.document.stream')
+        ->middleware('auth');
+        
         Route::get('/user/signature/{filename}', [ProfileController::class, 'streamSignatureImage'])
             ->name('user.signature.stream')->middleware('auth');
 
@@ -248,6 +261,26 @@ use App\Http\Controllers\Admin\ExamController;
 
             Route::get('360-result', [StudentEvaluation360Controller::class,'index'])->name('360.index');
             });
+    
+    
+        Route::prefix('cvbuilder')->group(function () {
+            Route::get('/cv-dashboard', [DashboardController::class, 'index'])->name('cv.dashboard');
+            Route::resource('cv',CvController::class);
+            Route::resource('education', EducationClinicalController::class);
+            Route::resource('research', ResearchAwardController::class);
+            Route::resource('milestone', MilestoneController::class);
+            Route::resource('document', DocumentController::class);
+            Route::resource('templates', TemplateController::class);
+            Route::post('templates/{template}/set-default', [TemplateController::class, 'setDefault'])->name('templates.setDefault');
+            Route::get('preview/{id}', [CvController::class, 'preview'])->name('cv.preview');
+            Route::get('pdf/{id}', [CvController::class, 'pdf'])->name('cv.pdf');
+            Route::post('share/{id}', [CvController::class, 'share'])->name('cv.share');
+            Route::get('public/{token}', [CvController::class, 'publicView'])->name('cv.public');
+            
+            // Profile routes
+            Route::post('cv-profile', [CvProfileController::class, 'store'])->name('profile.store');
+            Route::put('cv-profile/{id}', [CvProfileController::class, 'update'])->name('profile.update');
+        });
     });
     // External evaluation
     Route::get('360/evaluation/{share}', [ExternalEvaluation360Controller::class,'show']);

@@ -75,13 +75,10 @@
 
                         <div class="col-md-6 mb-3">
                             <label>Form Type</label>
-                            <select name="from_type_id" id="from_type_id"
-                                class="form-control" required>
+                            <select name="from_type_id" id="from_type_id" class="form-control" required>
                                 <option value="">Select</option>
                                 @foreach($fromTypes as $ft)
-                                    <option value="{{ $ft->id }}">
-                                        {{ $ft->title }}
-                                    </option>
+                                    <option value="{{ $ft->id }}">{{ $ft->title }}</option>
                                 @endforeach
                             </select>
                         </div>

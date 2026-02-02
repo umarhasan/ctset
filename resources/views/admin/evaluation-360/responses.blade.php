@@ -36,7 +36,7 @@
                             <span class="badge bg-info">Unlocked</span>
                         @endif
                     </td>
-                    <td>{{ $share->locked_at?->format('d M, Y H:i') ?? '-' }}</td>
+                 <td>{{ $share->locked_at ?? '-' }}</td>
                     <td>
                         @if($share->status === 'W')
                             <button class="btn btn-sm btn-primary" onclick="sendLink('{{ $share->id }}')">Send Link</button>

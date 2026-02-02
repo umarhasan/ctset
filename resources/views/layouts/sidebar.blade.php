@@ -344,25 +344,25 @@
                     ];
                 @endphp
 
-                <li class="nav-item {{ request()->routeIs(implode(',', $formsRoutes)) ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->routeIs(implode(',', $formsRoutes)) ? 'active' : '' }}">
-                        <i class="nav-icon bi bi-journal-bookmark-fill"></i>
-                        <p>Forms<i class="nav-arrow bi bi-chevron-right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        @foreach($formsMenu as $item)
-                            @can($item['permission'])
-                            <li class="nav-item">
-                                <a href="{{ route($item['route']) }}"
-                                   class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}">
-                                    <i class="nav-icon bi {{ $item['icon'] }}"></i>
-                                    <p>{{ $item['label'] }}</p>
-                                </a>
-                            </li>
-                            @endcan
-                        @endforeach
-                    </ul>
-                </li>
+                <li class="nav-item {{ collect($formsRoutes)->contains(fn($r) => request()->routeIs($r)) ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ collect($formsRoutes)->contains(fn($r) => request()->routeIs($r)) ? 'active' : '' }}">
+        <i class="nav-icon bi bi-journal-bookmark-fill"></i>
+        <p>Forms<i class="nav-arrow bi bi-chevron-right"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        @foreach($formsMenu as $item)
+            @can($item['permission'])
+            <li class="nav-item">
+                <a href="{{ route($item['route']) }}"
+                   class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}">
+                    <i class="nav-icon bi {{ $item['icon'] }}"></i>
+                    <p>{{ $item['label'] }}</p>
+                </a>
+            </li>
+            @endcan
+        @endforeach
+    </ul>
+</li>
                 @endcan
 
                 {{-- DOPS --}}

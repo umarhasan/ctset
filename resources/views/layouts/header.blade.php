@@ -10,7 +10,13 @@
     </ul>
 
     <ul class="navbar-nav ms-auto">
-
+      <!-- CV Builder Button -->
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('cv.dashboard') }}">
+          <i class="bi bi-file-earmark-person me-1"></i>
+          CV Builder
+        </a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
           <i class="bi bi-search"></i>
