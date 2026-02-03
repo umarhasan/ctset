@@ -146,13 +146,18 @@ class CvController extends Controller
     {
         $cv = Cv::with(['profile', 'educations', 'clinicals', 'researches', 'awards'])
             ->findOrFail($id);
-        
+
         CvActivity::create([
             'cv_id' => $cv->id,
             'activity' => 'PDF downloaded'
         ]);
-        
-        $pdf = Pdf::loadView('cvbuilder.templates.' . $cv->template, compact('cv'));
+
+        $pdf = Pdf::loadView('cvbuilder.templates.pdf', compact('cv'))
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true, // for images
+                ]);
+
         return $pdf->download('cv-' . Str::slug($cv->title) . '.pdf');
     }
 
