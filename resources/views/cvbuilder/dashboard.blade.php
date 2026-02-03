@@ -312,8 +312,7 @@ body {
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="{{ route('cv.edit', $cv->id) }}">Edit</a></li>
                                             <li><a class="dropdown-item" href="{{ route('cv.preview', $cv->id) }}" target="_blank">Preview</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('cv.pdf', $cv->id) }}">Download PDF</a></li>
-                                        </ul>
+                                         </ul>
                                     </div>
                                 </div>
                                 <div class="mt-2">
@@ -348,13 +347,11 @@ body {
                 ['icon' => 'fas fa-award', 'title' => 'Add Award', 'modal' => 'addAwardModal'],
                 ['icon' => 'fas fa-upload', 'title' => 'Upload Doc', 'modal' => 'addDocumentModal'],
                 ['icon' => 'fas fa-flag', 'title' => 'Add Milestone', 'modal' => 'addMilestoneModal'],
-                ['icon' => 'fas fa-palette', 'title' => 'Templates', 'url' => route('templates.index')],
-                ['icon' => 'fas fa-download', 'title' => 'Export PDF', 'url' => route('cv.pdf', auth()->user()->cvs->first()->id ?? '#')],
             ];
         @endphp
 
         @foreach($quickActions as $action)
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="quick-box" 
                      @if(isset($action['modal']))
                          data-bs-toggle="modal" data-bs-target="#{{ $action['modal'] }}"

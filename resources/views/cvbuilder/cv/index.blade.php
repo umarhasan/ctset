@@ -203,11 +203,11 @@
                                         <i class="fas fa-eye me-2"></i>Preview
                                     </a>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <a class="dropdown-item" href="{{ route('cv.pdf', $cv->id) }}">
                                         <i class="fas fa-download me-2"></i>Download PDF
                                     </a>
-                                </li>
+                                </li> -->
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form action="{{ route('cv.share', $cv->id) }}" method="POST" class="d-inline">

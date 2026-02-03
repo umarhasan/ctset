@@ -542,10 +542,10 @@
                             <i class="fas fa-eye me-2"></i>Preview CV
                         </a>
                         
-                        <a href="{{ route('cv.pdf', $cv->id) }}" 
+                        <!-- <a href="{{ route('cv.pdf', $cv->id) }}" 
                            class="btn btn-outline-success">
                             <i class="fas fa-download me-2"></i>Download PDF
-                        </a>
+                        </a> -->
                         
                         @if($cv->is_public && $cv->share_token)
                             <div class="mt-3">
