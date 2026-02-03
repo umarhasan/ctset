@@ -153,7 +153,7 @@ class CvController extends Controller
             'user'
         ])->findOrFail($id);
 
-        $pdf = Pdf::loadView('templates.template1', compact('cv'))
+        $pdf = Pdf::loadView('cvbuilder.templates.template1', compact('cv'))
             ->setPaper('a4', 'portrait');
 
         return $pdf->download('CV_'.$cv->id.'.pdf');
