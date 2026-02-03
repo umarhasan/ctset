@@ -182,23 +182,54 @@ body {
                         </a>
                     @endif
                 </div>
+@php
+    // User ki default ya first CV
+    $cv = Auth::user()->cvs->where('is_default', 1)->first()
+          ?? Auth::user()->cvs->first();
+@endphp
 
-                <div class="mt-3 text-center">
-                    <div class="mb-3">
-                        <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); 
-                                  border-radius: 50%; display: inline-flex; align-items: center; 
-                                  justify-content: center; font-size: 32px; color: white;">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                        </div>
-                    </div>
-                    <strong class="fs-5">{{ Auth::user()->name }}</strong>
-                    <p class="mb-1">{{ Auth::user()->institution ?? 'Institution not set' }}</p>
-                    <p class="mb-3">Class of {{ Auth::user()->graduation_year ?? 'Year not set' }}</p>
+<div class="mt-3 text-center">
+    <div class="mb-3">
 
-                    @if(Auth::user()->specialty)
-                        <span class="badge bg-light text-dark">{{ Auth::user()->specialty }}</span>
-                    @endif
-                </div>
+        @if($cv && $cv->profile && $cv->profile->profile_image)
+            <img
+                src="{{ route('user.profile.stream', $cv->profile->profile_image) }}"
+                alt="Profile Logo"
+                style="width:80px;height:80px;border-radius:50%;object-fit:cover;"
+            >
+        @else
+            <div style="width:80px;height:80px;
+                        background:rgba(255,255,255,0.2);
+                        border-radius:50%;
+                        display:inline-flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:32px;
+                        color:white;">
+                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+            </div>
+        @endif
+
+    </div>
+
+    <strong class="fs-5">{{ Auth::user()->name }}</strong>
+
+    <p class="mb-1">
+        {{ $cv?->profile?->university ?? 'Institution not set' }}
+    </p>
+
+    <p class="mb-3">
+        Class of {{ $cv?->profile?->class_year ?? 'Year not set' }}
+    </p>
+
+    @if($cv?->profile?->specialty)
+        <span class="badge bg-light text-dark">
+            {{ $cv->profile->specialty }}
+        </span>
+    @endif
+</div>
+
+
             </div>
 
             {{-- Quick Stats --}}
