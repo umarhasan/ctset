@@ -78,8 +78,9 @@ class DocumentController extends Controller
             ->with('success', 'Document updated successfully!');
     }
 
-    public function destroy(CvDocument $document)
+    public function destroy($id)
     {
+        $document = CvDocument::find($id);
         $cvId = $document->cv_id;
         $title = $document->title;
 

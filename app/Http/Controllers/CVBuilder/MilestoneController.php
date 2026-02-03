@@ -53,8 +53,9 @@ class MilestoneController extends Controller
             ->with('success', 'Milestone updated successfully!');
     }
 
-    public function destroy(CvMilestone $milestone)
+    public function destroy($id)
     {
+        $milestone = CvMilestone::find($id);
         $cv = $milestone->cv;
         
         $title = $milestone->title;

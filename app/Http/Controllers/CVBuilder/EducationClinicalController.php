@@ -62,8 +62,9 @@ class EducationClinicalController extends Controller
             ->with('success', $activityType . ' updated successfully!');
     }
 
-    public function destroy(CvEducationClinical $educationClinical)
+    public function destroy($id)
     {
+        $educationClinical =CvEducationClinical::find($id);
         $cv = $educationClinical->cv;
         
         $type = $educationClinical->type;

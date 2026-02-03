@@ -56,8 +56,9 @@ class ResearchAwardController extends Controller
             ->with('success', $activityType . ' updated successfully!');
     }
 
-    public function destroy(CvResearchAward $researchAward)
+    public function destroy($id)
     {
+        $researchAward = CvResearchAward::find($id);
         $cv = $researchAward->cv;
         
         $type = $researchAward->type;

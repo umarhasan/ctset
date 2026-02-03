@@ -79,9 +79,9 @@ class TemplateController extends Controller
         ->with('success', 'Template updated successfully!');
 }
 
-    public function destroy(CvTemplate $template)
+    public function destroy($id)
     {
-        
+        $template = CvTemplate::find($id);
         $template->delete();
 
         return redirect()->route('templates.index')
