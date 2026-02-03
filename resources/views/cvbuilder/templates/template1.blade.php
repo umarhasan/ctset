@@ -78,7 +78,10 @@
 
         <!-- Print Button -->
         <button onclick="window.print()" class="btn-print">
-            <i class="fas fa-print"></i> Print / Download
+            <i class="fas fa-print"></i> Print
+        </button>
+        <button id="downloadPdf" class="btn-print">
+            <i class="fas fa-file-pdf"></i> Download PDF
         </button>
     </div>
     @endif
@@ -215,5 +218,38 @@
             window.print();
         @endif
     </script>
+    <script>
+document.getElementById('downloadPdf').addEventListener('click', function () {
+
+    const btn = this;
+    btn.innerHTML = 'Downloading...';
+    btn.disabled = true;
+
+    fetch("{{ route('cv.pdf', $cv->id) }}", {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "CV_{{ $cv->profile->full_name ?? 'User' }}.pdf";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        btn.innerHTML = 'Download PDF';
+        btn.disabled = false;
+    })
+    .catch(error => {
+        alert('PDF download failed');
+        btn.innerHTML = 'Download PDF';
+        btn.disabled = false;
+        console.error(error);
+    });
+});
+</script>
 </body>
 </html>

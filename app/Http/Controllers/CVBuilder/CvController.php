@@ -142,18 +142,21 @@ class CvController extends Controller
         return view('cvbuilder.templates.' . $cv->template, compact('cv'));
     }
 
-    public function pdf($id)
+     public function pdf($id)
     {
-        $cv = Cv::with(['profile', 'educations', 'clinicals', 'researches', 'awards'])
-            ->findOrFail($id);
-        
-        CvActivity::create([
-            'cv_id' => $cv->id,
-            'activity' => 'PDF downloaded'
-        ]);
-        
-        $pdf = Pdf::loadView('cvbuilder.templates.' . $cv->template, compact('cv'));
-        return $pdf->download('cv-' . Str::slug($cv->title) . '.pdf');
+        $cv = Cv::with([
+            'profile',
+            'educations',
+            'clinicals',
+            'researches',
+            'awards',
+            'user'
+        ])->findOrFail($id);
+
+        $pdf = Pdf::loadView('templates.template1', compact('cv'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('CV_'.$cv->id.'.pdf');
     }
 
     public function share(Request $request, $id)
