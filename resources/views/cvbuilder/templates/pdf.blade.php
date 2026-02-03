@@ -2,18 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ $cv->title }} - {{ $cv->profile->full_name ?? 'CV' }}</title>
-
 <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: Arial, sans-serif; font-size:12px; line-height:1.4; color:#333; background:#fff; }
 
-    .cv-container { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 0; }
+    .cv-container { width:210mm; min-height:297mm; margin:0 auto; padding:0; }
 
     /* Header */
-    .cv-header { background-color: #667eea; color:#fff; padding: 20px; }
-    .profile-table { width:100%; }
+    .cv-header { background:#667eea; color:#fff; padding:20px; }
+    .profile-table { width:100%; border-collapse:collapse; }
     .profile-image { width:100px; height:100px; border-radius:50%; background:#fff; text-align:center; vertical-align:middle; font-size:36px; color:#667eea; overflow:hidden; }
     .profile-image img { width:100%; height:100%; object-fit:cover; }
     .profile-info h1 { font-size:22px; margin-bottom:3px; }
@@ -23,7 +21,7 @@
     /* Content Table */
     .cv-content { width:100%; padding:20px; }
     .cv-column { vertical-align: top; padding-right:10px; }
-    .section { margin-bottom:15px; page-break-inside: avoid; }
+    .section { margin-bottom:15px; page-break-inside:avoid; }
     .section-title { font-size:13px; font-weight:bold; color:#667eea; border-bottom:1px solid #667eea; padding-bottom:3px; margin-bottom:5px; text-transform:uppercase; }
     .summary-box { background:#f8f9fa; padding:8px; border-left:4px solid #667eea; margin-bottom:10px; }
     .entry { margin-bottom:5px; }
@@ -48,8 +46,8 @@
 </style>
 </head>
 <body>
-
 <div class="cv-container">
+
     <!-- Header -->
     <div class="cv-header">
         <table class="profile-table">
@@ -67,14 +65,28 @@
                     <div class="profile-info">
                         <h1>{{ $cv->profile->full_name ?? 'Your Name' }}</h1>
                         <div class="specialty">{{ $cv->primary_speciality ?? 'Medical Professional' }}</div>
-                        @if(isset($cv->profile))
-                        <div>
-                            @if($cv->profile->email)<div class="contact-item">✉ {{ $cv->profile->email }}</div>@endif
-                            @if($cv->profile->phone)<div class="contact-item">☎ {{ $cv->profile->phone }}</div>@endif
-                            @if($cv->profile->university)<div class="contact-item">🏛 {{ $cv->profile->university }}</div>@endif
-                            @if($cv->profile->class_year)<div class="contact-item">🎓 Class of {{ $cv->profile->class_year }}</div>@endif
+                        <div class="contact-info">
+                            @if($cv->profile && $cv->profile->email)
+                                <div class="contact-item">
+                                    <img src="{{ public_path('icons/email.png') }}" style="width:10px; vertical-align:middle;"> {{ $cv->profile->email }}
+                                </div>
+                            @endif
+                            @if($cv->profile && $cv->profile->phone)
+                                <div class="contact-item">
+                                    <img src="{{ public_path('icons/phone.png') }}" style="width:10px; vertical-align:middle;"> {{ $cv->profile->phone }}
+                                </div>
+                            @endif
+                            @if($cv->profile && $cv->profile->university)
+                                <div class="contact-item">
+                                    <img src="{{ public_path('icons/university.png') }}" style="width:10px; vertical-align:middle;"> {{ $cv->profile->university }}
+                                </div>
+                            @endif
+                            @if($cv->profile && $cv->profile->class_year)
+                                <div class="contact-item">
+                                    <img src="{{ public_path('icons/graduation.png') }}" style="width:10px; vertical-align:middle;"> Class of {{ $cv->profile->class_year }}
+                                </div>
+                            @endif
                         </div>
-                        @endif
                     </div>
                 </td>
             </tr>
@@ -94,60 +106,60 @@
                 @endif
 
                 @if($cv->educations->count())
-                <div class="section">
-                    <div class="section-title">Education</div>
-                    @foreach($cv->educations as $edu)
-                        <div class="entry">
-                            <div class="entry-title">{{ $edu->title }}</div>
-                            <div class="entry-subtitle">{{ $edu->institute }}</div>
-                            <div class="entry-period">{{ $edu->year_from }} - {{ $edu->year_to ?? 'Present' }}</div>
-                            @if($edu->details)<div class="entry-details">{{ $edu->details }}</div>@endif
-                        </div>
-                    @endforeach
-                </div>
+                    <div class="section">
+                        <div class="section-title">Education</div>
+                        @foreach($cv->educations as $edu)
+                            <div class="entry">
+                                <div class="entry-title">{{ $edu->title }}</div>
+                                <div class="entry-subtitle">{{ $edu->institute }}</div>
+                                <div class="entry-period">{{ $edu->year_from }} - {{ $edu->year_to ?? 'Present' }}</div>
+                                @if($edu->details)<div class="entry-details">{{ $edu->details }}</div>@endif
+                            </div>
+                        @endforeach
+                    </div>
                 @endif
 
                 @if($cv->clinicals->count())
-                <div class="section">
-                    <div class="section-title">Clinical Experience</div>
-                    @foreach($cv->clinicals as $clinical)
-                        <div class="entry">
-                            <div class="entry-title">{{ $clinical->title }}</div>
-                            <div class="entry-subtitle">{{ $clinical->institute }}</div>
-                            <div class="entry-period">{{ $clinical->year_from }} - {{ $clinical->year_to ?? 'Present' }}</div>
-                            @if($clinical->details)<div class="entry-details">{{ $clinical->details }}</div>@endif
-                        </div>
-                    @endforeach
-                </div>
+                    <div class="section">
+                        <div class="section-title">Clinical Experience</div>
+                        @foreach($cv->clinicals as $clinical)
+                            <div class="entry">
+                                <div class="entry-title">{{ $clinical->title }}</div>
+                                <div class="entry-subtitle">{{ $clinical->institute }}</div>
+                                <div class="entry-period">{{ $clinical->year_from }} - {{ $clinical->year_to ?? 'Present' }}</div>
+                                @if($clinical->details)<div class="entry-details">{{ $clinical->details }}</div>@endif
+                            </div>
+                        @endforeach
+                    </div>
                 @endif
             </td>
 
             <!-- Right Column -->
             <td class="cv-column" width="50%">
                 @if($cv->researches->count())
-                <div class="section">
-                    <div class="section-title">Research & Publications</div>
-                    @foreach($cv->researches as $research)
-                        <div class="entry">
-                            <div class="entry-title">{{ $research->title }}</div>
-                            <div class="entry-period">{{ $research->year }}</div>
-                            @if($research->details)<div class="entry-details">{{ $research->details }}</div>@endif
-                        </div>
-                    @endforeach
-                </div>
+                    <div class="section">
+                        <div class="section-title">Research & Publications</div>
+                        @foreach($cv->researches as $research)
+                            <div class="entry">
+                                <div class="entry-title">{{ $research->title }}</div>
+                                <div class="entry-period">{{ $research->year }}</div>
+                                @if($research->details)<div class="entry-details">{{ $research->details }}</div>@endif
+                            </div>
+                        @endforeach
+                    </div>
                 @endif
 
                 @if($cv->awards->count())
-                <div class="section">
-                    <div class="section-title">Awards & Honors</div>
-                    @foreach($cv->awards as $award)
-                        <div class="entry">
-                            <div class="entry-title">{{ $award->title }}</div>
-                            <div class="entry-period">{{ $award->year }}</div>
-                            @if($award->details)<div class="entry-details">{{ $award->details }}</div>@endif
-                        </div>
-                    @endforeach
-                </div>
+                    <div class="section">
+                        <div class="section-title">Awards & Honors</div>
+                        @foreach($cv->awards as $award)
+                            <div class="entry">
+                                <div class="entry-title">{{ $award->title }}</div>
+                                <div class="entry-period">{{ $award->year }}</div>
+                                @if($award->details)<div class="entry-details">{{ $award->details }}</div>@endif
+                            </div>
+                        @endforeach
+                    </div>
                 @endif
 
                 <div class="section">
