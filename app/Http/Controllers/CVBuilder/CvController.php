@@ -142,6 +142,7 @@ class CvController extends Controller
         return view('cvbuilder.templates.' . $cv->template, compact('cv'));
     }
 
+    // CvController.php mein pdf() method update karein:
     public function pdf($id)
     {
         $cv = Cv::with(['profile', 'educations', 'clinicals', 'researches', 'awards'])
@@ -152,10 +153,29 @@ class CvController extends Controller
             'activity' => 'PDF downloaded'
         ]);
 
-        $pdf = Pdf::loadView('cvbuilder.templates.pdf', compact('cv'))
+        // Icons ko base64 format mein prepare karein
+        $icons = [];
+        $iconNames = ['email', 'phone', 'university', 'graduation'];
+        
+        foreach ($iconNames as $icon) {
+            $iconPath = public_path("icons/{$icon}.png");
+            if (file_exists($iconPath)) {
+                $icons[$icon] = 'data:image/png;base64,' . base64_encode(file_get_contents($iconPath));
+            } else {
+                // Fallback simple icon
+                $icons[$icon] = 'data:image/svg+xml;base64,' . base64_encode(
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#667eea"><circle cx="12" cy="12" r="10"/></svg>'
+                );
+            }
+        }
+
+        $pdf = Pdf::loadView('cvbuilder.templates.pdf', compact('cv', 'icons'))
                 ->setOptions([
                     'isHtml5ParserEnabled' => true,
-                    'isRemoteEnabled' => true, // for images
+                    'isRemoteEnabled' => false,
+                    'defaultFont' => 'Helvetica',
+                    'isPhpEnabled' => true,
+                    'chroot' => public_path(),
                 ]);
 
         return $pdf->download('cv-' . Str::slug($cv->title) . '.pdf');
