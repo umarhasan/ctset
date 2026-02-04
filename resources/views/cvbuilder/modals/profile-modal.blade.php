@@ -12,7 +12,7 @@
 
             {{-- ===== FORM ===== --}}
             <form method="POST"
-                  action="{{ $cv->profile ? route('profile.update', $cv->profile->id) : route('profile.store') }}"
+                  action="{{ $cv->profile ? route('cv-profile.update', $cv->profile->id) : route('cv-profile.store') }}"
                   enctype="multipart/form-data"
                   id="profileForm">
 

@@ -772,7 +772,7 @@
 
         @if($cv->profile)
             // ✏️ EDIT MODE
-            form.action = '{{ route("profile.update", $cv->profile->id) }}';
+            form.action = '{{ route("cv-profile.update", $cv->profile->id) }}';
 
             form.querySelector('[name="_method"]').value = 'PUT';
 
@@ -787,7 +787,7 @@
 
         @else
             // ➕ ADD MODE
-            form.action = '{{ route("profile.store") }}';
+            form.action = '{{ route("cv-profile.store") }}';
 
             // method reset
             if (form.querySelector('[name="_method"]')) {

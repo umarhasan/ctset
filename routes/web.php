@@ -278,8 +278,8 @@ use App\Http\Controllers\Admin\ExamController;
             Route::get('public/{token}', [CvController::class, 'publicView'])->name('cv.public');
             
             // Profile routes
-            Route::post('cv-profile', [CvProfileController::class, 'store'])->name('profile.store');
-            Route::put('cv-profile/{id}', [CvProfileController::class, 'update'])->name('profile.update');
+            Route::post('cv-profile', [CvProfileController::class, 'store'])->name('cv-profile.store');
+            Route::put('cv-profile/{id}', [CvProfileController::class, 'update'])->name('cv-profile.update');
         });
     });
     // External evaluation
