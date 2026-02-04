@@ -4,7 +4,7 @@
         <!--end::To the end-->
         <!--begin::Copyright-->
         <strong>
-          Copyright &copy; 2014-2025&nbsp;
-          <a href="#" class="text-decoration-none">All rights reserved CTSE</a>.
+          Copyright &copy; 2014-2025 All rights reserved&nbsp;
+          <a href="#" class="text-decoration-none">CTSE</a>.
         </strong>
       </footer>
