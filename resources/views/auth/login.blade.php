@@ -10,7 +10,7 @@
                     <!-- Login Card -->
                     <div class="login-card">
                         <div class="text-center mb-4">
-                            <img src="{{ asset('adminlte/assets/img/logo.png') }}" alt="LMS Logo" height="80">
+                            <img src="{{ asset('adminlte/assets/img/Medivisty-trans-logo.png') }}" alt="LMS Logo" height="200">
                         </div>
                         @if (session('status'))
                             <div class="alert alert-success">
