@@ -141,7 +141,6 @@ class CvController extends Controller
         
         return view('cvbuilder.templates.' . $cv->template, compact('cv'));
     }
-
      public function pdf($id)
     {
         $cv = Cv::with([
