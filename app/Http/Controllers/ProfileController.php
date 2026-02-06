@@ -181,11 +181,7 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        // Sirf PUBLIC tabs
-        $tabs = ProfileTab::where('user_id', $user->id)
-                    ->where('profile_type', 'PU')
-                    ->get();
-
+        $tabs = ProfileTab::where('user_id', $user->id)->get();
         return view('profile.my-profile', compact('user','tabs'));
     }
 

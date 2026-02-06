@@ -46,7 +46,7 @@
                             <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $evaluation->id }})">
                                 <i class="fa fa-edit"></i>
                             </button>
-                        @endcan#
+                        @endcan
                         @can('self-evaluations-delete')
                             <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $evaluation->id }})">
                                 <i class="fa fa-trash"></i>

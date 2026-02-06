@@ -81,50 +81,76 @@
       </li>
 
       <li class="nav-item dropdown user-menu">
-        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">          
+          <!-- Profile Image -->
           <img
             src="{{ asset('adminlte/assets/img/user2-160x160.jpg') }}"
-            class="user-image rounded-circle shadow"
+            class="user-image rounded-circle shadow me-2"
+            width="35"
             alt="User Image"
           />
-          <span class="d-none d-md-inline">
+          <span class="d-none d-md-inline fw-semibold">
             {{ auth()->user()->name }}
           </span>
         </a>
 
-        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-          <li class="user-header text-bg-primary">
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0">
+
+          <!-- User Header -->
+          <li class="user-header text-bg-primary text-center py-4">
             <img
               src="{{ asset('adminlte/assets/img/user2-160x160.jpg') }}"
-              class="rounded-circle shadow"
+              class="rounded-circle shadow mb-2"
+              width="90"
             />
-            <p>
-              {{ auth()->user()->name }} - {{ auth()->user()->getRoleNames()->first() }}
-              <small>
-                Member since {{ auth()->user()->created_at->format('M Y') }}
-              </small>
-            </p>
+            <h6 class="mb-0 fw-bold">{{ auth()->user()->name }}</h6>
+            <small class="d-block">
+              {{ auth()->user()->getRoleNames()->first() }}
+            </small>
+            <small>
+              Member since {{ auth()->user()->created_at->format('M Y') }}
+            </small>
           </li>
 
-          <li class="user-footer">
+          <!-- Footer Buttons -->
+          <li class="user-footer px-3 py-3">
+
             @if(auth()->user()->hasRole('Admin'))
-                <a href="#"
-                  class="btn btn-outline-secondary">
-                    Settings
-                </a>
+
+                <!-- Admin UI -->
+                <div class="d-grid">
+                  <a href="#" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-gear me-1"></i> Settings
+                  </a>
+                </div>
+
             @else
-                <a href="{{ route('profile.index') }}"
-                  class="btn btn-outline-secondary">
-                    Profile
-                </a>
+
+                <!-- Normal User UI -->
+                <div class="d-grid gap-2">
+                  <a href="{{ route('my.profile') }}" class="btn btn-outline-warning btn-sm">
+                    <i class="bi bi-person me-1"></i> My Profile
+                  </a>
+
+                  <a href="{{ route('profile.index') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Profile
+                  </a>
+                </div>
+
             @endif
 
-            <form method="POST" action="{{ route('logout') }}" class="float-end">
+            <hr class="my-3">
+
+            <!-- Logout -->
+            <form method="POST" action="{{ route('logout') }}">
               @csrf
-              <button type="submit" class="btn btn-outline-danger">
-                Sign out
-              </button>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                  <i class="bi bi-box-arrow-right me-1"></i> Sign out
+                </button>
+              </div>
             </form>
+
           </li>
         </ul>
       </li>
