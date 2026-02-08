@@ -38,6 +38,7 @@
                     <th>To</th>
                     <th>Involvement</th>
                     <th>DOPS</th>
+                    <th>Consultant</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -55,7 +56,7 @@
                         {{ $d->to_time }}
                         @endif
                     </td>
-                <td>
+                    <td>
                                                 <span class="badge bg-{{ $d->involvement=='A'?'success':'secondary' }}">
                                                     {{ $d->involvement=='A'?'Active':'Waiting' }}
                                                 </span>
@@ -68,15 +69,21 @@
                                                 @endif
                                             </td>
                     <td>{{ $d->dops->title }}</td>
+                    <td>{{ $d->consultant ? $d->consultant->name : '-' }}</td>
                     <td>
-                        <a href="{{ route('trainee.dops.show', $d->dops_id) }}"
-       class="btn btn-sm btn-info">
-        View
-    </a>
-                        <button class="btn btn-sm btn-warning" onclick="editDops({{ $d->id }})">Edit</button>
+                        <a href="{{ route('trainee.dops.show', $d->dops_id) }}" class="btn btn-sm btn-info">
+                            <i class="fas fa-eye"></i>
+                        </a>
+
+                        <button class="btn btn-sm btn-warning" onclick="editDops({{ $d->id }})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+
                         <form method="POST" action="{{ route('trainee.dops.destroy',$d->id) }}" class="d-inline">
                             @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger">Delete</button>
+                            <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>
@@ -126,9 +133,17 @@
 {{-- Procedure --}}
 <label>Procedure</label>
 <select id="procedure_select" class="form-control mb-2">
-@foreach($procedure as $r)
-<option value="{{ $r->id }}">{{ $r->title }}</option>
-@endforeach
+    @foreach($procedure as $r)
+        <option value="{{ $r->id }}">{{ $r->title }}</option>
+    @endforeach
+</select>
+
+<label>Consultant</label>
+<select name="consultant_id" id="consultant_id" class="form-control mb-2">
+    <option value="">Select Consultant</option>
+    @foreach($consultants as $c)
+        <option value="{{ $c->id }}">{{ $c->name }}</option>
+    @endforeach
 </select>
 <div id="procedure_inputs"></div>
 
@@ -200,6 +215,7 @@ function editDops(id){
         $('#dopsForm').attr('action','/trainee/dops/'+id)
             .append('<input type="hidden" name="_method" value="PUT">');
         $('#rotation_id').val(d.rotation_id).trigger('change');
+        $('#consultant_id').val(d.consultant_id);
         setTimeout(()=>$('#dops_id').val(d.dops_id),400);
         $('#date').val(d.date);
         $('#from_time').val(d.from_time);

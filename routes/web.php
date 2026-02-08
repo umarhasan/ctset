@@ -71,6 +71,9 @@ use App\Http\Controllers\CVBuilder\MilestoneController;
 use App\Http\Controllers\CVBuilder\DocumentController;
 use App\Http\Controllers\CVBuilder\TemplateController;
 use App\Http\Controllers\CVBuilder\ProfileController as CvProfileController;
+use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\ModalTypeController;
+use App\Http\Controllers\Admin\ReportController;
 
 // Exam
 use App\Http\Controllers\Admin\ExamController;
@@ -81,6 +84,8 @@ use App\Http\Controllers\Admin\ExamController;
     });
 
     Route::middleware(['auth'])->group(function () {
+        Route::resource('departments', DepartmentController::class);
+        Route::resource('modal-types', ModalTypeController::class);
         Route::resource('roles', RoleController::class);
         Route::resource('permissions', PermissionController::class);
         Route::resource('users', UserController::class);
@@ -154,7 +159,10 @@ use App\Http\Controllers\Admin\ExamController;
                     'update'  => 'cicu-ward-rounds.update',
                     'destroy' => 'cicu-ward-rounds.destroy',
                 ]);
-        });
+        
+        
+        
+                });
 
 
         Route::resource('competencies', CompetencyController::class);
@@ -205,8 +213,7 @@ use App\Http\Controllers\Admin\ExamController;
         ->name('cv.document.stream')
         ->middleware('auth');
         
-        Route::get('/user/signature/{filename}', [ProfileController::class, 'streamSignatureImage'])
-            ->name('user.signature.stream')->middleware('auth');
+        Route::get('/user/signature/{filename}', [ProfileController::class, 'streamSignatureImage'])->name('user.signature.stream')->middleware('auth');
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
         Route::get('/my-profile',[ProfileController::class, 'myProfile'])->name('my.profile');
@@ -226,7 +233,14 @@ use App\Http\Controllers\Admin\ExamController;
         ->name('password.update');
 
         Route::prefix('admin')->name('admin.')->group(function () {
-            Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+           Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+           Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+           Route::post('/search', [ReportController::class, 'search'])->name('reports.search');
+           Route::post('/exception', [ReportController::class, 'exception'])->name('reports.exception');
+           Route::post('/summary', [ReportController::class, 'summary'])->name('reports.summary');
+           Route::get('/trainees', [ReportController::class, 'getTrainees'])->name('reports.trainees');
+           Route::post('/send-notification', [ReportController::class, 'sendNotification'])->name('reports.send.notification');     
+            Route::get('/departments', [ReportController::class, 'getDepartments'])->name('reports.departments'); 
         });
 
         Route::prefix('assessor')->name('assessor.')->group(function () {

@@ -19,6 +19,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TraineeDopsExport;
 use App\Models\DopsCompetencyDefinition;
 use App\Models\DopsCompetencyDefinitionDetail;
+use App\Models\User;
 
 class TraineeDopsController extends Controller
 {
@@ -28,12 +29,42 @@ class TraineeDopsController extends Controller
         $diagnosis = Diagnosis::get();
         $procedure = Procedure::get();
 
-        $traineeDops = DopsAttempt::with(['rotation','diagnosis','procedure','dops','trainee'])
-            ->where('trainee_id', auth()->id())
-            ->latest()
-            ->get();
+        $user = auth()->user();
 
-        return view('admin.trainee.dops.index', compact('rotations','diagnosis','procedure','traineeDops'));
+        // Fetch DOPS attempts role-wise
+        $traineeDops = DopsAttempt::with([
+            'rotation',
+            'diagnosis',
+            'procedure',
+            'dops',
+            'trainee',
+            'consultant'
+        ])
+        ->when($user->hasRole('Trainee'), function($q) use ($user) {
+            $q->where('trainee_id', $user->id); // trainee sees only their own attempts
+        })
+        ->when($user->hasRole('Consultant'), function($q) use ($user) {
+            $q->where('consultant_id', $user->id); // consultant sees only their assigned attempts
+        })
+        ->latest()
+        ->get();
+
+        // Fetch consultant dropdown role-wise
+        if($user->hasRole('Admin')){
+            $consultants = User::role('Consultant')->get(); // Admin sees all
+        } elseif($user->hasRole('Trainee')){
+            $consultants = User::role('Trainee')->get(); // Trainee sees only assigned consultants
+        } elseif($user->hasRole('Consultant')){
+            $consultants = collect([$user]); // Consultant sees only themselves
+        }
+
+        return view('admin.trainee.dops.index', compact(
+            'rotations',
+            'diagnosis',
+            'procedure',
+            'traineeDops',
+            'consultants'
+        ));
     }
 
 
@@ -59,6 +90,7 @@ class TraineeDopsController extends Controller
         DopsAttempt::create([
             'trainee_id' => auth()->id(),
             'rotation_id'=> $request->rotation_id,
+            'consultant_id' => $request->consultant_id,
             'dops_id'    => $request->dops_id,
             'date'       => $request->date,
             'from_time'  => $request->from_time,
@@ -89,7 +121,8 @@ class TraineeDopsController extends Controller
             'from_time'=>$d->from_time,
             'diagnosis'=>json_decode($d->diagnosis),
             'procedure'=>json_decode($d->procedure),
-            'comments'=>$d->comments
+            'comments'=>$d->comments,
+            'consultant_id'=>$d->consultant_id
         ]);
     }
 
@@ -99,6 +132,7 @@ class TraineeDopsController extends Controller
 
         $d->update([
             'rotation_id'=>$request->rotation_id,
+            'consultant_id' => $request->consultant_id,
             'dops_id'=>$request->dops_id,
             'date'=>$request->date,
             'from_time'=>$request->from_time,

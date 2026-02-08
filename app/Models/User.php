@@ -10,7 +10,21 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable, HasRoles;
 
-    protected $fillable = ['name','email','password','profile_image','signature_image','bio'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'fname',
+        'lname',
+        'gender',
+        'address',
+        'sem_id',
+        'rotation_id',
+        'sub_utype',
+        'profile_image',
+        'signature_image',
+        'bio',
+    ];
     protected $hidden = ['password','remember_token'];
     protected $casts = ['email_verified_at'=>'datetime'];
 
@@ -99,5 +113,15 @@ class User extends Authenticatable
     public function cvs()
     {
         return $this->hasMany(Cv::class);
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class,'sem_id');
+    }
+
+    public function rotation()
+    {
+        return $this->belongsTo(Rotation::class,'rotation_id');
     }
 }

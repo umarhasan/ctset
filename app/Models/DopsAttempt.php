@@ -30,4 +30,8 @@ class DopsAttempt extends Model
         return $this->belongsTo(Dops::class);
     }
 
+    public function consultant()
+    {
+        return $this->belongsTo(User::class, 'consultant_id');
+    }
 }

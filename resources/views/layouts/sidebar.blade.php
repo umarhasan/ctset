@@ -214,7 +214,7 @@
                             ['route' => 'trainee.dops.index', 'label' => 'DOPS']
                         ];
                     @endphp
-
+                    @role('Admin')
                     <li class="nav-item {{ request()->routeIs(implode(',', $clinicalRoutes)) ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->routeIs(implode(',', $clinicalRoutes)) ? 'active' : '' }}">
                             <i class="nav-icon bi bi-heart-pulse-fill"></i>
@@ -232,7 +232,7 @@
                             @endforeach
                         </ul>
                     </li>
-                
+                @endrole
 
                 {{-- Book & Assignments --}}
                 @canany(['subjects.index', 'topics.index'])
@@ -458,21 +458,7 @@
                         </ul>
                     </li>
                     @endforeach
-
-                    {{-- Clinical Activities --}}
-                    @php
-                        $clinicalRoutes = [
-                            'grand-ward-rounds.*', 'daily-ward-rounds.*',
-                            'cicu-ward-rounds.*', 'trainee.dops.*'
-                        ];
-
-                        $clinicalMenu = [
-                            ['route' => 'grand-ward-rounds.index', 'label' => 'Grand CICU / Ward Round'],
-                            ['route' => 'daily-ward-rounds.index', 'label' => 'Daily Ward Round'],
-                            ['route' => 'cicu-ward-rounds.index', 'label' => 'CICU Ward Rounds'],
-                            ['route' => 'trainee.dops.index', 'label' => 'DOPS']
-                        ];
-                    @endphp
+                    
 
                     <li class="nav-item {{ request()->routeIs(implode(',', $clinicalRoutes)) ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->routeIs(implode(',', $clinicalRoutes)) ? 'active' : '' }}">

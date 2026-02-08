@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\HasModalType;
 
 class CicuWardRound extends Model
 {
-    use HasFactory;
+    use HasFactory,HasModalType;
     protected $guarded = [];
 
     protected $casts = [
