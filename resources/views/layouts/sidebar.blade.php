@@ -104,7 +104,8 @@
                         'test-types.*', 'marketing-types.*', 'question-types.*',
                         'time-table-categories.*', 'assignment-from-types.*',
                         'video-main-categories.*', 'video-categories.*',
-                        'exam-duration-types.*', 'yes-no-options.*', 'rotations.*'
+                        'exam-duration-types.*', 'yes-no-options.*', 'rotations.*',
+                        'departments.*', 'modal-types.*'
                     ];
 
                     $masterMenu = [
@@ -117,7 +118,9 @@
                         'Video Categories' => 'video-categories.index',
                         'Exam Duration Types' => 'exam-duration-types.index',
                         'Yes / No Options' => 'yes-no-options.index',
-                        'Rotations' => 'rotations.index'
+                        'Rotations' => 'rotations.index',
+                        'Departments' => 'departments.index',
+                        'Modal Types' => 'modal-types.index'
                     ];
                 @endphp
 
@@ -574,6 +577,30 @@
                     </ul>
                 </li>
                 @endcanany
+
+                @can('reports')
+                @php
+                    $reportsRoutes = [
+                        'admin.reports.*'
+                    ];
+                @endphp
+                <li class="nav-item {{ request()->routeIs(implode(',', $reportsRoutes)) ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs(implode(',', $reportsRoutes)) ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-file-earmark-text"></i>
+                        <p>Reports<i class="nav-arrow bi bi-chevron-right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.reports.index') }}"
+                            class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Reports</p>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                @endcan
 
                 {{-- Settings --}}
                 @can('settings')
