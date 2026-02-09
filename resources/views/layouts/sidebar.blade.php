@@ -123,9 +123,8 @@
                         'Modal Types' => 'modal-types.index'
                     ];
                 @endphp
-
-                <li class="nav-item {{ request()->routeIs(implode(',', $masterRoutes)) ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->routeIs(implode(',', $masterRoutes)) ? 'active' : '' }}">
+                <li class="nav-item {{ request()->routeIs(...$masterRoutes) ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->routeIs(...$masterRoutes) ? 'menu-open' : '' }}">
                         <i class="nav-icon bi bi-gear-fill"></i>
                         <p>Master<i class="nav-arrow bi bi-chevron-right"></i></p>
                     </a>
@@ -203,39 +202,43 @@
                 </li>
                 @endcan
 
-                    {{-- Clinical Activities --}}
-                    @php
-                        $clinicalRoutes = [
-                            'grand-ward-rounds.*', 'daily-ward-rounds.*',
-                            'cicu-ward-rounds.*', 'trainee.dops.*'
-                        ];
+                {{-- Clinical Activities --}}
+            @php
+                $clinicalRoutes = [
+                    'grand-ward-rounds.*',
+                    'daily-ward-rounds.*',
+                    'cicu-ward-rounds.*',
+                    'trainee.dops.*'
+                ];
 
-                        $clinicalMenu = [
-                            ['route' => 'grand-ward-rounds.index', 'label' => 'Grand CICU / Ward Round'],
-                            ['route' => 'daily-ward-rounds.index', 'label' => 'Daily Ward Round'],
-                            ['route' => 'cicu-ward-rounds.index', 'label' => 'CICU Ward Rounds'],
-                            ['route' => 'trainee.dops.index', 'label' => 'DOPS']
-                        ];
-                    @endphp
-                    @role('Admin')
-                    <li class="nav-item {{ request()->routeIs(implode(',', $clinicalRoutes)) ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs(implode(',', $clinicalRoutes)) ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-heart-pulse-fill"></i>
-                            <p>Clinical Activities<i class="nav-arrow bi bi-chevron-right"></i></p>
+                $clinicalMenu = [
+                    ['route' => 'grand-ward-rounds.index', 'label' => 'Grand CICU / Ward Round'],
+                    ['route' => 'daily-ward-rounds.index', 'label' => 'Daily Ward Round'],
+                    ['route' => 'cicu-ward-rounds.index', 'label' => 'CICU Ward Rounds'],
+                    ['route' => 'trainee.dops.index', 'label' => 'DOPS']
+                ];
+            @endphp
+
+            @role('Admin')
+            <li class="nav-item {{ request()->routeIs(...$clinicalRoutes) ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ request()->routeIs(...$clinicalRoutes) ? 'active' : '' }}">
+                    <i class="nav-icon bi bi-heart-pulse-fill"></i>
+                    <p>Clinical Activities<i class="nav-arrow bi bi-chevron-right"></i></p>
+                </a>
+
+                <ul class="nav nav-treeview">
+                    @foreach($clinicalMenu as $item)
+                    <li class="nav-item">
+                        <a href="{{ route($item['route']) }}"
+                        class="nav-link {{ request()->routeIs(str_replace('.index','.*',$item['route'])) ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>{{ $item['label'] }}</p>
                         </a>
-                        <ul class="nav nav-treeview">
-                            @foreach($clinicalMenu as $item)
-                            <li class="nav-item">
-                                <a href="{{ route($item['route']) }}"
-                                   class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>{{ $item['label'] }}</p>
-                                </a>
-                            </li>
-                            @endforeach
-                        </ul>
                     </li>
-                @endrole
+                    @endforeach
+                </ul>
+            </li>
+            @endrole
 
                 {{-- Book & Assignments --}}
                 @canany(['subjects.index', 'topics.index'])
@@ -420,7 +423,7 @@
                     ];
                 @endphp
 
-                <li class="nav-item {{ request()->routeIs(implode(',', $dopsRoutes)) ? 'menu-open' : '' }}">
+                <li class="nav-item {{ request()->routeIs(...$dopsRoutes) ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->routeIs(implode(',', $dopsRoutes)) ? 'active' : '' }}">
                         <i class="nav-icon bi bi-bar-chart-line-fill"></i>
                         <p>DOPS<i class="nav-arrow bi bi-chevron-right"></i></p>
@@ -462,9 +465,8 @@
                     </li>
                     @endforeach
                     
-
-                    <li class="nav-item {{ request()->routeIs(implode(',', $clinicalRoutes)) ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs(implode(',', $clinicalRoutes)) ? 'active' : '' }}">
+                    <li class="nav-item {{ request()->routeIs(...$clinicalRoutes) ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs(...$clinicalRoutes) ? 'active' : '' }}">
                             <i class="nav-icon bi bi-heart-pulse-fill"></i>
                             <p>Clinical Activities<i class="nav-arrow bi bi-chevron-right"></i></p>
                         </a>
