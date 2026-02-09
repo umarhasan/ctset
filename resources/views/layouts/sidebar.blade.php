@@ -1,18 +1,18 @@
 <style>
    .sidebar-brand .brand-link .brand-image {
-        max-height: 188px !important;
+        /* max-height: 188px !important; */
         width: 100% !important;
         margin: 25px auto 24px !important;
         box-shadow: none !important;
     }
-.sidebar-brand { 
+/* .sidebar-brand { 
     height: 12rem !important; 
-}
+} */
 </style>
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark1">
     <div class="sidebar-brand">
         <a href="@role('Admin'){{ route('admin.dashboard') }}@elserole('Assessor'){{ route('assessor.dashboard') }}@else{{ route('trainee.dashboard') }}@endrole" class="brand-link">
-            <img src="{{ asset('adminlte/assets/img/Medivisty-trans-logo.png') }}" class="brand-image opacity-500 shadow">
+            <img src="{{ asset('adminlte/assets/img/logo.png') }}" class="brand-image opacity-500 shadow">
         </a>
     </div>
 
@@ -29,31 +29,34 @@
                     </a>
                 </li>
 
-                {{-- Profiles --}}
                 @unlessrole('Admin')
-                <li class="nav-item {{ request()->routeIs('profile.*','public.profile.*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->routeIs('profile.*','public.profile.*') ? 'active' : '' }}">
+                @php
+                    $isProfileActive = request()->routeIs('my.profile') || request()->routeIs('public.profile');
+                @endphp
+
+                <li class="nav-item {{ $isProfileActive ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ $isProfileActive ? 'active' : '' }}">
                         <i class="nav-icon bi bi-person-circle"></i>
                         <p>Profiles<i class="nav-arrow bi bi-chevron-right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('my.profile') }}"
-                               class="nav-link {{ request()->routeIs('my.profile') ? 'active' : '' }}">
+                            class="nav-link {{ request()->routeIs('my.profile') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-person"></i>
                                 <p>My Profile</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('public.profile', auth()->id()) }}"
-                               class="nav-link {{ request()->routeIs('public.profile.*') ? 'active' : '' }}">
+                            class="nav-link {{ request()->routeIs('public.profile') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-globe"></i>
                                 <p>Public Profile</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                @endunlessrole
+            @endunlessrole
 
                 {{-- Exam --}}
                 @can('exams.index')
@@ -454,112 +457,127 @@
                 @endcan
 
                 {{-- Trainee Specific Menus --}}
-                @role('Trainee|Assessor')
-                    {{-- PDFs --}}
-                    @php $pdfGroups = \App\Models\Pdf::active()->get()->groupBy('page_name'); @endphp
-                    @foreach($pdfGroups as $page_name => $pdfs)
-                    <li class="nav-item has-treeview">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-file-pdf"></i>
-                            <p>{{ $page_name }}<i class="nav-arrow bi bi-chevron-right"></i></p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            @foreach($pdfs as $pdf)
-                            <li class="nav-item">
-                                <a href="{{ route('trainee.pdfs.show', ['page_name' => $pdf->title,'page_key' => $pdf->page_key, 'file' => 1]) }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>{{ $pdf->title }}</p>
-                                </a>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </li>
-                    @endforeach
-                    
-                    <li class="nav-item {{ request()->routeIs(...$clinicalRoutes) ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs(...$clinicalRoutes) ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-heart-pulse-fill"></i>
-                            <p>Clinical Activities<i class="nav-arrow bi bi-chevron-right"></i></p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            @foreach($clinicalMenu as $item)
-                            <li class="nav-item">
-                                <a href="{{ route($item['route']) }}"
-                                   class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>{{ $item['label'] }}</p>
-                                </a>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </li>
+@role('Trainee|Assessor')
 
-                    {{-- My Invitations --}}
-                    @can('trainee.invitations')
-                    <li class="nav-item {{ request()->routeIs('trainee.invitations.*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs('trainee.invitations.*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-journal-text"></i>
-                            <p>My invitations<i class="nav-arrow bi bi-chevron-right"></i></p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('trainee.invitations') }}"
-                                   class="nav-link {{ request()->routeIs('trainee.invitations.*') ? 'active' : '' }}">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Trainee Invitations</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    @endcan
-
-                    {{-- Evaluation Form --}}
-                    @php
-                        $traineeEvaluationMenu = [
-                            ['route' => 'evaluation-360.index', 'icon' => 'bi-arrow-repeat', 'label' => '360° Evaluations'],
-                            ['route' => 'self-evaluations.index', 'icon' => 'bi-person-lines-fill', 'label' => 'Self Evaluations'],
-                            ['route' => 'trainee-evaluations.index', 'icon' => 'bi-person-check', 'label' => 'Trainee Evaluations'],
-                            ['route' => 'rotation-evaluations.index', 'icon' => 'bi-calendar-check', 'label' => 'Rotation Evaluations'],
-                            ['route' => 'longitudinal-requirements.index', 'icon' => 'bi-clipboard-check', 'label' => 'Longitudinal Requirements']
-                        ];
-                    @endphp
-
-                    <li class="nav-item {{ request()->routeIs('evaluation-360.*', 'self-evaluations.*', 'trainee-evaluations.*', 'rotation-evaluations.*', 'longitudinal-requirements.*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->routeIs('evaluation-360.*', 'self-evaluations.*', 'trainee-evaluations.*', 'rotation-evaluations.*', 'longitudinal-requirements.*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-journal-bookmark-fill"></i>
-                            <p>Evaluation Form<i class="nav-arrow bi bi-chevron-right"></i></p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            @foreach($traineeEvaluationMenu as $item)
-                            <li class="nav-item">
-                                <a href="{{ route($item['route']) }}"
-                                   class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}">
-                                    <i class="nav-icon bi {{ $item['icon'] }}"></i>
-                                    <p>{{ $item['label'] }}</p>
-                                </a>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </li>
-
-                    {{-- Exams --}}
+    {{-- PDFs --}}
+    @php
+        $pdfGroups = \App\Models\Pdf::active()->get()->groupBy('page_name');
+    @endphp
+    @foreach($pdfGroups as $page_name => $pdfs)
+        @php
+            $pdfRoutes = $pdfs->map(fn($pdf) => route('trainee.pdfs.show', ['page_name'=>$pdf->title,'page_key'=>$pdf->page_key,'file'=>1]))->toArray();
+            $isPdfActive = in_array(url()->current(), $pdfRoutes);
+        @endphp
+        <li class="nav-item has-treeview {{ $isPdfActive ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ $isPdfActive ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file-pdf"></i>
+                <p>{{ $page_name }}<i class="nav-arrow bi bi-chevron-right"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                @foreach($pdfs as $pdf)
                     <li class="nav-item">
-                        <a href="{{ route('trainee.exams') }}"
-                           class="nav-link {{ request()->routeIs('trainee.exams.*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-clipboard-check"></i>
-                            <p>Exams</p>
+                        <a href="{{ route('trainee.pdfs.show', ['page_name'=>$pdf->title,'page_key'=>$pdf->page_key,'file'=>1]) }}"
+                           class="nav-link {{ request()->fullUrlIs(route('trainee.pdfs.show', ['page_name'=>$pdf->title,'page_key'=>$pdf->page_key,'file'=>1])) ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>{{ $pdf->title }}</p>
                         </a>
                     </li>
+                @endforeach
+            </ul>
+        </li>
+    @endforeach
 
-                    {{-- My Results --}}
-                    <li class="nav-item">
-                        <a href="{{ route('trainee.results.index') }}"
-                           class="nav-link {{ request()->routeIs('trainee.results.*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-clipboard-check"></i>
-                            <p>My Results</p>
-                        </a>
-                    </li>
-                @endrole
+    {{-- Clinical Activities --}}
+    @php
+        $isClinicalActive = collect($clinicalMenu)->contains(fn($item) => request()->routeIs($item['route']));
+    @endphp
+    <li class="nav-item {{ $isClinicalActive ? 'menu-open' : '' }}">
+        <a href="#" class="nav-link {{ $isClinicalActive ? 'active' : '' }}">
+            <i class="nav-icon bi bi-heart-pulse-fill"></i>
+            <p>Clinical Activities<i class="nav-arrow bi bi-chevron-right"></i></p>
+        </a>
+        <ul class="nav nav-treeview">
+            @foreach($clinicalMenu as $item)
+                <li class="nav-item">
+                    <a href="{{ route($item['route']) }}"
+                       class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-circle"></i>
+                        <p>{{ $item['label'] }}</p>
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </li>
+
+    {{-- My Invitations --}}
+    @can('trainee.invitations')
+        @php $isInvitationActive = request()->routeIs('trainee.invitations'); @endphp
+        <li class="nav-item {{ $isInvitationActive ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ $isInvitationActive ? 'active' : '' }}">
+                <i class="nav-icon bi bi-journal-text"></i>
+                <p>My Invitations<i class="nav-arrow bi bi-chevron-right"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('trainee.invitations') }}"
+                       class="nav-link {{ $isInvitationActive ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-circle"></i>
+                        <p>Trainee Invitations</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    @endcan
+
+    {{-- Evaluation Form --}}
+    @php
+        $traineeEvaluationMenu = [
+            ['route' => 'evaluation-360.index', 'icon' => 'bi-arrow-repeat', 'label' => '360° Evaluations'],
+            ['route' => 'self-evaluations.index', 'icon' => 'bi-person-lines-fill', 'label' => 'Self Evaluations'],
+            ['route' => 'trainee-evaluations.index', 'icon' => 'bi-person-check', 'label' => 'Trainee Evaluations'],
+            ['route' => 'rotation-evaluations.index', 'icon' => 'bi-calendar-check', 'label' => 'Rotation Evaluations'],
+            ['route' => 'longitudinal-requirements.index', 'icon' => 'bi-clipboard-check', 'label' => 'Longitudinal Requirements']
+        ];
+        $evaluationRoutes = collect($traineeEvaluationMenu)->pluck('route')->toArray();
+        $isEvaluationActive = collect($evaluationRoutes)->contains(fn($r) => request()->routeIs($r));
+    @endphp
+    <li class="nav-item {{ $isEvaluationActive ? 'menu-open' : '' }}">
+        <a href="#" class="nav-link {{ $isEvaluationActive ? 'active' : '' }}">
+            <i class="nav-icon bi bi-journal-bookmark-fill"></i>
+            <p>Evaluation Form<i class="nav-arrow bi bi-chevron-right"></i></p>
+        </a>
+        <ul class="nav nav-treeview">
+            @foreach($traineeEvaluationMenu as $item)
+                <li class="nav-item">
+                    <a href="{{ route($item['route']) }}"
+                       class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}">
+                        <i class="nav-icon bi {{ $item['icon'] }}"></i>
+                        <p>{{ $item['label'] }}</p>
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </li>
+
+    {{-- Exams --}}
+    <li class="nav-item">
+        <a href="{{ route('trainee.exams') }}"
+           class="nav-link {{ request()->routeIs('trainee.exams') ? 'active' : '' }}">
+            <i class="nav-icon bi bi-clipboard-check"></i>
+            <p>Exams</p>
+        </a>
+    </li>
+
+    {{-- My Results --}}
+    <li class="nav-item">
+        <a href="{{ route('trainee.results.index') }}"
+           class="nav-link {{ request()->routeIs('trainee.results') ? 'active' : '' }}">
+            <i class="nav-icon bi bi-clipboard-check"></i>
+            <p>My Results</p>
+        </a>
+    </li>
+
+@endrole
 
                 {{-- QR Management --}}
                 @canany(['qr-categories.index','qr-generates.index'])

@@ -69,9 +69,12 @@
 @endsection
 
 <style>
+/* PDF container & pages */
 #pdf-container {
     scroll-behavior: smooth;
     background-color: #f8f9fa;
+    /* Adjust height for footer */
+    height: calc(100vh - 70px - 60px); /* 70px header + 60px footer */
 }
 .pdf-page {
     display: block;
@@ -89,6 +92,8 @@
     box-shadow: 0 0 0 3px #0d6efd, 0 6px 20px rgba(13,110,253,0.2);
     border: 2px solid #0d6efd;
 }
+
+/* Scrollbar */
 #pdf-container::-webkit-scrollbar {
     width: 10px;
 }
@@ -103,6 +108,8 @@
 #pdf-container::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+/* Header buttons/input */
 .card-header .btn-group .btn { border-radius: 0; }
 .input-group .form-control { border-radius: 0; text-align: center; }
 </style>
