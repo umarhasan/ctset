@@ -1,7 +1,18 @@
-<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+<style>
+   .sidebar-brand .brand-link .brand-image {
+        max-height: 188px !important;
+        width: 100% !important;
+        margin: 25px auto 24px !important;
+        box-shadow: none !important;
+    }
+.sidebar-brand { 
+    height: 12rem !important; 
+}
+</style>
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark1">
     <div class="sidebar-brand">
         <a href="@role('Admin'){{ route('admin.dashboard') }}@elserole('Assessor'){{ route('assessor.dashboard') }}@else{{ route('trainee.dashboard') }}@endrole" class="brand-link">
-            <img src="{{ asset('adminlte/assets/img/logo.png') }}" class="brand-image opacity-75 shadow">
+            <img src="{{ asset('adminlte/assets/img/Medivisty-trans-logo.png') }}" class="brand-image opacity-500 shadow">
         </a>
     </div>
 
