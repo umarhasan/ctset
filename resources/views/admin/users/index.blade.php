@@ -12,8 +12,8 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <table class="table table-bordered table-striped">
-        <thead>
+    <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
+            <thead class="table-dark">
             <tr>
                 <th>#</th>
                 <th>Name</th>

@@ -38,8 +38,8 @@
                 <!-- <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a> -->
                 </div>
               <div class="card-body table-responsive">
-                <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center align-middle w-100">
-                    <thead class="table-light text-nowrap">
+                <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
+            <thead class="table-dark">
                   <tr>
                     <th>S.No</th>
                     <th>permission</th>
