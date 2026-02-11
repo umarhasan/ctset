@@ -17,7 +17,7 @@
         <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
              <thead class="table-dark">
                 <tr>
-                    <th>ID</th>
+                    <th>#</th>
                     <th>Title</th>
                     <th>Goals</th>
                     <th>Goal-Plan</th>

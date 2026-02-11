@@ -15,6 +15,7 @@
         <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
              <thead class="table-dark">
             <tr>
+                <th>#</th>
                 <th>Title</th>
                 <th>Category</th>
                 <th>Min Score</th>
@@ -26,6 +27,7 @@
             <tbody>
             @foreach($workClouds as $cloud)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $cloud->title }}</td>
                     <td>{{ $cloud->category }}</td>
                     <td>{{ $cloud->min_score }}</td>

@@ -13,6 +13,7 @@
         <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
              <thead class="table-dark">
                 <tr>
+                    <th>#</td>
                     <th>Title</th>
                     <th width="120">Action</th>
                 </tr>
@@ -20,6 +21,7 @@
             <tbody>
                 @foreach($types as $type)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $type->title }}</td>
                     <td>
                         <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $type->id }})"><i class="fa fa-edit"></i></button>

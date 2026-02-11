@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const traineeFieldsEdit = document.getElementById('traineeFieldsEdit');
 
     function toggleFields() {
-        if(roleSelectEdit.value.toLowerCase() === 'trainee'){
+        if(roleSelectEdit.value.toLowerCase() === 'Assessor'){
             traineeFieldsEdit.style.display = 'block';
         } else {
             traineeFieldsEdit.style.display = 'none';

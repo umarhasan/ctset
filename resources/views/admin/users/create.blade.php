@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const traineeFields = document.getElementById('traineeFields');
 
     function toggleFields() {
-        if(roleSelect.value === 'Trainee'){
+        if(roleSelect.value === 'Assessor'){
             traineeFields.style.display = 'block';
         } else {
             traineeFields.style.display = 'none';

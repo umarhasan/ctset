@@ -15,6 +15,7 @@
         <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
             <thead class="table-light">
                 <tr>
+                   <th>#</th>
                     <th>Category Name</th>
                     <th>Title</th>
                     <th width="120">Action</th>
@@ -23,6 +24,7 @@
             <tbody>
                 @foreach($records as $row)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $row->category }}</td>
                     <td>{{ $row->title }}</td>
                     <td>

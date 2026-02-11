@@ -7,8 +7,8 @@
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add Department</button>
     </div>
 
-    <table class="table table-bordered">
-        <thead>
+    <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
+             <thead class="table-dark">
             <tr>
                 <th>#</th>
                 <th>Name</th>

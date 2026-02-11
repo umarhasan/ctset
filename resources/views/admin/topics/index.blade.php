@@ -15,6 +15,7 @@
         <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
              <thead class="table-dark">
             <tr>
+                <th>#</th>
                 <th>Topic Name</th>
                 <th>Subject</th>
                 <th width="120">Action</th>
@@ -23,6 +24,7 @@
             <tbody>
             @foreach($topics as $topic)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $topic->topic_name }}</td>
                     <td>{{ $topic->subject->name }}</td>
                     <td>

@@ -55,7 +55,7 @@
                             </td>
                             <td>
                                 @if($r->consultant_signature)
-                                    <img src="{{ asset('sign/'.$r->consultant_signature) }}" width="80">
+                                        <img src="{{ $r->consultant->signature_image_signature ? route('user.profile.stream', $r->consultant->signature_image) : asset('adminlte/assets/img/avatar.png') }}" width="100" class="mb-2">
                                 @endif
                             </td>
                         </tr>

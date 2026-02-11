@@ -15,6 +15,7 @@
         <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
              <thead class="table-dark">
             <tr>
+                <th>#</th>
                 <th>Title</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -24,6 +25,7 @@
             <tbody>
             @foreach($semesters as $semester)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $semester->title }}</td>
                     <td>{{ $semester->start }}</td>
                     <td>{{ $semester->end }}</td>

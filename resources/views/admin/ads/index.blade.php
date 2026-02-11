@@ -17,6 +17,7 @@
             <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
              <thead class="table-dark">
                 <tr>
+                    <th>#</th>
                     <th>Title</th>
                     <th>Image</th>
                     <th>Description</th>
@@ -26,6 +27,7 @@
             <tbody>
                 @foreach($ads as $ad)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $ad->title }}</td>
                     <td>
                         @if($ad->image)

@@ -13,6 +13,7 @@
         <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
              <thead class="table-dark">
                 <tr>
+                    <th>#</th>
                     <th>Title</th>
                     <th width="120">Action</th>
                 </tr>
@@ -20,6 +21,7 @@
             <tbody>
                 @foreach($rotations as $rot)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $rot->title }}</td>
                     <td>
                         <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $rot->id }})"><i class="fa fa-edit"></i></button>
