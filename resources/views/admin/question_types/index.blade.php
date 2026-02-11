@@ -24,7 +24,6 @@
             @foreach($records as $row)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $row->title }}</td>
                     <td>
                         <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $row->id }})">
