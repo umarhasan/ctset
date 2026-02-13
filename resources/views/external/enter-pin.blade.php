@@ -20,7 +20,7 @@
                         @csrf
                         <div class="mb-3">
                             <label for="pin" class="form-label">PIN</label>
-                            <input type="text" id="pin" name="pin" class="form-control" placeholder="Enter your PIN" required>
+                            <input type="text" id="pin" name="pin" class="form-control" value="{{$share->pin}}" placeholder="Enter your PIN" required>
                         </div>
                         <button type="submit" class="btn btn-success w-100">Submit</button>
                     </form>

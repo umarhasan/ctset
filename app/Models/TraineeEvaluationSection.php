@@ -15,4 +15,9 @@ class TraineeEvaluationSection extends Model
     {
         return $this->belongsTo(TraineeEvaluation::class);
     }
+
+    public function points()
+    {
+        return $this->hasMany(TraineeEvaluationPoint::class, 'section_id')->orderBy('order');
+    }
 }

@@ -65,7 +65,8 @@
                             @endif
                         </td>
                         <td>
-                            <button class="btn btn-info btn-sm" onclick="viewForm({{ $eval->id }})">View</button>
+                            <a href="{{ route('evaluation-360.show',$eval->id) }}" class="btn btn-warning btn-sm">view</a>
+                            <!--<button class="btn btn-info btn-sm" onclick="viewForm({{ $eval->id }})">View</button>-->
                         </td>
                     </tr>
                 @endforeach

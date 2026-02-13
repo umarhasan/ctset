@@ -103,7 +103,7 @@ use App\Http\Controllers\Admin\ExamController;
         Route::resource('assignments', AssignmentController::class);
         Route::resource('self-evaluations', SelfEvaluationController::class);
         Route::resource('trainee-evaluations', TraineeEvaluationController::class);
-
+        Route::post('/trainee-evaluations/{id}/submit', [TraineeEvaluationController::class,'submitFromShow'])->name('trainee-evaluations.submit');
         Route::resource('evaluation-360', Evaluation360Controller::class);
         Route::post('evaluation-360/{id}/share', [Evaluation360ShareController::class,'store']);
         Route::post('evaluation-360/share/{id}/approve', [Evaluation360ShareController::class,'approve']);
@@ -123,6 +123,8 @@ use App\Http\Controllers\Admin\ExamController;
         Route::get('grand-ward-rounds/export/excel', [GrandWardRoundController::class, 'exportExcel'])->name('grand-ward-rounds.export.excel');
         Route::get('grand-ward-rounds/export/pdf', [GrandWardRoundController::class, 'exportPdf'])->name('grand-ward-rounds.export.pdf');
         Route::get('grand-ward-rounds/performance/analysis', [GrandWardRoundController::class, 'performanceAnalysis'])->name('grand-ward-rounds.performance');
+        Route::post('/grand-rounds/unmap/{id}',[GrandWardRoundController::class,'unmap'])->name('grand-ward-rounds.unmap');
+        Route::post('/grand-rounds/toggle/{round}', [GrandWardRoundController::class,'toggleInvolvement'])->name('grand-rounds.toggle');
         // Clinical Sessions
         Route::resource('clinical-sessions', ClinicalSessionController::class);
         Route::get('/clinical-sessions/{clinical_session}/end', [ClinicalSessionController::class, 'end'])->name('clinical-sessions.end');
@@ -136,6 +138,8 @@ use App\Http\Controllers\Admin\ExamController;
         Route::get('daily-ward-rounds/export/excel', [DailyWardRoundController::class, 'exportExcel'])->name('daily-ward-rounds.export.excel');
         Route::get('daily-ward-rounds/export/pdf', [DailyWardRoundController::class, 'exportPdf'])->name('daily-ward-rounds.export.pdf');
         Route::get('daily-ward-rounds/performance/analysis', [DailyWardRoundController::class, 'performanceAnalysis'])->name('daily-ward-rounds.performance');
+        Route::post('/daily-ward-rounds/unmap/{id}',[DailyWardRoundController::class,'unmap'])->name('daily-ward-rounds.unmap');
+        Route::post('/daily-ward-rounds/toggle/{round}', [DailyWardRoundController::class,'toggleInvolvement'])->name('grand-rounds.toggle');
 
         Route::prefix('cicu-ward-rounds')->group(function() {
             Route::get('performance', [CicuWardRoundController::class,'performanceAnalysis'])

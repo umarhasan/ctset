@@ -42,11 +42,12 @@
                         @endif
                     </td>
                     <td>
-                        @can('self-evaluations-update')
+                        @can('self-evaluations-edit')
                             <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $evaluation->id }})">
                                 <i class="fa fa-edit"></i>
                             </button>
                         @endcan
+                        <a href="{{ route('self-evaluations.show',$evaluation->id) }}" class="btn btn-warning btn-sm">view</a>
                         @can('self-evaluations-delete')
                             <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $evaluation->id }})">
                                 <i class="fa fa-trash"></i>

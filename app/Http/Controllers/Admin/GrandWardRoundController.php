@@ -17,11 +17,25 @@ class GrandWardRoundController extends Controller
 {
     public function index()
     {
-        return view('admin.grand_ward_rounds.index', [
-            'rounds'      => GrandWardRound::with(['hospital','rotation','consultant','user'])->latest()->get(),
-            'hospitals'   => Hospital::all(),
-            'rotations'   => Rotation::all(),
-            'consultants' => User::role('consultant')->get()
+        $user = auth()->user();
+
+        if($user->hasRole('Admin')){
+            $rounds = GrandWardRound::with(['user','hospital','rotation'])->latest()->get();
+        }
+        elseif($user->hasRole('Trainee')){
+            $rounds = GrandWardRound::where('user_id',$user->id)
+                ->with(['consultant','hospital','rotation'])->latest()->get();
+        }
+        else{
+            $rounds = GrandWardRound::where('consultant_id',$user->id)
+                ->with(['user','consultant','hospital','rotation'])->latest()->get();
+        }
+        
+        return view('admin.grand_ward_rounds.index',[
+            'rounds'=>$rounds,
+            'hospitals'=>Hospital::get(),
+            'rotations'=>Rotation::get(),
+            'consultants' => User::role('Assessor')->get()
         ]);
     }
 
@@ -33,7 +47,7 @@ class GrandWardRoundController extends Controller
             'hospital_id'   => 'required',
             'rotation_id'   => 'nullable',
             'consultant_id' => 'nullable',
-            'involvement'   => 'required|in:A,W',
+            //'involvement'   => 'required|in:A,W',
         ]);
 
         $data['user_id'] = auth()->id();
@@ -113,5 +127,25 @@ class GrandWardRoundController extends Controller
             'chart_data'=>$top5,
             'bar_data'=>$overall
         ]);
+    }
+
+    public function unmap($id)
+    {
+        GrandWardRound::where('id',$id)->update([
+            'consultant_id'=>null
+        ]);
+
+        return back()->with('success','Supervisor unmapped');
+    }
+    
+    public function toggle(Request $request, $id)
+    {
+        
+        $round = GrandWardRound::findOrFail($id);
+
+        $round->involvement = $round->involvement=='A'?'W':'A';
+        $round->save();
+
+        return response()->json(['status'=>'success']);
     }
 }

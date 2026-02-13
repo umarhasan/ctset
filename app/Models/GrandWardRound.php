@@ -26,7 +26,7 @@ class GrandWardRound extends Model
         return $this->belongsTo(Rotation::class);
     }
     public function consultant() {
-        return $this->belongsTo(User::class, 'consultant_id');
+        return $this->belongsTo(User::class,'consultant_id');
     }
 
     public function getStatusTextAttribute()

@@ -51,7 +51,7 @@
                                 <button class="btn btn-sm btn-info">Unlock</button>
                             </form>
                         @endif
-                        <button class="btn btn-sm btn-secondary" onclick="viewResponses({{ $share->id }})">View Responses</button>
+                        <button class="btn btn-sm btn-secondary" onclick="viewResponses({{ $share->evaluation_360_form_id  }})">View Responses</button>
                     </td>
                 </tr>
                 @endforeach

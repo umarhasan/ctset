@@ -42,11 +42,12 @@
                     </td>
                     <td>{{ $evaluation->created_at->format('Y-m-d') }}</td>
                     <td>
-                        @can('trainee-evaluations-update')
+                        @can('trainee-evaluations-edit')
                             <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $evaluation->id }})">
                                 <i class="fa fa-edit"></i>
                             </button>
                         @endcan
+                        <a href="{{ route('trainee-evaluations.show',$evaluation->id) }}">view</a>
                         @can('trainee-evaluations-delete')
                             <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $evaluation->id }})">
                                 <i class="fa fa-trash"></i>
@@ -64,8 +65,8 @@
 </div>
 
 <!-- MODAL -->
-<div class="modal fade" id="masterModal">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="masterModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
         <form id="masterForm">
             @csrf
             <input type="hidden" id="record_id">
@@ -85,43 +86,22 @@
                         </div>
                     </div>
 
-                    <!-- Form Points Sections -->
+                    <!-- Form Points Sections with Points -->
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h6 class="mb-0">Form Points</h6>
-                                    <button type="button" class="btn btn-success btn-sm" onclick="addSection()">
-                                        <i class="fa fa-plus"></i> Add Section
+                                    <h6 class="mb-0">Form Sections & Points</h6>
+                                    
+                                    <div class="ms-auto">
+                                    <button type="button" class="btn btn-success btn-sm" onclick="addMainSection()">
+                                        <i class="fa fa-plus"></i> Add Main Section
                                     </button>
+                                    </div>
+                                    
                                 </div>
                                 <div class="card-body" id="sectionsContainer">
                                     <!-- Sections will be added here dynamically -->
-                                    <div class="section-item mb-2">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-9">
-                                                <input type="text" name="sections[0][section_title]"
-                                                       class="form-control section-title"
-                                                       placeholder="Section Title" required>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-info btn-sm move-up"
-                                                            onclick="moveSectionUp(this)" disabled>
-                                                        <i class="fa fa-arrow-up"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-info btn-sm move-down"
-                                                            onclick="moveSectionDown(this)" disabled>
-                                                        <i class="fa fa-arrow-down"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                            onclick="removeSection(this)" disabled>
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -153,16 +133,20 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        let sectionCount = 1;
+        let mainSectionCount = 0;
         let masterModal;
 
-        // Initialize DataTable
-        $('#evaluationsTable').DataTable({
-            paging: false,
-            info: false,
-            searching: true,
-            ordering: true
-        });
+        // Default sections with their points from the image
+        const defaultSections = [
+            {
+                title: 'CLINICAL KNOWLEDGE/MEDICAL EXPERTISE: ACQUISITION AND APPLICATION',
+                points: [
+                    'Knowledge of basic sciences',
+                    'Able to recognize & differentiate specific cardiothoracic surgical issues'
+                ]
+            },
+            
+        ];
 
         // Initialize modal
         masterModal = new bootstrap.Modal(document.getElementById('masterModal'));
@@ -174,39 +158,167 @@
             $('#modalTitle').text('Create Trainee Evaluation Form');
             $('#status').val('active');
 
-            // Reset sections container with one empty section
-            $('#sectionsContainer').html(`
-                <div class="section-item mb-2">
-                    <div class="row align-items-center">
-                        <div class="col-md-9">
-                            <input type="text" name="sections[0][section_title]"
-                                class="form-control section-title"
-                                placeholder="Section Title" required>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-info btn-sm move-up"
-                                        onclick="moveSectionUp(this)" disabled>
-                                    <i class="fa fa-arrow-up"></i>
-                                </button>
-                                <button type="button" class="btn btn-info btn-sm move-down"
-                                        onclick="moveSectionDown(this)" disabled>
-                                    <i class="fa fa-arrow-down"></i>
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm"
-                                        onclick="removeSection(this)" disabled>
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `);
+            // Load default sections with points
+            loadDefaultSections();
 
-            sectionCount = 1;
-            updateSectionButtons();
             masterModal.show();
         };
+
+        // Function to load default sections with points
+        function loadDefaultSections() {
+            let sectionsHtml = '';
+            
+            defaultSections.forEach(function(section, sectionIndex) {
+                sectionsHtml += generateMainSectionHtml(sectionIndex, section.title, section.points);
+            });
+
+            $('#sectionsContainer').html(sectionsHtml);
+            mainSectionCount = defaultSections.length;
+            updateMainSectionButtons();
+        }
+
+        // Generate HTML for main section with points (WITHOUT move up/down buttons)
+        function generateMainSectionHtml(sectionIndex, title = '', points = []) {
+            let pointsHtml = '';
+            
+            if (points.length > 0) {
+                points.forEach(function(point, pointIndex) {
+                    pointsHtml += generatePointHtml(sectionIndex, pointIndex, point);
+                });
+            } else {
+                pointsHtml += generatePointHtml(sectionIndex, 0, '');
+            }
+
+            return `
+                <div class="main-section-item card mb-3">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center w-75">
+                            <input type="text" 
+                                name="sections[${sectionIndex}][title]" 
+                                class="form-control form-control-sm main-section-title" 
+                                placeholder="Main Section Title" 
+                                value="${title}" required>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger btn-sm remove-section" 
+                                    onclick="removeMainSection(this)" ${defaultSections.length === 1 ? 'disabled' : ''}>
+                                <i class="fa fa-trash"></i> Delete Section
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="points-container mb-2" data-section="${sectionIndex}">
+                            ${pointsHtml}
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="addPoint(this, ${sectionIndex})">
+                            <i class="fa fa-plus"></i> Add Point
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate HTML for point (WITHOUT move up/down buttons)
+        function generatePointHtml(sectionIndex, pointIndex, value = '') {
+            return `
+                <div class="point-item row mb-2 align-items-center">
+                    <div class="col-md-10">
+                        <input type="text" 
+                            name="sections[${sectionIndex}][points][${pointIndex}]" 
+                            class="form-control form-control-sm point-input" 
+                            placeholder="Enter evaluation point" 
+                            value="${value}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger btn-sm remove-point" 
+                                onclick="removePoint(this)">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add new main section
+        window.addMainSection = function() {
+            let newSectionHtml = generateMainSectionHtml(mainSectionCount, '', ['']);
+            $('#sectionsContainer').append(newSectionHtml);
+            mainSectionCount++;
+            reindexMainSections();
+            updateMainSectionButtons();
+        };
+
+        // Add new point to section
+        window.addPoint = function(button, sectionIndex) {
+            let pointsContainer = $(button).closest('.main-section-item').find('.points-container');
+            let pointCount = pointsContainer.find('.point-item').length;
+            let newPointHtml = generatePointHtml(sectionIndex, pointCount, '');
+            pointsContainer.append(newPointHtml);
+            reindexPoints(pointsContainer);
+        };
+
+        // Remove main section
+        window.removeMainSection = function(button) {
+            if ($('#sectionsContainer .main-section-item').length > 1) {
+                $(button).closest('.main-section-item').remove();
+                reindexMainSections();
+                updateMainSectionButtons();
+            }
+        };
+
+        // Remove point
+        window.removePoint = function(button) {
+            let pointsContainer = $(button).closest('.points-container');
+            let pointsCount = pointsContainer.find('.point-item').length;
+            
+            if (pointsCount > 1) {
+                $(button).closest('.point-item').remove();
+                reindexPoints(pointsContainer);
+            } else {
+                toastr.warning('At least one point is required per section');
+            }
+        };
+
+        // Reindex main sections
+        function reindexMainSections() {
+            $('#sectionsContainer .main-section-item').each(function(sectionIndex) {
+                // Update section title name
+                $(this).find('.main-section-title').attr('name', `sections[${sectionIndex}][title]`);
+                
+                // Update points container data-section
+                let pointsContainer = $(this).find('.points-container');
+                pointsContainer.attr('data-section', sectionIndex);
+                
+                // Update point names
+                reindexPoints(pointsContainer);
+                
+                // Update add point button onclick
+                $(this).find('.btn-primary').attr('onclick', `addPoint(this, ${sectionIndex})`);
+            });
+            mainSectionCount = $('#sectionsContainer .main-section-item').length;
+        }
+
+        // Reindex points in a section
+        function reindexPoints(pointsContainer) {
+            let sectionIndex = pointsContainer.attr('data-section');
+            pointsContainer.find('.point-item').each(function(pointIndex) {
+                $(this).find('.point-input').attr('name', `sections[${sectionIndex}][points][${pointIndex}]`);
+            });
+        }
+
+        // Update main section buttons
+        function updateMainSectionButtons() {
+            let sections = $('#sectionsContainer .main-section-item');
+            let totalSections = sections.length;
+
+            sections.each(function(index) {
+                let $this = $(this);
+                let $removeBtn = $this.find('.remove-section');
+
+                // Enable/disable remove button
+                $removeBtn.prop('disabled', totalSections === 1);
+            });
+        }
 
         // Open Edit Modal
         window.openEditModal = function(id) {
@@ -219,73 +331,20 @@
                     $('#status').val(response.status);
                     $('#modalTitle').text('Edit Trainee Evaluation Form');
 
-                    // Clear and load sections
-                    let sectionsHtml = '';
+                    // Load sections from response
                     if (response.sections && response.sections.length > 0) {
-                        response.sections.forEach(function(section, index) {
-                            sectionsHtml += `
-                                <div class="section-item mb-2">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-9">
-                                            <input type="text" name="sections[${index}][section_title]"
-                                                class="form-control section-title"
-                                                placeholder="Section Title"
-                                                value="${section.section_title}" required>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-info btn-sm move-up"
-                                                        onclick="moveSectionUp(this)">
-                                                    <i class="fa fa-arrow-up"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-info btn-sm move-down"
-                                                        onclick="moveSectionDown(this)">
-                                                    <i class="fa fa-arrow-down"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-danger btn-sm"
-                                                        onclick="removeSection(this)">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
+                        let sectionsHtml = '';
+                        response.sections.forEach(function(section, sectionIndex) {
+                            let points = section.points ? section.points.map(p => p.point_text) : [];
+                            sectionsHtml += generateMainSectionHtml(sectionIndex, section.section_title, points);
                         });
-                        sectionCount = response.sections.length;
+                        $('#sectionsContainer').html(sectionsHtml);
+                        mainSectionCount = response.sections.length;
                     } else {
-                        sectionsHtml = `
-                            <div class="section-item mb-2">
-                                <div class="row align-items-center">
-                                    <div class="col-md-9">
-                                        <input type="text" name="sections[0][section_title]"
-                                            class="form-control section-title"
-                                            placeholder="Section Title" required>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-info btn-sm move-up"
-                                                    onclick="moveSectionUp(this)" disabled>
-                                                <i class="fa fa-arrow-up"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-info btn-sm move-down"
-                                                    onclick="moveSectionDown(this)" disabled>
-                                                <i class="fa fa-arrow-down"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-danger btn-sm"
-                                                    onclick="removeSection(this)" disabled>
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        sectionCount = 1;
+                        loadDefaultSections();
                     }
 
-                    $('#sectionsContainer').html(sectionsHtml);
-                    updateSectionButtons();
+                    updateMainSectionButtons();
                     masterModal.show();
                 },
                 error: function() {
@@ -293,114 +352,6 @@
                 }
             });
         };
-
-        // Add New Section
-        window.addSection = function() {
-            let newSection = `
-                <div class="section-item mb-2">
-                    <div class="row align-items-center">
-                        <div class="col-md-9">
-                            <input type="text" name="sections[${sectionCount}][section_title]"
-                                class="form-control section-title"
-                                placeholder="Section Title" required>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-info btn-sm move-up"
-                                        onclick="moveSectionUp(this)">
-                                    <i class="fa fa-arrow-up"></i>
-                                </button>
-                                <button type="button" class="btn btn-info btn-sm move-down"
-                                        onclick="moveSectionDown(this)">
-                                    <i class="fa fa-arrow-down"></i>
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm"
-                                        onclick="removeSection(this)">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            $('#sectionsContainer').append(newSection);
-            sectionCount++;
-            updateSectionButtons();
-        };
-
-        // Remove Section
-        window.removeSection = function(button) {
-            $(button).closest('.section-item').remove();
-            reindexSections();
-            updateSectionButtons();
-        };
-
-        // Move Section Up
-        window.moveSectionUp = function(button) {
-            let currentItem = $(button).closest('.section-item');
-            let prevItem = currentItem.prev('.section-item');
-
-            if (prevItem.length) {
-                currentItem.insertBefore(prevItem);
-                reindexSections();
-                updateSectionButtons();
-            }
-        };
-
-        // Move Section Down
-        window.moveSectionDown = function(button) {
-            let currentItem = $(button).closest('.section-item');
-            let nextItem = currentItem.next('.section-item');
-
-            if (nextItem.length) {
-                currentItem.insertAfter(nextItem);
-                reindexSections();
-                updateSectionButtons();
-            }
-        };
-
-        // Reindex Sections
-        function reindexSections() {
-            sectionCount = 0;
-            $('#sectionsContainer .section-item').each(function(index) {
-                $(this).find('.section-title').attr('name', `sections[${index}][section_title]`);
-                sectionCount++;
-            });
-        }
-
-        // Update Section Buttons State
-        function updateSectionButtons() {
-            let sections = $('#sectionsContainer .section-item');
-
-            sections.each(function(index) {
-                let $this = $(this);
-                let $moveUp = $this.find('.move-up');
-                let $moveDown = $this.find('.move-down');
-                let $removeBtn = $this.find('.btn-danger');
-
-                // Enable/disable move up button
-                if (index === 0) {
-                    $moveUp.prop('disabled', true);
-                } else {
-                    $moveUp.prop('disabled', false);
-                }
-
-                // Enable/disable move down button
-                if (index === sections.length - 1) {
-                    $moveDown.prop('disabled', true);
-                } else {
-                    $moveDown.prop('disabled', false);
-                }
-
-                // Enable/disable remove button
-                if (sections.length === 1) {
-                    $removeBtn.prop('disabled', true);
-                } else {
-                    $removeBtn.prop('disabled', false);
-                }
-            });
-        }
 
         // Submit Form
         $('#masterForm').on('submit', function(e) {
@@ -410,16 +361,32 @@
             let url = id ? `trainee-evaluations/${id}` : `trainee-evaluations`;
             let method = id ? 'PUT' : 'POST';
 
-            // Prepare sections data
+            // Prepare sections data with points
             let sections = [];
-            $('#sectionsContainer .section-item').each(function() {
-                let title = $(this).find('.section-title').val();
-                if (title.trim() !== '') {
-                    sections.push({
-                        section_title: title
+            $('#sectionsContainer .main-section-item').each(function(sectionIndex) {
+                let sectionTitle = $(this).find('.main-section-title').val().trim();
+                if (sectionTitle !== '') {
+                    let points = [];
+                    $(this).find('.point-input').each(function() {
+                        let pointValue = $(this).val().trim();
+                        if (pointValue !== '') {
+                            points.push(pointValue);
+                        }
                     });
+                    
+                    if (points.length > 0) {
+                        sections.push({
+                            title: sectionTitle,
+                            points: points
+                        });
+                    }
                 }
             });
+
+            if (sections.length === 0) {
+                toastr.error('At least one section with points is required');
+                return;
+            }
 
             // Prepare form data
             let formData = {
@@ -479,47 +446,87 @@
                 }
             });
         };
-
-        // Initialize section buttons on load
-        updateSectionButtons();
     });
 </script>
+@endpush
 
 <style>
-    .section-item {
-        padding: 10px;
-        border: 1px solid #ddd;
+    .main-section-item {
+        border: 2px solid #dee2e6;
+        margin-bottom: 20px;
+    }
+    
+    .main-section-item .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .point-item {
+        padding: 8px;
+        background-color: #ffffff;
+        border: 1px solid #e9ecef;
         border-radius: 4px;
-        background-color: #f9f9f9;
+        margin-bottom: 8px;
     }
-
-    .section-item:hover {
-        background-color: #f0f0f0;
+    
+    .point-item:hover {
+        background-color: #f1f3f5;
     }
-
+    
+    .points-container {
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+    
+    .btn-group {
+        gap: 2px;
+    }
+    
     .btn-group .btn {
-        margin-right: 2px;
+        border-radius: 4px !important;
+        margin: 0 2px;
     }
-
-    .btn-group .btn:last-child {
-        margin-right: 0;
-    }
-
-    .btn-info {
-        background-color: #17a2b8;
-        border-color: #17a2b8;
-    }
-
-    .btn-info:hover {
-        background-color: #138496;
-        border-color: #117a8b;
-    }
-
-    .move-up:disabled,
-    .move-down:disabled,
-    .btn-danger:disabled {
-        opacity: 0.5;
+    
+    .btn-group .btn:disabled {
+        opacity: 0.3;
         cursor: not-allowed;
     }
+    
+    .modal-xl {
+        max-width: 90%;
+    }
+    
+    .main-section-title {
+        font-weight: 600;
+        background-color: #fff;
+    }
+    
+    .point-input {
+        background-color: #fff;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .remove-section, .remove-point {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+    
+    .remove-section:hover, .remove-point:hover {
+        background-color: #bb2d3b;
+        border-color: #b02a37;
+    }
+    
+    .remove-section:disabled, .remove-point:disabled {
+        background-color: #e35d6a;
+        border-color: #e35d6a;
+        opacity: 0.5;
+    }
 </style>
-@endpush

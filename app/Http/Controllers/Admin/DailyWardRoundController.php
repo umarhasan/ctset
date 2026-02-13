@@ -17,11 +17,25 @@ class DailyWardRoundController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+
+        if($user->hasRole('Admin')){
+            $rounds = DailyWardRound::with(['user','consultant','hospital','rotation'])->latest()->get();
+        }
+        elseif($user->hasRole('Trainee')){
+            $rounds = DailyWardRound::where('user_id',$user->id)
+                        ->with(['consultant','hospital','rotation'])->latest()->get();
+        }
+        else{
+            $rounds = DailyWardRound::where('consultant_id',$user->id)
+                        ->with(['user','consultant','hospital','rotation'])->latest()->get();
+        }
+
         return view('admin.daily_ward_rounds.index', [
-            'rounds'      => DailyWardRound::with(['hospital','rotation','consultant'])->latest()->get(),
-            'hospitals'   => Hospital::all(),
-            'rotations'   => Rotation::all(),
-            'consultants' => User::role('consultant')->get()
+            'rounds'=>$rounds,
+            'hospitals'=>Hospital::get(),
+            'rotations'=>Rotation::get(),
+            'consultants' => User::role('Assessor')->get()
         ]);
     }
 
@@ -93,5 +107,24 @@ class DailyWardRoundController extends Controller
         ])->values();
 
         return response()->json(['chart_data'=>$top5,'bar_data'=>$overall]);
+    }
+     public function unmap($id)
+    {
+        DailyWardRound::where('id',$id)->update([
+            'consultant_id'=>null
+        ]);
+
+        return back()->with('success','Supervisor unmapped');
+    }
+    
+    public function toggle(Request $request, $id)
+    {
+        
+        $round = DailyWardRound::findOrFail($id);
+
+        $round->involvement = $round->involvement=='A'?'W':'A';
+        $round->save();
+
+        return response()->json(['status'=>'success']);
     }
 }

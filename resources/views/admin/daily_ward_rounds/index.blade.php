@@ -6,9 +6,11 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>
             DAILY CICU / WARD ROUND
+            @if(auth()->user()->hasRole('Trainee'))
             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRoundModal">
                 <i class="fas fa-plus"></i>
             </button>
+            @endif
         </h3>
 
         <div>
@@ -26,31 +28,46 @@
     {{-- DAILY WARD ROUND TABLE --}}
     <div class="card">
         <div class="card-body">
-            <table id="examTable" class="table table-bordered table-hover text-center w-100">
+            <table id="examTable" class="table table-bordered table-hover table-striped mb-0 text-center w-100">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
-                        <th>By</th>
+                        @if(auth()->user()->hasRole('Admin'))
+                        <th>Trainee By</th>
+                        <th>Assessor By</th>
+                        @endif
                         <th>Date</th>
                         <th>From</th>
                         <th>To</th>
                         <th>Hospital</th>
                         <th>Rotation</th>
                         <th>Involvement</th>
+                        @if(auth()->user()->hasAnyRole(['Trainee','Assessor']))
                         <th>Consultant</th>
+                        <th>Consultant Signature</th>
+                        @endif
+                        @if(auth()->user()->hasRole('Admin'))
                         <th>Action</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($rounds as $i => $r)
                         <tr>
                             <td>{{ $i+1 }}</td>
-                            <td>{{ $r->user->name ?? '-' }}</td>
+
+                            @if(auth()->user()->hasRole('Admin'))
+                                <td>{{ $r->user->name ?? '-' }}</td>
+                                <td>{{ $r->consultant->name ?? '-' }}</td>
+                            @endif
+
                             <td>{{ \Carbon\Carbon::parse($r->date)->format('d-m-Y') }}</td>
                             <td>{{ $r->from_time }}</td>
                             <td>
                                 @if(!$r->to_time)
-                                <a href="{{ route('daily-ward-rounds.end',$r) }}" onclick="return confirm('End activity?')" class="btn btn-danger btn-sm">End</a>
+                                 @if(auth()->user()->hasAnyRole(['Trainee','Assessor']))
+                                 <a href="{{ route('daily-ward-rounds.end',$r) }}" onclick="return confirm('End activity?')" class="btn btn-danger btn-sm">End activity</a>
+                                @endif
                                 @else
                                 {{ $r->to_time }}
                                 @endif
@@ -58,22 +75,41 @@
                             <td>{{ $r->hospital->name ?? '-' }}</td>
                             <td>{{ $r->rotation->short_name ?? '-' }}</td>
                             <td>
-                                <span class="badge bg-{{ $r->involvement=='A'?'success':'secondary' }}">
+                                <span class="badge bg-{{ $r->involvement=='A'?'success':'secondary' }}" id="badge-{{ $r->id }}">
                                     {{ $r->involvement=='A'?'Active':'Waiting' }}
                                 </span>
+
+                                @if(auth()->user()->hasRole('Assessor'))
+                                <br>
+                                <label class="switch mt-1">
+                                    <input type="checkbox" {{ $r->involvement=='A'?'checked':'' }} 
+                                        onchange="toggleInvolvement({{ $r->id }})" id="switch-{{ $r->id }}">
+                                    <span class="slider round"></span>
+                                </label>
+                                @endif
                             </td>
-                            <td>{{ $r->consultant->name ?? $r->consultant_free_text ?? '-' }}</td>
+
+                            {{-- Only for Trainee or Assessor --}}
+                            @if(auth()->user()->hasAnyRole(['Trainee','Assessor']))
+                                <td>{{ $r->consultant->name ?? $r->consultant_free_text ?? '-' }}</td>
+                                <td>
+                                    @if(!empty($r->consultant->signature_image))
+                                        <img src="{{ route('user.signature.stream', $r->consultant->signature_image) }}" width="80">
+                                    @endif
+                                </td>
+                            @endif
+
+                            @if(auth()->user()->hasRole('Admin'))
                             <td>
-                                <form method="POST" action="{{ route('daily-ward-rounds.destroy',$r) }}">
-                                    @csrf @method('DELETE')
-                                    <button class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                <form method="POST" action="{{ route('daily-ward-rounds.unmap',$r->id) }}">
+                                    @csrf
+                                    <button class="btn btn-danger btn-sm">Un-Map</button>
                                 </form>
                             </td>
+                            @endif
                         </tr>
                     @empty
-                        <tr><td colspan="10">No records found</td></tr>
+                        <tr><td colspan="12">No records found</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -83,6 +119,7 @@
 </div>
 
 {{-- ADD ROUND MODAL --}}
+@if(auth()->user()->hasRole('Trainee'))
 <div class="modal fade" id="addRoundModal" tabindex="-1">
     <div class="modal-dialog">
         <form method="POST" action="{{ route('daily-ward-rounds.store') }}" class="modal-content">
@@ -148,6 +185,9 @@
                         <label>Consultant Free Text</label>
                         <input type="text" name="consultant_free_text" class="form-control">
                     </div>
+
+                    <div id="feesContainer"></div>
+                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="addFeeRow()">+ Add Fee</button>
                 </div>
 
             </div>
@@ -159,22 +199,20 @@
         </form>
     </div>
 </div>
+@endif
 
 {{-- PERFORMANCE MODAL --}}
 <div class="modal fade" id="performanceModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-
             <div class="modal-header bg-warning">
                 <h5 class="modal-title">Performance Analysis</h5>
                 <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
             <div class="modal-body">
-
                 <ul class="nav nav-pills mb-3" id="perfTabs">
-                    <li class="nav-item"><button class="nav-link active" onclick="switchTab('top5')">Over All Top 5 Trainees</button></li>
-                    <li class="nav-item"><button class="nav-link" onclick="switchTab('overall')">Over all Performance</button></li>
+                    <li class="nav-item"><button class="nav-link active" onclick="switchTab('top5')">Top 5 Trainees</button></li>
+                    <li class="nav-item"><button class="nav-link" onclick="switchTab('overall')">Overall Performance</button></li>
                 </ul>
 
                 <div class="btn-group mb-3">
@@ -192,7 +230,7 @@
 
                 <div id="top5Table" class="mt-3">
                     <table class="table table-bordered">
-                         <thead class="table-dark">
+                        <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Name</th>
@@ -205,7 +243,6 @@
                 </div>
 
             </div>
-
         </div>
     </div>
 </div>
@@ -213,13 +250,13 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded',function(){
+document.addEventListener('DOMContentLoaded', function(){
 
     // Geolocation
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(pos=>{
-            document.getElementById('lat').value=pos.coords.latitude;
-            document.getElementById('long').value=pos.coords.longitude;
+            document.getElementById('lat').value = pos.coords.latitude;
+            document.getElementById('long').value = pos.coords.longitude;
         });
     }
 
@@ -236,7 +273,41 @@ function addFeeRow(){
     document.getElementById('feesContainer').appendChild(d);
 }
 
-// Performance Chart
+// Toggle involvement (Assessor)
+function toggleInvolvement(id){
+    const checkbox = document.getElementById('switch-' + id);
+    const badge = document.getElementById('badge-' + id);
+    const newValue = checkbox.checked ? 'A' : 'W';
+
+    badge.innerText = newValue === 'A' ? 'Active' : 'Waiting';
+    badge.className = 'badge bg-' + (newValue === 'A' ? 'success' : 'secondary');
+
+    fetch(`/daily-ward-rounds/toggle/${id}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ involvement: newValue })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status !== 'success'){
+            alert('Something went wrong!');
+            checkbox.checked = !checkbox.checked;
+            badge.innerText = checkbox.checked ? 'Active' : 'Waiting';
+            badge.className = 'badge bg-' + (checkbox.checked ? 'success' : 'secondary');
+        }
+    })
+    .catch(err=>{
+        alert('Error updating involvement');
+        checkbox.checked = !checkbox.checked;
+        badge.innerText = checkbox.checked ? 'Active' : 'Waiting';
+        badge.className = 'badge bg-' + (checkbox.checked ? 'success' : 'secondary');
+    });
+}
+
+// Performance chart
 let tab='top5', currentPeriod='all';
 function switchTab(t){ tab=t; loadData(currentPeriod); }
 function loadData(period){
@@ -254,37 +325,29 @@ function loadData(period){
 function drawPie(data){
     am4core.disposeAllCharts();
     am4core.useTheme(am4themes_animated);
-    let chart=am4core.create("chartdiv",am4charts.PieChart);
-    chart.data=data;
-    let s=chart.series.push(new am4charts.PieSeries());
-    s.dataFields.value="value"; s.dataFields.category="name";
-    chart.legend=new am4charts.Legend();
+    let chart = am4core.create("chartdiv", am4charts.PieChart);
+    chart.data = data;
+    let s = chart.series.push(new am4charts.PieSeries());
+    s.dataFields.value = "value"; s.dataFields.category = "name";
+    chart.legend = new am4charts.Legend();
 }
 
 function drawBar(data){
     am4core.disposeAllCharts();
     am4core.useTheme(am4themes_animated);
-    let chart=am4core.create("chartdiv",am4charts.XYChart);
-    chart.data=data;
-    let x=chart.xAxes.push(new am4charts.CategoryAxis());
-    x.dataFields.category="name";
-    let y=chart.yAxes.push(new am4charts.ValueAxis());
-    let s=chart.series.push(new am4charts.ColumnSeries());
-    s.dataFields.valueY="value"; s.dataFields.categoryX="name";
+    let chart = am4core.create("chartdiv", am4charts.XYChart);
+    chart.data = data;
+    let x = chart.xAxes.push(new am4charts.CategoryAxis());
+    x.dataFields.category = "name";
+    let y = chart.yAxes.push(new am4charts.ValueAxis());
+    let s = chart.series.push(new am4charts.ColumnSeries());
+    s.dataFields.valueY = "value"; s.dataFields.categoryX = "name";
 }
 
 function fillTop5(data){
     let html='';
     data.forEach((d,i)=>{ html+=`<tr><td>${i+1}</td><td>${d.name}</td><td>${d.type}</td><td>${d.value}</td></tr>`; });
-    document.getElementById('top5Body').innerHTML=html;
-}
-
-function toggleInvolvement(id){
-    // Call your API to toggle involvement status
+    document.getElementById('top5Body').innerHTML = html;
 }
 </script>
-<script type="text/javascript" src="https://sellfy.com/js/api_buttons.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/anypicker@latest/dist/anypicker-all.min.css" />
-<script type="text/javascript" src="//cdn.jsdelivr.net/npm/anypicker@latest/dist/anypicker.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/npm/anypicker@latest/dist/i18n/anypicker-i18n.js"></script>
 @endpush

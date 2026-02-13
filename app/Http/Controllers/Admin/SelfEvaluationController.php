@@ -76,6 +76,36 @@ class SelfEvaluationController extends Controller
         return response()->json(['success'=>true,'message'=>'Updated successfully!','evaluation'=>$evaluation]);
     }
 
+    public function show($id)
+    {
+        $evaluation = SelfEvaluation::findOrFail($id);
+        
+        // Decode JSON data for view
+        $evaluation->goal_plan_actions = json_decode($evaluation->goal_plan_actions ?? '[]', true);
+        $evaluation->question_actions = json_decode($evaluation->question_actions ?? '[]', true);
+        
+        return view('admin.self-evaluations.show', compact('evaluation'));
+    }
+
+    protected function isNonTechnicalGoal($goalText)
+{
+    $nonTechnicalKeywords = [
+        'communicat', 'team', 'leader', 'present', 'teach', 
+        'mentor', 'interpersonal', 'soft skill', 'collaborat',
+        'empathy', 'patient care', 'bedside manner', 'counseling',
+        'feedback', 'conflict', 'negotiat', 'motivat', 'coach',
+        'profess', 'ethic', 'integrity', 'compassion'
+    ];
+    
+    $text = strtolower($goalText);
+    foreach ($nonTechnicalKeywords as $keyword) {
+        if (str_contains($text, $keyword)) {
+            return true;
+        }
+    }
+    
+    return false;
+}
     public function destroy($id)
     {
         $evaluation = SelfEvaluation::findOrFail($id);

@@ -148,4 +148,99 @@ class Evaluation360Controller extends Controller
         $form = Evaluation360Form::with('shares.responses.section')->findOrFail($id);
         return view('admin.evaluation-360.responses', compact('form'));
     }
+
+
+    public function show($id)
+    {
+        $form = Evaluation360Form::with([
+            'sections' => function($q) {
+                $q->orderBy('order', 'asc');
+            }
+        ])->findOrFail($id);
+        
+        if (request()->has('token')) {
+            
+            $share = Evaluation360FormShare::with([
+                'sharedBy',
+                'assignedTo',
+                'responses' => function($q) {
+                    $q->with('section');
+                }
+            ])
+            ->where('token', request()->token)
+            ->where('evaluation_360_form_id', $id)
+            ->firstOrFail();
+            
+            $totalScore = 0;
+            $totalQuestions = 0;
+            
+            foreach ($share->responses as $response) {
+                if (is_numeric($response->score)) {
+                    $totalScore += (int)$response->score;
+                    $totalQuestions++;
+                }
+            }
+            
+            $percentage = $totalQuestions > 0 
+                ? round(($totalScore / ($totalQuestions * 7)) * 100, 2) 
+                : 0;
+            
+            $grade = $this->calculateGrade($percentage);
+            
+            return view('evaluation-360.show', compact('form', 'share', 'percentage', 'grade'));
+        }
+        
+        $share = $form->shares()
+            ->with([
+                'sharedBy',
+                'assignedTo',
+                'responses' => function($q) {
+                    $q->with('section');
+                }
+            ])
+            ->first();
+        
+        if (!$share) {
+            $share = new \stdClass();
+            $share->responses = collect([]);
+            $share->sharedBy = null;
+            $share->assignedTo = null;
+            $share->status = 'pending';
+            $share->grade = '-';
+            $share->rotation = '-';
+            $share->score = 0;
+        }
+        
+        $totalScore = 0;
+        $totalQuestions = 0;
+        
+        if ($share && isset($share->responses)) {
+            foreach ($share->responses as $response) {
+                if (is_numeric($response->score)) {
+                    $totalScore += (int)$response->score;
+                    $totalQuestions++;
+                }
+            }
+        }
+        
+        $percentage = $totalQuestions > 0 
+            ? round(($totalScore / ($totalQuestions * 7)) * 100, 2) 
+            : 0;
+        
+        $grade = $this->calculateGrade($percentage);
+        
+        return view('admin.evaluation-360.show', compact('form', 'share', 'percentage', 'grade'));
+    }
+
+    private function calculateGrade($percentage)
+    {
+        if ($percentage >= 90) return 'A+';
+        if ($percentage >= 80) return 'A';
+        if ($percentage >= 70) return 'B+';
+        if ($percentage >= 60) return 'B';
+        if ($percentage >= 50) return 'C+';
+        if ($percentage >= 40) return 'C';
+        if ($percentage >= 33) return 'D';
+        return 'F';
+    }
 }
