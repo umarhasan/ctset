@@ -42,12 +42,13 @@
                     </td>
                     <td>{{ $evaluation->created_at->format('Y-m-d') }}</td>
                     <td>
+                        <a href="{{ route('trainee-evaluations.show',$evaluation->id) }}"><i class="fa fa-eye"></i></a>
+                        
                         @can('trainee-evaluations-edit')
                             <button class="btn btn-warning btn-sm" onclick="openEditModal({{ $evaluation->id }})">
                                 <i class="fa fa-edit"></i>
                             </button>
                         @endcan
-                        <a href="{{ route('trainee-evaluations.show',$evaluation->id) }}">view</a>
                         @can('trainee-evaluations-delete')
                             <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ $evaluation->id }})">
                                 <i class="fa fa-trash"></i>

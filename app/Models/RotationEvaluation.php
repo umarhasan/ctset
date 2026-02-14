@@ -13,6 +13,12 @@ class RotationEvaluation extends Model
 
     public function sections()
     {
-        return $this->hasMany(RotationEvaluationSection::class)->orderBy('order');
+        return $this->hasMany(RotationEvaluationSection::class, 'rotation_evaluation_id')->orderBy('order');
+    }
+
+    
+    public function responses()
+    {
+        return $this->hasMany(RotationEvaluationResponse::class, 'rotation_evaluation_id');
     }
 }

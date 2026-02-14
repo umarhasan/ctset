@@ -15,4 +15,5 @@ class RotationEvaluationSubitem extends Model
     {
         return $this->belongsTo(RotationEvaluationSection::class, 'section_id');
     }
+
 }

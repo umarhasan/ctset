@@ -114,6 +114,10 @@ use App\Http\Controllers\Admin\ExamController;
 
 
         Route::resource('rotation-evaluations', RotationEvaluationController::class);
+        Route::post('rotation-evaluations/{id}/submit', [RotationEvaluationController::class, 'submitResponse'])->name('rotation-evaluations.submit');
+        Route::get('rotation-evaluations/{id}/responses', [RotationEvaluationController::class, 'viewResponses'])->name('rotation-evaluations.responses');
+        Route::get('rotation-evaluations/{id}/responses/{responseId}', [RotationEvaluationController::class, 'showResponse'])->name('rotation-evaluations.response-detail');
+        
         Route::resource('longitudinal-requirements', LongitudinalRequirementController::class);
         Route::resource('diagnoses', DiagnosisController::class);
         Route::resource('procedures', ProcedureController::class);

@@ -31,4 +31,6 @@ class RotationEvaluationSection extends Model
     {
         return $this->hasMany(RotationEvaluationSubitem::class, 'section_id')->orderBy('order');
     }
+
+    
 }
