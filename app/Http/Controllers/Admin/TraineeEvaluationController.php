@@ -208,7 +208,7 @@ class TraineeEvaluationController extends Controller
             'success' => true,
             'message' => 'Evaluation Submitted Successfully'
         ]);
-    }k
+    }
 
     public function destroy($id)
     {
